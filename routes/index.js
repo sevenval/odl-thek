@@ -1,7 +1,7 @@
 var express = require('express');
 
 var helper = require('../helper.js');
-var odl = helper.db.collection('odl');
+var gadgets = helper.db.collection('gadgets');
 var count = helper.db.collection('count');
 
 var router = express.Router();
@@ -24,7 +24,17 @@ router.get('/', function(req, res) {
       });
     }
   });
-  res.render('index', { title: 'Express' });
+  gadgets.find({}).toArray(function(_err,_result){
+    res.render('index', { title: 'Express'+_result.length });  
+  })
+  
+});
+
+router.get('/:id', function(req, res) {
+  gadgets.find({ hwid : parseInt(req.params.id) }).toArray(function(_err,_result){
+    console.log(_result[0]);
+    res.render('detail', { title: 'Express', device : _result[0] });  
+  })
 });
 
 module.exports = router;
