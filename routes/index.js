@@ -25,7 +25,7 @@ router.get('/', function(req, res) {
     }
   });
   gadgets.find({}).toArray(function(_err,_result){
-    if(_result) {
+    if(_result&&_result!=undefined&&_result.length) {
       res.render('index', { title: 'Express'+_result.length });  
     } else {
       res.render('index', { title: 'No devices' });  
