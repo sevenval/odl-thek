@@ -25,16 +25,20 @@ router.get('/', function(req, res) {
     }
   });
   gadgets.find({}).toArray(function(_err,_result){
+
+
+    console.log('session========', req.session.passport.user)
+    
     res.render('index', { title: 'Express'+_result.length });  
   })
   
 });
 
-router.get('/:id', function(req, res) {
-  gadgets.find({ hwid : parseInt(req.params.id) }).toArray(function(_err,_result){
-    console.log(_result[0]);
-    res.render('detail', { title: 'Express', device : _result[0] });  
-  })
-});
+// router.get('/:id', function(req, res) {
+//   gadgets.find({ hwid : parseInt(req.params.id) }).toArray(function(_err,_result){
+//     console.log(_result[0]);
+//     res.render('detail', { title: 'Express', device : _result[0] });  
+//   })
+// });
 
 module.exports = router;
