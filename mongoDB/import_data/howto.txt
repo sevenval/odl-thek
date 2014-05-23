@@ -1,0 +1,1 @@
+mongoimport -d odlthek -c gadgets --type csv --file hardware.csv --headerline
