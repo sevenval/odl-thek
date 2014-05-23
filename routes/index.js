@@ -25,18 +25,12 @@ router.get('/', function(req, res) {
     }
   });
   gadgets.find({}).toArray(function(_err,_result){
-
-
     if(_result) {
-
       res.render('index', { title: 'Express'+_result.length });  
     } else {
-
-    res.render('index', { title: 'No devices' });  
+      res.render('index', { title: 'No devices' });  
     }
-
   })
-  
 });
 
 // router.get('/:id', function(req, res) {
