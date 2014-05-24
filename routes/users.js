@@ -25,6 +25,8 @@ router.post('/:id/setrole', helper.ensureAuthenticated, function(req, res) {
       _user.role = req.body.role;
       if(req.body.active) {
         _user.active = true;
+      } else {
+        _user.active = false;
       }
       users.save(_user,function(_err,_newuser){
         console.log(_err,_newuser);
