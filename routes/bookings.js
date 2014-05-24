@@ -53,6 +53,12 @@ router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
       }
       var start = new Date(start);
       var end = new Date(end);
+	  
+	  if( start > end ){
+		tmp_start = start;
+		start = end;
+		end = tmp_start;
+	  }
 
       helper.checkGadgetBooking(_gadget._id,start,end,function(_result,_info){
         if(_result) {
