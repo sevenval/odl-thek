@@ -15,7 +15,10 @@ block content
       - each gadget in gadgets
         li.element
           a(href="/gadgets/"+gadget._id) 
-            img(src='/img/device.jpg')
+            if(gadget.image)
+              img(src="../"+gadget.image,style="width: 100%;")
+            else   
+              img(src='/img/device.jpg')
           if(gadget.handout)
             div.traffic_handout
           else if(gadget.booked)

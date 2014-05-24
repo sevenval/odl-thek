@@ -16,6 +16,13 @@ block content
         br
     input(type="submit")
 
+   form(action="/gadgets/"+gadget._id+"/upload",method="post",enctype="multipart/form-data")
+      input(type="file",name="image")
+      br
+      input(type="submit")
+
+
+
 
 
 

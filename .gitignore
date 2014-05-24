@@ -4,6 +4,7 @@ logs
 .DS_Store
 
 github.json
+uploads
 
 # Runtime data
 pids

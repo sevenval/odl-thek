@@ -59,6 +59,18 @@ router.get('/:id/edit', helper.ensureAuthenticated, helper.ensureAdmin, function
 
 
 
+router.post('/:id/upload', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
+  gadgets.findById(req.params.id,function(_err,_gadget){
+    _gadget.image = req.files.image.path.replace(/public\//,'');
+    gadgets.save(_gadget,function(_err,_result){
+      res.render('gadgets/edit', { title: _gadget.name , gadget : _gadget});  
+    })
+  })
+});
+
+
+
+
 router.post('/:id/edit', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
   gadgets.findById(req.params.id,function(_err,_gadget){
     for(var key in req.body) {
