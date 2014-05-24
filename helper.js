@@ -1,6 +1,18 @@
-var config = require('./config.json');
+
+var config = {
+  "github" : {
+    "GITHUB_CLIENT_ID" : process.env.GITHUB_CLIENT_ID, 
+    "GITHUB_CLIENT_SECRET" : process.env.GITHUB_CLIENT_SECRET,
+    "callbackURL" : process.env.callbackURL
+  },
+  "mongourl" : process.env.mongodburl
+}
+
 
 var db = require('mongoskin').db(config.mongourl);
+
+
+
 
 
 /* test if the user ist authorized */
