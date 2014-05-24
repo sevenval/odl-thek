@@ -14,8 +14,9 @@ block content
     ul.elements
       - each gadget in gadgets
         li.element
-          img(src='/img/device.jpg')
-          div.traffic
+          a(href="/gadgets/"+gadget._id) 
+            img(src='/img/device.jpg')
+            div.traffic
           a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
             div.spec
             div.brand= gadget.brand

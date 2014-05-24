@@ -46,7 +46,7 @@ router.get('/logout', function(req, res){
 
 router.get('/:id', helper.ensureAuthenticated, function(req, res) {
   users.findById(req.params.id,function(_err,_user){
-      res.render('users/detail',{ title : 'userdetail', user : _user});  
+      res.render('users/detail',{ title : 'userdetail', euser : _user});  
   })
 });
 
