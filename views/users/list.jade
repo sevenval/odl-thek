@@ -4,4 +4,5 @@ block content
   h1= title
   ul
   - each user in users
-    li= user.username
+    li= user.name
+      a(href='/users/remove/'+user._id) löschen
