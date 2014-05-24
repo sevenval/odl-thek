@@ -8,18 +8,13 @@ var users = helper.db.collection('users');
 
 var passport = require('passport');
 
-/* GET users listing. */
-router.get('/', helper.ensureAuthenticated, function(req, res) {
-  res.render('index', { title: 'logged in '+req.session.user.displayname});  
-});
-
-
-router.get('/list', helper.ensureAuthenticated, function(req, res) {
+router.get('/', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
   users.find({}).toArray(function(_err,_users){
-    console.log(_users);
     res.render('users/list', { title: 'users'+_users.length, users : _users});  
   })
 });
+
+
 
 
 

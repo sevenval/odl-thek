@@ -27,12 +27,19 @@ var ensureAuthenticated = function (req, res, next) {
   res.redirect('/')
 }
 
+/* test if the user ist authorized */
+var ensureAdmin = function (req, res, next) {
+  if (req.session.user&&req.session.user.role= 'admin') { return next(); }
+  res.redirect('/')
+}
+
 
 
 var helper = {
   github : config.github,
   db : db,
-  ensureAuthenticated : ensureAuthenticated
+  ensureAuthenticated : ensureAuthenticated,
+  ensureAdmin : ensureAdmin
 }
 
 module.exports = helper;
