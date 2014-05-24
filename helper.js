@@ -33,13 +33,32 @@ var ensureAdmin = function (req, res, next) {
   res.redirect('/')
 }
 
+var prettyDate = function(_date) {
+  console.log(_date);
+  // return _date.toGMTString();
+  return _date.getFullYear()+'-'+fillZero(_date.getMonth()+1,2)+'-'+fillZero(_date.getDate(),2)+' '+fillZero(_date.getHours(),2)+':'+fillZero(_date.getMinutes(),2)
+}
 
+var fillZero = function(_int,_num) {
+  var string = _int.toString();
+  var length = string.length;
+  for(var i = length ; i < _num ; i++) {
+    string = '0'+string;
+  }
+  return string;
+}
+
+var now = function() {
+  return fillZero(new Date().getHours(),2)+":"+fillZero(new Date().getMinutes(),2);
+}
 
 var helper = {
   github : config.github,
   db : db,
   ensureAuthenticated : ensureAuthenticated,
-  ensureAdmin : ensureAdmin
+  ensureAdmin : ensureAdmin,
+  prettyDate : prettyDate,
+  now : now
 }
 
 module.exports = helper;

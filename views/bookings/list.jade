@@ -1,8 +1,18 @@
 extends ../layout
 
 block content
-  ul
-  - each booking in bookings
-    li= booking.user
-      span= " "
-      a(href="/bookings/remove/"+booking._id) cancel
+  table(style="width:100%")
+    - each booking in bookings
+      tr
+        td= booking.username
+        td= booking.gadgetname
+        td
+          if(booking.start)
+            span= booking.startdate
+        td
+          if(booking.end)
+            span= booking.enddate
+        td
+          a(href="/bookings/"+booking._id) edit
+        td
+          a(href="/bookings/remove/"+booking._id) cancel

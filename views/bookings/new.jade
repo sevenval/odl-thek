@@ -1,13 +1,14 @@
 form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
   h1= gadget.name
-
+  if(locals.error)
+    div(style="background-color: #f00;")= error
   div
     h2 Start
     input(type='date',name='startdate')
-    input(type='time',name='starttime')
+    input(type='time',name='starttime',value=locals.now)
     h2 End
     input(type='date',name='enddate')
-    input(type='time',name='endtime')
+    input(type='time',name='endtime',value=locals.now)
   br
   div(onclick="bookNow(); return false;") Buchen
   div
