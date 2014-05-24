@@ -51,9 +51,13 @@ router.get('/:gid/handout', helper.ensureAuthenticated, function(req,res){
       _booking.start = now;
     }
     _booking.handoutuser = req.session.user._id;
-    console.log(_booking);
-    bookings.save(_booking,function(_err,_booking){
-      console.log(_booking);
+    bookings.save(_booking,function(_err,_result){
+      gadgets.findById(_booking.gadget,function(_err,_gadget){
+        _gadget.handoutcount = _gadget.handoutcount ? _gadget.handoutcount+1 : 1;
+        gadgets.save(_gadget,function(_err,_effected){
+          console.log('saved');
+        })
+      })
       res.redirect('/bookings/');
     })
   })
