@@ -24,12 +24,16 @@ html
               a(href="/gadgets/") gadgets
             li
               a(href="/bookings/") bookings
-        div#user
+        #user
           if(locals.user)
-            div(style="float: left;")
-            p.username= user.displayname
-            p.login 
-              a(href="/users/logout") logout
+            div(style="position: absolute; top: 0; right: 100px;")
+              span.username= user.displayname
+              br
+              span.login 
+                a(href="/users/logout") logout
+            div(style="position: relative; top: 0; right: 0; height:90px; width:100px;background-color: #0f0;")
+              if(user.avatarurl)
+                img(src=user.avatarurl, style="width:100px; border-radius: 0 10px 0 0;")
           else
             p.login
               a(href="/users/auth/github") login

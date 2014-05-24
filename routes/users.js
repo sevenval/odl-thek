@@ -54,7 +54,7 @@ router.get('/remove/:id', helper.ensureAuthenticated, function(req, res) {
   console.log('ID',req.params.id);
   users.findById(req.params.id,function(_err,_user){
     users.remove(_user,function(_err,_result){
-      res.redirect('/users/list');  
+      res.redirect('/users/');  
     })
   })
 });
@@ -78,12 +78,14 @@ router.get('/auth/github/callback',
             displayname : suser.username,
             name : suser._json.name,
             active : true,
+            avatarurl : suser._json.avatar_url,
             email : suser._json.email,
             type : 'github',
             role : 'user'
           }
           users.insert(user,function(_err,_newuser){
-            req.session.user = _newuser;
+            console.log(_newuser);
+            req.session.user = user;
             /* check if this is the first user */
             users.find({}).toArray(function(_err,_result){
               if(_result.length==1) {
@@ -100,7 +102,6 @@ router.get('/auth/github/callback',
           })
         } else {
           req.session.user = _user;
-
           res.redirect('/gadgets/');
         }
       })
