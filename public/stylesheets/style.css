@@ -5,7 +5,7 @@ body {
   background-color: #D9F1E3;
   max-width: 960px;
   margin: 0 auto;
-  border:1px solid #ddd;
+  
 }
 
 a {
@@ -44,6 +44,9 @@ a {
 
 
 /* PHONES */
+.welcome {
+	padding: 9px;
+}
 #phones {
 
 }
@@ -55,9 +58,7 @@ a {
 	margin: 9px;
 	padding: 0;
 }
-#phones h2 {
 
-}
 .elements {
 	/*padding: 0 10px;*/
 }

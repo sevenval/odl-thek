@@ -4,19 +4,19 @@ block content
   h1= user.name
   h2= user.displayname
   p
-    form(action="/users/"+user._id+"/setrole",method="post")
+    form(action="/users/"+euser._id+"/setrole",method="post")
       select(name='role')
-        if(user.role == 'admin')
+        if(euser.role == 'admin')
           option(selected) admin
         else
           option admin
-        if(user.role == 'user')
+        if(euser.role == 'user')
           option(selected) user
         else
           option user
       br
 
-      if(user.active)
+      if(euser.active)
         input(type='checkbox',name="active",checked="checked") 
       else 
         input(type='checkbox',name="active") 
@@ -24,4 +24,4 @@ block content
       br
       input(type="submit")
   p
-    a(href='/users/remove/'+user._id) löschen
+    a(href='/users/remove/'+euser._id) löschen

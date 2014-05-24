@@ -14,7 +14,8 @@ block content
     ul.elements
       - each gadget in gadgets
         li.element
-          img(src='/img/device.jpg')
+          a(href="/gadgets/"+gadget._id) 
+            img(src='/img/device.jpg')
           if(gadget.booked)
             div.traffic_reserved
           else

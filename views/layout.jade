@@ -27,7 +27,7 @@ html
         div#user
           if(locals.user)
             div(style="float: left;")
-            p.username= user.name
+            p.username= user.displayname
             p.login 
               a(href="/users/logout") logout
           else
