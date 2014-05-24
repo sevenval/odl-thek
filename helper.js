@@ -29,7 +29,7 @@ var ensureAuthenticated = function (req, res, next) {
 
 /* test if the user ist authorized */
 var ensureAdmin = function (req, res, next) {
-  if (req.session.user&&req.session.user.role= 'admin') { return next(); }
+  if (req.session.user&&req.session.user.role == 'admin') { return next(); }
   res.redirect('/')
 }
 
