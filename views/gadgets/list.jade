@@ -13,34 +13,34 @@ block content
     h1 Smartphones
     ul.elements
       - each gadget in gadgets
-        li.element
-          div.hide
-            div.overlay
-            div.traffic_overlay 
-            div.click
-              div.brand brand
-              div.name name
-              div.isolator
-              div.os os
+        li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
+          .hide.info
+            .traffic_overlay 
+            .click
+              div.brand= gadget.brand
+              div.name= gadget.name
+              span.isolator
+              div.os= gadget.os
             div.lastBook ich war es nicht
               br
               span.user Max Mustermann
-            div.buttons
-              div.detail
-                a(href="/detail/") Details
-              div.booking
-                a(href="/detail/") Buchen
-          a(href="/gadgets/"+gadget._id) 
-            img(src='/img/device.jpg')
-          if(gadget.booked)
-            div.traffic_reserved
-          else
-            div.traffic
-          a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
-            div.spec
-            
-            div.brand= gadget.brand
-            div.name= gadget.name
-            span.isolator
-            div.os= gadget.os
+            .buttons
+              .detail
+                a(href="/gadgets/"+gadget._id) Details
+              .booking
+                a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+          .cont
+            a(href="/gadgets/"+gadget._id) 
+              img(src='/img/device.jpg')
+            if(gadget.booked)
+              div.traffic_reserved
+            else
+              div.traffic
+            a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
+              div.spec
+              
+              div.brand= gadget.brand
+              div.name= gadget.name
+              span.isolator
+              div.os= gadget.os
     div.clear    
