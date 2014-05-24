@@ -57,12 +57,12 @@ router.get('/auth/github/callback',
           }
           users.insert(user,function(_err,_newuser){
             req.session.user = _newuser;
-            res.redirect('/users/');    
+            res.redirect('/gadgets/');    
           })
         } else {
           req.session.user = _user;
 
-          res.redirect('/users/');
+          res.redirect('/gadgets/');
         }
       })
     }

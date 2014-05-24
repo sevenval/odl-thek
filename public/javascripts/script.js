@@ -1,0 +1,3 @@
+function openBookingLayer(_url) {
+
+}

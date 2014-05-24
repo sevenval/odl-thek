@@ -3,4 +3,6 @@ extends ../layout
 block content
   ul
   - each booking in bookings
-    li= booking.devicename
+    li= booking.user
+      span= " "
+      a(href="/bookings/remove/"+booking._id) cancel

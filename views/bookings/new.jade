@@ -1,4 +1,11 @@
-form
-  input(type='date',name='start')
+form(method='post',action="/bookings/"+gadget._id+"/new")
+  h1= gadget.name
+  div
+    h2 Start
+    input(type='date',name='startdate')
+    input(type='time',name='starttime')
+    h2 End
+    input(type='date',name='enddate')
+    input(type='time',name='endtime')
   br
   input(type='submit')

@@ -3,16 +3,22 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="/javascript/script.js")
   body
     .navi
       if(locals.user)
         a(href="/users/logout") logout
+        span= " "
+        a(href="/users/list") users
+        span= " "
+        a(href="/gadgets/") gadgets
+        span= " "
+        a(href="/bookings/") bookings
       else
         a(href="/users/auth/github") login
+        span= " "
+        a(href="/gadgets/top") TOP
       span= " "
-      a(href="/users/list") users
-      span= " "
-      a(href="/gadgets/") gadgets
-      span= " "
-      a(href="/bookings/") bookings
+      a(href="/imprint") Impressum
     block content
