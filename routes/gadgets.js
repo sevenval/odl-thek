@@ -11,7 +11,8 @@ router.get('/', helper.ensureAuthenticated,  function(req, res) {
       console.log(_result[0]);
       res.render('gadgets/list', { title: 'Gadgets: '+_result.length, gadgets : _result });  
     } else {
-      res.render('index', { title: 'No devices' });  
+      // res.render('index', { title: 'No devices' });  
+      res.render('index', { title: 'Gadgets: '+_result.length, gadgets : _result });
     }
   })
 });
