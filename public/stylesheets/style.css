@@ -42,10 +42,43 @@ a {
 	width: 80%;
 }
 
+#footer {
+	background-color: #1F2022;
+	height: 50px;
+	margin-top: 40px;
+	padding: 9px 19px;
+	color: white;
+	text-align: right;
+}
+#footer a {
+	color: #ddd;
 
+}
 /* PHONES */
 .welcome {
+	text-align: center;
 	padding: 9px;
+	margin-bottom: 40px;
+	height: 400px;
+	font-style: normal;
+	color: white;
+	background-color: #1F2022;
+	background-image: url(/img/skyline.png);
+	background-repeat: no-repeat; 
+	background-position: bottom;
+}
+.introduction {
+	font-size: 60px;
+	font-weight: 700;
+	padding-top: 130px;
+}
+.introduction span {
+	font-weight: 100;
+}
+.introductionText {
+	padding-top: 35px;
+	font-size: 24px;
+	font-weight: 300;
 }
 #phones {
 

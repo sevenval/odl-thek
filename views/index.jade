@@ -5,8 +5,9 @@ block content
   #content
     #phones
       div.welcome
-        div Lieber User, 
-        div WIllkommen auf der OLDthek, Have fun
+        div.introduction Welcome to ODL
+          span THEK
+        div.introductionText Login with your GitHub account to rent a device
       h1 Smartphones
       ul.elements
         - each gadget in gadgets
@@ -18,4 +19,5 @@ block content
               div.name= gadget.name
               span.isolator
               div.os= gadget.os
+      div.clear
   
