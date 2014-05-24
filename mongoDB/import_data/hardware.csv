@@ -471,3 +471,22 @@ hwid,name,available,location,description,brand,model,os,type
 595,Samsung SM-G900F (Samsung Galaxy S5),t,cologne,Smartphone. \nWLAN-Unterstützung.\n\nIMEI: 352558066907370\n\nBlue-Box-Inhalt:\n- Phone\n- Deckel\n- Akku\n- Stromnetzadapter\n- Micro-USB-Kabel,Samsung,Galaxy S5,Android OS 4.42,mobile
 594,Sony XPERIA Z2 Tablet,t,cologne,Tablet. \nWLAN-Fähig.\n\nSN: 430101660002633\n\nBox-Inhalt:\n- Tablet\n- Micro-USB-Kabel\n- Stromnetzstecker [Adapter]\n- Karton/Verpackung,Sony,Xperia Tablet Z2,Android OS 4.42,tablet
 596,Tolino Shine,t,cologne,E-Book / Tablet\nWLAN-Unterstützung.\n\nInhalt:\n- Reader\n- Micro-USB-Kabel,Unspecified,Android,Android OS 2.34,mobile
+597,(22)SIM 6 AT A1 POSTPAID normal,t,berlin,MSISDN 00436641806982,A1,Sim,unspecified,sim
+598,(5)yoigo (1),t,cologne,Spanische Prepaid-SIM-Karte für Spanien. RufNr.: 0034622345168; PIN-Nr.: 3852; PUK-Nr.: 63337828,Yoigo,Sim,unspecified,sim
+599,(6)o2,t,cologne,PIN: 8809 Tel.-Nr.: 017624303396 Vertrag: Inernet-Pack-M O² Select (60/1) Reise-Option. Bitte nicht in einem Blackberry nutzen,O2,Sim,unspecified,sim
+600,(7)Base,t,cologne,PIN: 8809 Daten-SIM-Karte 0178-583 56 22 Vertrag: Mein BASE Web-Edition Internet Handy Flat. Bitte nicht in einem Blackberry nutzen,Base,Sim,unspecified,sim
+601,(4)Vodafone (2),t,cologne,PIN: 8809 Reine Daten-SIM. Keine ab- oder eingehende Anrufe möglich. Trotzdem ist eine Rufnummer zugewiesen: 0173 8689425 Vertrag: Mobile Connect Flat Light. Bitte nicht in einem Blackberry nutzen,Vodafone,Sim,unspecified,sim
+602,(1)T-D1,t,cologne,PIN: 8809 Tel.-Nr.: 016094615396  Vertrag: Business S mit Handy web'n'walk L KomfortPlus EVN  Option DayPass Europe M Ländergruppe 1                         Bitte nicht in einem Blackberry nutzen,Telekom,Sim,unspecified,sim
+603,(12)yoigo (3),t,cologne,Spanische Prepaid-SIM-Karte für Spanien. Rufnummer: 0034622839919. PIN-Nr.: 3941. PUK-Nr.: 17128232,Yoigo,Sim,unspecified,sim
+604,(3)Vodafone (1),t,cologne,PIN: 8809 Tel. Nr.: 01737050130 Vertrag: Business Classic 60/1 Mobile Connect Flat Option Email Connect L World Data. Kann in einem Blackberry genutzt werden (Keine Flat sondern nur Volumentarif. Also bitte mit bedacht).  (70 3085 5775250 3 G 0173),Vodafone,Sim,unspecified,sim
+605,(16)SIM 9 VDF DE POSTPAID micro,t,berlin,MSISDN +491727276800,Vodafone,MicroSim,unspecified,sim
+606,(28)SIM AT Orange micro,t,berlin,MSISDN +4369918166065,Orange,MicroSim,unspecified,sim
+607,(25)SIM 54 o2 POSTPAID normal,t,berlin,MSISDN +4917624857922,O2,Sim,unspecified,sim
+608,(31)Blau.de Nano SIM-Karte,f,cologne,Die Nano-SIM-Karte ist nur zum aktivieren eines iPhones vorgesehen und nicht zum Surven oder Telefonieren. PIN-Nr.: 2018. RufNr.: 015755361459,Blau,NanoSim,unspecified,sim
+609,(17)SIM 10 T-Mobile normal_micro,t,berlin,MSISDN +491752960722 Webnwalk Plus + webnwalk large + weltweit + standardplus evn,T-Mobile,MicroSim,unspecified,sim
+610,(23)SIM 75 T-Mobile POSTPAID micro,t,berlin,MSISDN +491704387520 Complete S (1. Generation) + Weltweit + Visual Voicemail iPhone + StandardPlus EVN,T-Mobile,MicroSim,unspecified,sim
+611,(24)SIM 36 T-Mobile POSTPAID nano,f,berlin,MSISDN +491713397473 Complete 120 mit Handy + Weltweit + Weekend inclusive + StandardPLUS EVN,T-Mobile,NanoSim,unspecified,sim
+612,(8)T-D1(2) microSIM,t,cologne,PIN: 8809 Micro SIM Karte. Kann auch als SIM-Karte benutzt werden wenn sie auf einem Adapter montiert wird. Adapter sind vorhanden und können nach bedarf auch ausgeliehen werden. Reine Datenkarte. ACHTUNG: Micro-SIM-Karte mit  Adapter nicht  in älteren Handys mit schmalen SIM-Karten-Fächer stecken weil man sie wenn überhaupt schwer wieder rausnehmen kann! RufNr.:0160 70 333 41. KartenNr: 688 009 43-5 Vertrag: Business S (1 GB flat danach Drosselung) web'n'walk L StandardPlus EVN. Bitte nicht in einem Blackberry nutzen. Datenverbrauch abrufbar unter http://pass.telekom.de,T-Mobile,MicroSim,unspecified,sim
+613,(19)SIM 42 VDF DE normal_micro,f,berlin,MSISDN +491621365559,Vodafone,MicroSim,unspecified,sim
+614,(14)SIM 6 E+ POSTPAID normal,t,berlin,MSIDN +491783125371,E+,Sim,unspecified,sim
+615,(21)SIM 5 AT 3Usim POSTPAID normal,t,berlin,MSISDN 00436605698848,3U,Sim,unspecified,sim
