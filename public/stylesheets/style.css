@@ -1,7 +1,8 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #D9F1E3;
- 
+  max-width: 960px;
+  margin: 0 20%;
 }
 
 a {
@@ -36,6 +37,36 @@ a {
 .logoImg {
 	width: 80%;
 }
+
+
+/* PHONES */
+#phones {
+
+}
+#phones h1 {
+
+}
+#phones h2 {
+
+}
+.elements {
+	padding: 0 10px;
+}
+.elements .element{
+	float: left;
+	width: 220px;
+	margin: 10px 22px;
+	border:1px solid white;
+	background-color: white;
+	text-align: center;
+	border-radius: 0 20px 0 0 ;
+}
+.element img {
+	max-width: 215px;
+	border-radius: 0 20px 0 0 ;
+}
+
+
 .claim {
 	font-family: Ubuntu, sans-serif;
 	font-size: 1.1em;
@@ -130,88 +161,6 @@ a {
 	padding: 2px 5px;   
 }
 
-/* PHONES */
-#phones {
-	padding: 0 3%;
-}
-#phones h1 {
-  margin: 0;
-  padding: 0;
-}
-/*.logoImg {
-	max-width: 100px;
-	display: block;
-	height: auto;
-  width: auto;
-  padding: 10% 0 0 10%;
-}*/
-/*.menu{
-	position: relative;
-  display: block;
-  top: 70%;
-  width: auto;
-  padding: 0;
-  margin: 0;
-}
-.menu li{
-	display: inline-block;
-	width: 100px;
-	padding: 0 0.5em;
-	font-size: 1.5em;
-}
-
-.sepertatorlineDevice {
-  width: 112px;
-  background-color: black;
-  height: 5px;
-  position: absolute;
-  left: 25%;
-}
-
-.username {
-	text-align: right;
-	position: absolute;
-	right: 10%;
-}
-.login {
-	text-align: right;
-	position: absolute;
-	right: 10%;
-	top: 40%;
-}
-.profile {
-	text-align: right;
-	position: absolute;
-	right: 2%;
-	top: 0;
-}
-.element {
-	width: auto;
-	background-color: yellow;
-	float: left;
-	margin: 1% 2%;
-	padding-left: 5px;
-	height: 300px;
-}
-.deviceImg {
-	display: block;
-	width: 100%;
-}
-.images {
-	padding: 5%;
-}*/
-/*
-#user {
-  text-align: right;
-  vertical-align: top;
-}
-.menu{
-	position: absolute;
-  height: 100%;
-  display: inline-block;
-  right: 4%;
-  width: auto;
-}*/
 
 
 .clear{clear: both;}

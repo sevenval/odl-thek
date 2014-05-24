@@ -1,11 +1,16 @@
 extends ../layout
 
 block content
-  h1= title
   #layer
-
-  ul
-  - each gadget in gadgets
-    li= gadget.name
-      span= " "
-      a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") buchen
+  
+  #phones
+    h1 Smartphones
+    h2= title 
+    div.elements
+      - each gadget in gadgets
+        div.element
+          img(src='/img/device.jpg')
+          div= gadget.name
+          span= " "
+          a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") buchen
+      div.clear    
