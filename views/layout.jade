@@ -17,8 +17,9 @@ html
               span THEK
         ul.menu 
           if(locals.user)
-            li
-              a(href="/users/list") users
+            if(user.role == 'admin')
+              li
+                a(href="/users/list") users
             li
               a(href="/gadgets/") gadgets
             li
