@@ -3,10 +3,10 @@ extends ../layout
 block content
   #layer
   #search
-    form(name='search', action='/search', method='post', id='formSearch') 
-      input(type='text', name='searchText', id='inputTextSearch', placeholder='        SEARCH' )
+    form(name='search', action='/gadgets/find/', method='get', id='formSearch') 
+      input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
       div.lupe 
-        img(src='/img/search.gif')
+        input(type="image",src='/img/search.gif')
       div.inputButtonSearch
         input(type='image', name='submit', id='inputButtonSearch', src='/img/filter.gif', height='50px')
   #phones

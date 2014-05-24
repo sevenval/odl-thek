@@ -30,6 +30,14 @@ router.get('/', helper.ensureAuthenticated,  function(req, res) {
   })
 });
 
+
+
+router.get('/find/', helper.ensureAuthenticated, function(req, res) {
+  gadgets.find({ "name" : {$regex : ".*"+req.query.q+".*", $options: 'i'}}).sort({brand:1}).toArray(function(_err,_result){
+    res.render('gadgets/list', { title: 'Gadgets: '+_result.length, gadgets : _result}); 
+  });
+});
+
 router.get('/:id', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
   gadgets.findById(req.params.id,function(_err,_gadget){
     bookings.find({gadget : _gadget._id.toString()}).toArray(function(_err,_bookings){
