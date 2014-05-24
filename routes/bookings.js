@@ -22,8 +22,6 @@ router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
       user : req.session.user._id
     }
     bookings.insert(booking,function(_err,_booking){
-
-    // res.render('bookings/new', { gadget : _gadget});
       res.render('bookings/ok',{ gadget : _gadget});
     })
   })

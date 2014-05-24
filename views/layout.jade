@@ -7,19 +7,32 @@ html
     script(src="/javascripts/script.js")
     link(rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=regular&subset=Latin,Cyrillic')
   body
-    .navi
-      if(locals.user)
-        a(href="/users/logout") logout
-        span= " "
-        a(href="/users/list") users
-        span= " "
-        a(href="/gadgets/") gadgets
-        span= " "
-        a(href="/bookings/") bookings
-      else
-        a(href="/users/auth/github") login
-        span= " "
-        a(href="/gadgets/top") TOP
-      span= " "
-      a(href="/imprint") Impressum
+    #head
+      div.head
+        div.logo 
+          img(src='/img/Logo_sevenval.gif', class='logoImg') 
+          div.claim 
+            span  
+              b ODL
+              span THEK
+        ul.menu 
+          if(locals.user)
+            li
+              a(href="/users/list") users
+            li
+              a(href="/gadgets/") gadgets
+            li
+              a(href="/bookings/") bookings
+        div#user
+          if(locals.user)
+            p.username= user.name
+            p.login 
+              a(href="/users/logout") logout
+            div.profile 
+              img(src='/img/uli.jpg', class='profilImg') 
+          else
+            p.login
+              a(href="/users/auth/github") login
+      div.separator
+        div#sep.sepertatorlineDevice 
     block content
