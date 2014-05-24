@@ -3,6 +3,7 @@ logs
 *.log
 .DS_Store
 
+github.json
 
 # Runtime data
 pids
