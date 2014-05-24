@@ -14,8 +14,12 @@ router.get('/', helper.ensureAuthenticated,  function(req, res) {
 				console.log(_booked_result);
 				for(i = 0;i < _result.length;i++) {
 					_result[i].booked = false;
+					_result[i].handout = false;
 					for(j = 0;j < _booked_result.length;j++) {
-						if(_result[i]._id == _booked_result[j].gadget){
+						if(_result[i]._id == _booked_result[j].gadget && _booked_result[j].status == "handout") {
+						    console.log(_result[i]._id);
+							_result[i].handout = true;
+						} else if(_result[i]._id == _booked_result[j].gadget){
 							console.log(_result[i]._id);
 							_result[i].booked = true;
 						}
@@ -25,21 +29,15 @@ router.get('/', helper.ensureAuthenticated,  function(req, res) {
 			res.render('gadgets/list', { title: 'Gadgets: '+_result.length, gadgets : _result});  
 		})
     } else {
-      // res.render('index', { title: 'No devices' });  
-      res.render('index', { title: 'Gadgets: '+_result.length, gadgets : _result });
+      res.render('index', { title: 'No devices' });  
     }
   })
 });
 
-router.get('/:id', helper.ensureAuthenticated, function(req, res) {
-  gadgets.findById(req.params.id,function(_err,_gadget){
-    bookings.find({gadget : _gadget._id.toString()}).toArray(function(_err,_bookings){
-      for(var i = 0 ; i < _bookings.length ; i++) {
-        _bookings[i].startdate = helper.prettyDate(_bookings[i].start);
-        _bookings[i].enddate = helper.prettyDate(_bookings[i].end);
-      }
-      res.render('gadgets/detail', { title: _gadget.name , gadget : _gadget, bookings : _bookings });  
-    })
+router.get('/:id', function(req, res) {
+  gadgets.find({ hwid : parseInt(req.params.id) }).toArray(function(_err,_result){
+    console.log(_result[0]);
+    res.render('detail', { title: 'Express', device : _result[0] });  
   })
 });
 
