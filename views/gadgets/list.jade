@@ -2,15 +2,26 @@ extends ../layout
 
 block content
   #layer
-  
+  #search
+    form(name='search', action='/search', method='post', id='formSearch') 
+      input(type='text', name='searchText', id='inputTextSearch', placeholder='        SEARCH' )
+      div.lupe 
+        img(src='/img/search.gif')
+      div.inputButtonSearch
+        input(type='image', name='submit', id='inputButtonSearch', src='/img/filter.gif', height='50px')
   #phones
     h1 Smartphones
-    h2= title 
-    div.elements
+    ul.elements
       - each gadget in gadgets
-        div.element
+        li.element
           img(src='/img/device.jpg')
-          div= gadget.name
-          span= " "
-          a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") buchen
+          div.traffic
+          a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
+            div.spec
+            div.brand= gadget.brand
+            div.name= gadget.name
+            span.isolator
+            div.os= gadget.os
+//- div.type= gadget.type
+//- span= " "
       div.clear    
