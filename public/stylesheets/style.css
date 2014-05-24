@@ -1,8 +1,211 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #D9F1E3;
+ 
 }
 
 a {
-  color: #00B7FF;
+  text-decoration: none;
+  font-family: Ubuntu, sans-serif;
+	font-size: 0.9em;
+	color: white;
 }
+#content {
+	width: 100%;
+	}
+#head {
+	height: 100px;
+	overflow: hidden;
+	background-color: #1CA055;
+	vertical-align: bottom;
+	position: relative;
+}
+.head {
+	padding: 20px 50px 0 50px;
+	height: 75px;
+}
+.logo {
+	display: block;
+	width: 20%;
+}
+.logoImg {
+	width: 80%;
+}
+.claim {
+	font-family: Ubuntu, sans-serif;
+	font-size: 1.1em;
+	color: white;
+}
+.menu {
+	position: relative;
+	top: -25px;
+	padding: 0 0 0 20%;
+	margin: 0;
+}
+.menu li{
+	display: inline-block;
+	width: 100px;
+	padding: 0 0.5em;
+	font-size: 1.5em;
+	text-align: center;
+}
+
+.separator {
+	height: 5px;
+	background-color: #1CA055;
+}
+.sepertatorlineDevice {
+	width: 60px;
+  background-color: #0E7A3C;
+  height: 5px;
+  position: absolute;
+  left: 24.5%;
+}
+.sepertatorlineDMost {
+	width: 60px;
+  background-color: #0E7A3C;
+  height: 5px;
+  position: absolute;
+  left: 33.5%;
+}
+.sepertatorlineBooking {
+	width: 100px;
+  background-color: #0E7A3C;
+  height: 5px;
+  position: absolute;
+  left: 41%;
+}
+#user {
+	position: relative;
+  top: -100px;
+  padding: 0 0 0 20%;
+  margin: 0;
+  height: 95px;
+  text-align: right;
+  font-family: Ubuntu, sans-serif;
+	font-size: 1em;
+	color: white;
+}
+.username {
+	padding: 0;
+	margin: 0;
+	position: relative;
+	right: 7%;
+	top: 20%;
+}
+.login {
+	position: relative;
+	right: 7%;
+	top: 13%;
+}
+.profile {
+	position: relative;
+	top: -40px;
+}
+.profilImg {
+	border-radius: 0 2px 0 0;
+}
+/* search */
+#search {
+	text-align: left;
+	padding: 2% 3%;
+}
+#inputTextSearch {
+  width: 90%;
+  line-height: 30px;
+  border: none;
+  background-image: url(../img/suche_btn.gif);
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 32px;
+  float: left;
+}
+#inputButtonSearch{
+	padding: 2px 5px;   
+}
+
+/* PHONES */
+#phones {
+	padding: 0 3%;
+}
+#phones h1 {
+  margin: 0;
+  padding: 0;
+}
+/*.logoImg {
+	max-width: 100px;
+	display: block;
+	height: auto;
+  width: auto;
+  padding: 10% 0 0 10%;
+}*/
+/*.menu{
+	position: relative;
+  display: block;
+  top: 70%;
+  width: auto;
+  padding: 0;
+  margin: 0;
+}
+.menu li{
+	display: inline-block;
+	width: 100px;
+	padding: 0 0.5em;
+	font-size: 1.5em;
+}
+
+.sepertatorlineDevice {
+  width: 112px;
+  background-color: black;
+  height: 5px;
+  position: absolute;
+  left: 25%;
+}
+
+.username {
+	text-align: right;
+	position: absolute;
+	right: 10%;
+}
+.login {
+	text-align: right;
+	position: absolute;
+	right: 10%;
+	top: 40%;
+}
+.profile {
+	text-align: right;
+	position: absolute;
+	right: 2%;
+	top: 0;
+}
+.element {
+	width: auto;
+	background-color: yellow;
+	float: left;
+	margin: 1% 2%;
+	padding-left: 5px;
+	height: 300px;
+}
+.deviceImg {
+	display: block;
+	width: 100%;
+}
+.images {
+	padding: 5%;
+}*/
+/*
+#user {
+  text-align: right;
+  vertical-align: top;
+}
+.menu{
+	position: absolute;
+  height: 100%;
+  display: inline-block;
+  right: 4%;
+  width: auto;
+}*/
+
+
+.clear{clear: both;}

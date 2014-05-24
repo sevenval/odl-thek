@@ -24,7 +24,10 @@ router.get('/', function(req, res) {
       });
     }
   });
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'ODL-thek' });
+});
+router.get('/detail', function(req, res) {
+res.render('detail', { title: 'Detail' });
 });
 
 module.exports = router;
