@@ -16,12 +16,15 @@ router.get('/:gid/new',helper.ensureAuthenticated, function(req,res){
 
 router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
    gadgets.findById(req.params.gid,function(_err,_gadget){
+    console.log(req.params);
     var booking = {
       gadget : req.params.gid,
       user : req.session.user._id
     }
     bookings.insert(booking,function(_err,_booking){
-      res.redirect('/bookings/');
+
+    // res.render('bookings/new', { gadget : _gadget});
+      res.render('bookings/ok',{ gadget : _gadget});
     })
   })
 })

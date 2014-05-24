@@ -2,8 +2,10 @@ extends ../layout
 
 block content
   h1= title
+  #layer
+
   ul
   - each gadget in gadgets
     li= gadget.name
       span= " "
-      a(href="/bookings/"+gadget._id+"/new") buchen
+      a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") buchen

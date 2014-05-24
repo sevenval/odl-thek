@@ -1,5 +1,6 @@
-form(method='post',action="/bookings/"+gadget._id+"/new")
+form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
   h1= gadget.name
+
   div
     h2 Start
     input(type='date',name='startdate')
@@ -8,4 +9,6 @@ form(method='post',action="/bookings/"+gadget._id+"/new")
     input(type='date',name='enddate')
     input(type='time',name='endtime')
   br
-  input(type='submit')
+  div(onclick="bookNow(); return false;") Buchen
+  div
+    div(style="text-align: right;",onclick="$('#book').hide();") schließen

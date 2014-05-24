@@ -6,3 +6,7 @@ body {
 a {
   color: #00B7FF;
 }
+
+#layer {
+  display: none;
+}
