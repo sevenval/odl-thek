@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  h1= user.name
+  h2= user.displayname
+  p
+    form(action="/users/"+user._id+"/setrole",method="post")
+      select(name='role')
+        if(user.role == 'admin')
+          option(selected) admin
+        else
+          option admin
+        if(user.role == 'user')
+          option(selected) user
+        else
+          option user
+      br
+
+      if(user.active)
+        input(type='checkbox',name="active",checked="checked") 
+      else 
+        input(type='checkbox',name="active") 
+      span Aktiv
+      br
+      input(type="submit")
+  p
+    a(href='/users/remove/'+user._id) löschen

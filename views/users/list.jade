@@ -2,7 +2,14 @@ extends ../layout
 
 block content
   h1= title
-  ul
-  - each user in users
-    li= user.name
-      a(href='/users/remove/'+user._id) löschen
+  table(style="width: 100%")
+    - each user in users
+      tr
+        td
+          a(href='/users/'+user._id)= user.name
+        td
+          span= user.displayname 
+        td
+          span= user.role
+        td
+          a(href='/users/remove/'+user._id) (löschen)

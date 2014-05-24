@@ -56,18 +56,17 @@ passport.use(new GitHubStrategy({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.disable('view cache');
+app.disable('etag');
+
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-
-
-
 app.use(session({ secret: 'odl-theklafksjd flaksjdflkajsdlkfjalksdjf', name : 'sid' }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -89,11 +88,6 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-app.use(function(req, res, next){
-  res.locals.user = req.user;
-  res.locals.authenticated = ! req.user.anonymous;
-  next();
-});
 
 /// error handlers
 

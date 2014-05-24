@@ -21,6 +21,38 @@ router.get('/list', helper.ensureAuthenticated, function(req, res) {
   })
 });
 
+
+
+router.post('/:id/setrole', helper.ensureAuthenticated, function(req, res) {
+  users.findById(req.params.id,function(_err,_user){
+    console.log(req.body);
+    if(req.body.role) {
+      _user.role = req.body.role;
+      if(req.body.active) {
+        _user.active = true;
+      }
+      users.save(_user,function(_err,_newuser){
+        console.log(_err,_newuser);
+        res.redirect('/users/'+_user._id);
+      })
+    }
+  })
+});
+
+
+router.get('/logout', function(req, res){
+  req.logout();
+  req.session.destroy();
+  res.redirect('/');
+});
+
+
+router.get('/:id', helper.ensureAuthenticated, function(req, res) {
+  users.findById(req.params.id,function(_err,_user){
+      res.render('users/detail',{ title : 'userdetail', user : _user});  
+  })
+});
+
 router.get('/remove/:id', helper.ensureAuthenticated, function(req, res) {
   console.log('ID',req.params.id);
   users.findById(req.params.id,function(_err,_user){
@@ -42,22 +74,32 @@ router.get('/auth/github/callback',
   function(req, res) {
     if(req.session&&req.session.passport&&req.session.passport.user) {
       var suser = req.session.passport.user;
-      users.findOne({displayname : suser.username, role :'user' },function(_err,_user){
-
-        console.log(_user);
+      users.findOne({displayname : suser.username, type :'github' },function(_err,_user){
         if(_user == null) {
           console.log('suser',suser._json);
           var user = {
             displayname : suser.username,
             name : suser._json.name,
-            auth : true,
+            active : true,
             email : suser._json.email,
             type : 'github',
             role : 'user'
           }
           users.insert(user,function(_err,_newuser){
             req.session.user = _newuser;
-            res.redirect('/gadgets/');    
+            /* check if this is the first user */
+            users.find({}).toArray(function(_err,_result){
+              if(_result.length==1) {
+                _result[0].role = 'admin';
+
+                users.save(_result[0],function(_err,_myuser){
+                  req.session.user = _myuser;
+                   res.redirect('/gadgets/');        
+                })
+              } else {
+                 res.redirect('/gadgets/');     
+              }
+            })
           })
         } else {
           req.session.user = _user;
@@ -67,13 +109,6 @@ router.get('/auth/github/callback',
       })
     }
   });
-
-router.get('/logout', function(req, res){
-  req.logout();
-
-  req.session.user = null;
-  res.redirect('/');
-});
 
 
 
