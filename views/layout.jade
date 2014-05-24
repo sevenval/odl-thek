@@ -5,7 +5,7 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="/javascripts/script.js")
-    link(rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=regular&subset=Latin,Cyrillic')
+    link(href='http://fonts.googleapis.com/css?family=Ubuntu:400,700,300italic' rel='stylesheet' type='text/css')
   body
     #head
       div.head
@@ -33,6 +33,6 @@ html
           else
             p.login
               a(href="/users/auth/github") login
-      div.separator
-        div#sep.sepertatorlineDevice 
+      //- div.separator
+      //-   div#sep.sepertatorlineDevice 
     block content

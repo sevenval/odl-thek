@@ -1,7 +1,11 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+  font-family: 'Ubuntu', sans-serif;
+  font-style: normal;
   background-color: #D9F1E3;
- 
+  max-width: 960px;
+  margin: 0 auto;
+  border:1px solid #ddd;
 }
 
 a {
@@ -10,8 +14,6 @@ a {
 	font-size: 0.9em;
   color: #1CA055;
 }
-
-
 #layer {
   display: none;
 }
@@ -38,6 +40,87 @@ a {
 }
 .logoImg {
 	width: 80%;
+}
+
+
+/* PHONES */
+#phones {
+
+}
+#phones h1 {
+  color: #405060;
+  font-size: 16px;
+	font-weight: 600;
+	font-style: normal;
+	margin: 9px;
+	padding: 0;
+}
+#phones h2 {
+
+}
+.elements {
+	/*padding: 0 10px;*/
+}
+ul {padding:0; margin: 0;}
+.elements .element{
+	float: left;
+	width: 220px;
+	margin: 9px 9px;
+	border:1px solid white;
+	background-color: white;
+	text-align: center;
+	border-radius: 0 10px 0 0 ;
+	height: 320px;
+	list-style: none;
+}
+.element img {
+	max-width: 215px;
+	border-radius: 0 20px 0 0 ;
+	height: 220px;
+}
+.traffic{
+	background-color: green;
+	height: 5px;
+}
+.spec {
+	text-align: left;
+	
+	
+}
+.click{
+	font-weight: normal;
+	background-color: #405060;
+	height: 95px; 
+	display: block;
+	height: 95px;
+  text-align: left;
+  padding: 0 10px; 
+	font-size: 12px;
+}
+.brand {
+	padding: 10px 0 5px 0;
+	font-size: 12px;
+	font-weight: 400;
+	font-style: normal;
+	color: white;
+}
+.isolator {
+	border: 1px solid #ddd;
+	display: block;
+	margin-bottom: 5px;
+}
+.name {
+	color: white;
+	font-size: 16px;
+	font-weight: 600;
+	font-style: normal;
+	height: 41px;
+}
+.os {
+	font-size: 11px;
+	color: white;
+	font-weight: 300;
+	font-style: italic;
 }
 .claim {
 	font-family: Ubuntu, sans-serif;
@@ -117,104 +200,35 @@ a {
 /* search */
 #search {
 	text-align: left;
-	padding: 2% 3%;
+	padding: 9px;
 }
 #inputTextSearch {
-  width: 90%;
-  line-height: 30px;
+  width: 87%;
+  line-height: 50px;
   border: none;
-  background-image: url(../img/suche_btn.gif);
-  background-repeat: no-repeat;
-  background-position: right;
-  background-size: 32px;
+  background-color: white;
   float: left;
+  padding-right: 10px;
+}
+.lupe {
+	margin-top: 2px;
+  background-color: #1CA055;
+  float: left;
+  width: 50px;
+  border-radius: 0 10px 0 0 ;
+  margin-right: 10px;
 }
 #inputButtonSearch{
-	padding: 2px 5px;   
+	margin-top: 2px;
+	padding-bottom: 2px;
+	background-color: #1CA055;  
+	border-radius: 0 10px 0 0 ;
 }
 
-/* PHONES */
-#phones {
-	padding: 0 3%;
-}
-#phones h1 {
-  margin: 0;
-  padding: 0;
-}
-/*.logoImg {
-	max-width: 100px;
-	display: block;
-	height: auto;
-  width: auto;
-  padding: 10% 0 0 10%;
-}*/
-/*.menu{
-	position: relative;
-  display: block;
-  top: 70%;
-  width: auto;
-  padding: 0;
-  margin: 0;
-}
-.menu li{
-	display: inline-block;
-	width: 100px;
-	padding: 0 0.5em;
-	font-size: 1.5em;
+.inputButtonSearch{
+
 }
 
-.sepertatorlineDevice {
-  width: 112px;
-  background-color: black;
-  height: 5px;
-  position: absolute;
-  left: 25%;
-}
-
-.username {
-	text-align: right;
-	position: absolute;
-	right: 10%;
-}
-.login {
-	text-align: right;
-	position: absolute;
-	right: 10%;
-	top: 40%;
-}
-.profile {
-	text-align: right;
-	position: absolute;
-	right: 2%;
-	top: 0;
-}
-.element {
-	width: auto;
-	background-color: yellow;
-	float: left;
-	margin: 1% 2%;
-	padding-left: 5px;
-	height: 300px;
-}
-.deviceImg {
-	display: block;
-	width: 100%;
-}
-.images {
-	padding: 5%;
-}*/
-/*
-#user {
-  text-align: right;
-  vertical-align: top;
-}
-.menu{
-	position: absolute;
-  height: 100%;
-  display: inline-block;
-  right: 4%;
-  width: auto;
-}*/
 
 
 .clear{clear: both;}
