@@ -54,54 +54,24 @@ router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
       var start = new Date(start);
       var end = new Date(end);
 
-
-      var find = {
-        gadget : _gadget._id.toString()
-      }
-      find.start = {$lt: end};
-      find.end = {$gte: end};
-
-      console.log('find',find);
-      bookings.find(find).toArray( function(_err,_bookings1){
-        console.log('1',_bookings1);
-        if(_bookings1.length > 0) {
-          res.render('bookings/new', { gadget : _gadget, error : 'Gerät ist bereits gebucht. (1)' })
-        } else {
-
-          find.start = {$lte: start};
-          find.end = {$gt: start};
-          bookings.find(find).toArray( function(_err,_bookings2){
-            console.log('2',_bookings2);
-            if(_bookings2.length > 0) {
-              res.render('bookings/new', { gadget : _gadget, error : 'Gerät ist bereits gebucht. (2)' })
-            } else {
-              find.start = {$gte: start}
-              find.end = {$lte: end}
-              bookings.find(find).toArray( function(_err,_bookings3){
-                console.log('3',_bookings3);
-                if(_bookings3.length > 0) {
-                  res.render('bookings/new', { gadget : _gadget, error : 'Gerät ist bereits gebucht. (3)' })
-                } else {
-            
-                  /* ist frei, also buchen */
-                  var booking = {
-                    gadget : req.params.gid,
-                    gadgetname : _gadget.name,
-                    user : req.session.user._id,
-                    username : req.session.user.displayname,
-                    start : start,
-                    end : end
-                  }
-                  bookings.insert(booking,function(_err,_booking){
-                    res.render('bookings/ok',{ gadget : _gadget});
-                  }) 
-                }
-               });
-            
-              }
-            });
+      helper.checkGadgetBooking(_gadget._id,start,end,function(_result,_info){
+        if(_result) {
+          /* ist frei, also buchen */
+          var booking = {
+            gadget : req.params.gid,
+            gadgetname : _gadget.name,
+            user : req.session.user._id,
+            username : req.session.user.displayname,
+            start : start,
+            end : end
           }
-        });
+          bookings.insert(booking,function(_err,_booking){
+            res.render('bookings/ok',{ gadget : _gadget});
+          }) 
+        } else {
+          res.render('bookings/new', { gadget : _gadget, error : 'Datum belegt.'+_info })
+        }
+      })
 
  
     }
