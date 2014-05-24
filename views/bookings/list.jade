@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+  #layer
   table(style="width:100%")
     - each booking in bookings
       tr
@@ -13,6 +14,6 @@ block content
           if(booking.end)
             span= booking.enddate
         td
-          a(href="/bookings/"+booking._id) edit
+          a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')") edit
         td
           a(href="/bookings/remove/"+booking._id) cancel

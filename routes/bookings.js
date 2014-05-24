@@ -7,11 +7,11 @@ var router = express.Router();
 
 
 /* all bookings */
-router.get('/', helper.ensureAuthenticated,  function(req, res) {
+router.get('/',   function(req, res) {
   var find = {};
-  if(req.session.user.role != 'admin'){ 
-     find.user = req.session.user._id;
-  }
+  // if(req.session.user.role != 'admin'){  helper.ensureAuthenticated,
+  //    find.user = req.session.user._id;
+  // }
 
   bookings.find(find).toArray(function(_err,_result){
     if(_result&&_result!=undefined&&_result.length) {
@@ -27,13 +27,39 @@ router.get('/', helper.ensureAuthenticated,  function(req, res) {
   })
 });
 
-/* shows a form to insert a new booking */
-router.get('/:gid/new',helper.ensureAuthenticated, function(req,res){
-  gadgets.findById(req.params.gid,function(_err,_gadget){
-    res.render('bookings/new', { gadget : _gadget, now : helper.now()});
+
+router.get('/:id', function(req, res) {
+  bookings.findById(req.params.id,function(_err,_booking){
+    console.log(_booking);
+    gadgets.findById(_booking.gadget,function(_err,_gadget){
+      console.log(_gadget);
+
+    _gadget.description = _gadget.description.replace(/\\n/g,'<br/>')
+      res.render('bookings/detail', { title: 'Express', booking : _booking, gadget : _gadget }); 
+    })
   })
 });
 
+
+/* shows a form to edit an existing booking  helper.ensureAuthenticated,*/
+router.get('/:gid/edit', function(req,res){
+  bookings.findById(req.params.gid,function(_err,_booking){
+
+
+    res.render('bookings/edit', { booking : _booking, stime : helper.getTime(_booking.start), etime : helper.getTime(_booking.end), sdate : helper.getDate(_booking.start), edate : helper.getDate(_booking.end)});
+  })
+});
+
+
+
+/* shows a form to insert a new booking */
+router.get('/:gid/new',helper.ensureAuthenticated, function(req,res){
+  gadgets.findById(req.params.gid,function(_err,_gadget){
+    res.render('bookings/new', { gadget : _gadget, stime : helper.now(), etime : helper.now()});
+  })
+});
+
+/* insert new booking */
 router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
    gadgets.findById(req.params.gid,function(_err,_gadget){
     console.log(req.body);
@@ -54,11 +80,12 @@ router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
       var start = new Date(start);
       var end = new Date(end);
 	  
-	  if( start > end ){
-		tmp_start = start;
-		start = end;
-		end = tmp_start;
-	  }
+      /* if start is to big, reverse them both */
+  	  if( start > end ){
+    		tmp_start = start;
+    		start = end;
+    		end = tmp_start;
+  	  }
 
       helper.checkGadgetBooking(_gadget._id,start,end,function(_result,_info){
         if(_result) {
@@ -86,12 +113,6 @@ router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
 })
 
 
-router.get('/:id', function(req, res) {
-  bookings.findById(req.params.id,function(_err,_booking){
-    console.log(_booking);
-    res.render('bookings/detail', { title: 'Express', booking : _booking });  
-  })
-});
 
 
 router.get('/remove/:id', helper.ensureAuthenticated, function(req, res) {

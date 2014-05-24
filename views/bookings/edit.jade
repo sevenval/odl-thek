@@ -1,5 +1,5 @@
-form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
-  h1= gadget.name
+form(method='post',action="/bookings/"+booking._id+"/edit",id="book")
+  h1= booking.gadgetname
   if(locals.error)
     div(style="background-color: #f00;")= error
   div
@@ -10,6 +10,6 @@ form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
     input(type='date',name='enddate',value=locals.sdate)
     input(type='time',name='endtime',value=locals.etime)
   br
-  div(onclick="bookNow(); return false;") book
+  div(onclick="bookNow(); return false;") update
   div
     div(style="text-align: right;",onclick="$('#book').hide();") schließen

@@ -35,9 +35,15 @@ var ensureAdmin = function (req, res, next) {
 }
 
 var prettyDate = function(_date) {
-  console.log(_date);
-  // return _date.toGMTString();
-  return _date.getFullYear()+'-'+fillZero(_date.getMonth()+1,2)+'-'+fillZero(_date.getDate(),2)+' '+fillZero(_date.getHours(),2)+':'+fillZero(_date.getMinutes(),2)
+  return getDate(_date)+' '+getTime(_date);
+}
+
+var getDate = function(_date) {
+  return _date.getFullYear()+'-'+fillZero(_date.getMonth()+1,2)+'-'+fillZero(_date.getDate(),2);
+}
+
+var getTime = function(_date) {
+  return fillZero(_date.getHours(),2)+':'+fillZero(_date.getMinutes(),2);
 }
 
 var fillZero = function(_int,_num) {
@@ -97,6 +103,8 @@ var helper = {
   ensureAdmin : ensureAdmin,
   prettyDate : prettyDate,
   now : now,
+  getTime : getTime,
+  getDate : getDate,
   checkGadgetBooking : checkGadgetBooking
 }
 
