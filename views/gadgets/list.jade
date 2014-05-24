@@ -15,9 +15,13 @@ block content
       - each gadget in gadgets
         li.element
           img(src='/img/device.jpg')
-          div.traffic
+          if(gadget.booked)
+            div.traffic_reserved
+          else
+            div.traffic
           a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
             div.spec
+            
             div.brand= gadget.brand
             div.name= gadget.name
             span.isolator
