@@ -92,7 +92,7 @@ router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
           /* ist frei, also buchen */
           var booking = {
             gadget : req.params.gid,
-            gadgetname : _gadget.name+'('+_gadget._id+')',
+            gadgetname : _gadget.name+'('+_gadget.hwid+')',
             user : req.session.user._id,
             username : req.session.user.displayname,
             start : start,
