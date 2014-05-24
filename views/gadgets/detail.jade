@@ -1,7 +1,10 @@
 extends ../layout
 
 block content
-  p= gadget.name
+  h1= gadget.name
+  a(href="/gadgets/"+gadget._id+"/edit") edit gadget
+  br
+  br
   #layer
   table(style="width:100%")
     - each booking in bookings

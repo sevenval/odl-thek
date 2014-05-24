@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
+var multer  = require('multer')
+
 
 var helper = require('./helper.js');
 
@@ -67,6 +69,10 @@ app.use(cookieParser());
 app.use(session({ secret: 'odl-theklafksjd flaksjdflkajsdlkfjalksdjf', name : 'sid' }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(multer({ dest: './public/uploads/',
+  rename: function (fieldname, filename) {
+    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+  }}))
 
 app.use(express.static(path.join(__dirname, 'public')));
 

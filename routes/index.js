@@ -18,11 +18,4 @@ router.get('/',  function(req, res) {
   })
 });
 
-// router.get('/:id', function(req, res) {
-//   gadgets.find({ hwid : parseInt(req.params.id) }).toArray(function(_err,_result){
-//     console.log(_result[0]);
-//     res.render('detail', { title: 'Express', device : _result[0] });  
-//   })
-// });
-
 module.exports = router;
