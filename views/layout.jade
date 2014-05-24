@@ -5,7 +5,10 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .navi
-      a(href="/users/auth/github") login
+      if(locals.user)
+        a(href="/users/logout") logout
+      else
+        a(href="/users/auth/github") login
       span= " "
       a(href="/users/list") users
       span= " "

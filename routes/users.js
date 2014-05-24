@@ -61,6 +61,7 @@ router.get('/auth/github/callback',
           })
         } else {
           req.session.user = _user;
+
           res.redirect('/users/');
         }
       })
@@ -69,6 +70,8 @@ router.get('/auth/github/callback',
 
 router.get('/logout', function(req, res){
   req.logout();
+
+  req.session.user = null;
   res.redirect('/');
 });
 
