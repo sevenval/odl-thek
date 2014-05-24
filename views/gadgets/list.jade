@@ -16,7 +16,9 @@ block content
         li.element
           a(href="/gadgets/"+gadget._id) 
             img(src='/img/device.jpg')
-          if(gadget.booked)
+          if(gadget.handout)
+            div.traffic_handout
+          else if(gadget.booked)
             div.traffic_reserved
           else
             div.traffic
