@@ -83,16 +83,15 @@ router.get('/auth/github/callback',
             type : 'github',
             role : 'user'
           }
-          users.insert(user,function(_err,_newuser){
-            console.log(_newuser);
-            req.session.user = user;
+          users.insert(user,function(_err,_newuser,_zwei){
+            req.session.user = _newuser[0];
             /* check if this is the first user */
             users.find({}).toArray(function(_err,_result){
               if(_result.length==1) {
                 _result[0].role = 'admin';
 
                 users.save(_result[0],function(_err,_myuser){
-                  req.session.user = _myuser;
+                  req.session.user = _result[0];
                    res.redirect('/gadgets/');        
                 })
               } else {
