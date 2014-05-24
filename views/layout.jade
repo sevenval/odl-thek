@@ -25,11 +25,10 @@ html
               a(href="/bookings/") bookings
         div#user
           if(locals.user)
+            div(style="float: left;")
             p.username= user.name
             p.login 
               a(href="/users/logout") logout
-            div.profile 
-              img(src='/img/uli.jpg', class='profilImg') 
           else
             p.login
               a(href="/users/auth/github") login

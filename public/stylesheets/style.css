@@ -81,8 +81,9 @@ a {
   left: 41%;
 }
 #user {
-	position: relative;
-  top: -100px;
+	position: absolute;
+  top: 0;
+  right:0;
   padding: 0 0 0 20%;
   margin: 0;
   height: 95px;
