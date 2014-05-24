@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  p= gadget.name
+  #layer
+  table(style="width:100%")
+    - each booking in bookings
+      tr
+        td= booking.username
+        td= booking.gadgetname
+        td
+          if(booking.start)
+            span= booking.startdate
+        td
+          if(booking.end)
+            span= booking.enddate
+        td
+          a(href="/bookings/remove/"+booking._id) cancel
+
+
