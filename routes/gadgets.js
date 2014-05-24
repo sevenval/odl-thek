@@ -30,10 +30,35 @@ router.get('/', helper.ensureAuthenticated,  function(req, res) {
   })
 });
 
-router.get('/:id', function(req, res) {
-  gadgets.find({ hwid : parseInt(req.params.id) }).toArray(function(_err,_result){
-    console.log(_result[0]);
-    res.render('detail', { title: 'Express', device : _result[0] });  
+router.get('/:id', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
+  gadgets.findById(req.params.id,function(_err,_gadget){
+    bookings.find({gadget : _gadget._id.toString()}).toArray(function(_err,_bookings){
+      for(var i = 0 ; i < _bookings.length ; i++) {
+        _bookings[i].startdate = helper.prettyDate(_bookings[i].start);
+        _bookings[i].enddate = helper.prettyDate(_bookings[i].end);
+      }
+      res.render('gadgets/detail', { title: _gadget.name , gadget : _gadget, bookings : _bookings });  
+    })
+  })
+});
+
+
+router.get('/:id/edit', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
+  gadgets.findById(req.params.id,function(_err,_gadget){
+    res.render('gadgets/edit', { title: _gadget.name , gadget : _gadget});  
+  })
+});
+
+
+
+router.post('/:id/edit', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
+  gadgets.findById(req.params.id,function(_err,_gadget){
+    for(var key in req.body) {
+      _gadget[key] = req.body[key];
+    }
+    gadgets.save(_gadget,function(_err,_result){
+       res.redirect('/gadgets/'+_gadget._id+'/edit');
+    }) 
   })
 });
 

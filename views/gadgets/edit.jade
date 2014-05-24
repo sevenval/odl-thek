@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  h1= gadget.name
+  form(action="/gadgets/"+gadget._id+"/edit",method="post")
+    each value,key in gadget
+      if(key!="_id"&&key!="description")
+        span= key
+        br
+        input(type="text",name=key,value=value)
+        br
+      if(key=='description')
+        span description
+        br
+        textarea(name=key,rows="4")= value
+        br
+    input(type="submit")
+
+
+
+
