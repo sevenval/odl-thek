@@ -1,68 +1,21 @@
 extends layout
 
 block content
-
-    //- //- .clear
-    div.separator
-      div#sep.sepertatorlineDevice 
+  
   #content
-    #search
-     form(name='search', action='/search', method='post', id='formSearch') 
-       input(type='text', name='searchText', id='inputTextSearch', placeholder='        SEARCH' )
-       div.inputButtonSearch
-         input(type='image', name='submit', id='inputButtonSearch', src='/img/filter_btn.gif', height='33px')
     #phones
+      div.welcome
+        div Lieber User, 
+        div WIllkommen auf der OLDthek, Have fun
       h1 Smartphones
-      div.elements
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-        div.element 
-          div.images
-            img(src='/img/samsung.jpg', class='deviceImg')
-            span signal
-            span hersteller
-            span devicename
-            span os
-          
-
-      
+      ul.elements
+        - each gadget in gadgets
+          li.element
+            img(src='/img/device.jpg')
+            div.traffic
+            div.click
+              div.brand= gadget.brand
+              div.name= gadget.name
+              span.isolator
+              div.os= gadget.os
+  
