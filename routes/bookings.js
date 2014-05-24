@@ -7,11 +7,11 @@ var router = express.Router();
 
 
 /* all bookings */
-router.get('/',   function(req, res) {
+router.get('/',helper.ensureAuthenticated, function(req, res) {
   var find = {};
-  // if(req.session.user.role != 'admin'){  helper.ensureAuthenticated,
-  //    find.user = req.session.user._id;
-  // }
+  if(req.session.user.role != 'admin'){
+     find.user = req.session.user._id;
+  }
 
   bookings.find(find).toArray(function(_err,_result){
     if(_result&&_result!=undefined&&_result.length) {
@@ -22,13 +22,13 @@ router.get('/',   function(req, res) {
       }
       res.render('bookings/list', { title: 'Bookings: '+_result.length, bookings : _result });  
     } else {
-      res.render('index', { title: 'No Bookings' });  
+      res.render('bookings/list', { title: 'No Bookings' });  
     }
   })
 });
 
 
-router.get('/:id', function(req, res) {
+router.get('/:id',helper.ensureAuthenticated, function(req, res) {
   bookings.findById(req.params.id,function(_err,_booking){
     console.log(_booking);
     gadgets.findById(_booking.gadget,function(_err,_gadget){
@@ -41,8 +41,48 @@ router.get('/:id', function(req, res) {
 });
 
 
+/* just set the status to handout */
+router.get('/:gid/handout', helper.ensureAuthenticated, function(req,res){
+  bookings.findById(req.params.gid,function(_err,_booking){
+    var now = new Date();
+    _booking.status = 'handout';
+    _booking.handoutdate = now;
+    if(_booking.start < _booking.handoutdate) {
+      _booking.start = now;
+    }
+    _booking.handoutuser = req.session.user._id;
+    console.log(_booking);
+    bookings.save(_booking,function(_err,_booking){
+      console.log(_booking);
+      res.redirect('/bookings/');
+    })
+  })
+});
+
+
+/* just set the status to takeout */
+router.get('/:gid/takeback', helper.ensureAuthenticated, function(req,res){
+  bookings.findById(req.params.gid,function(_err,_booking){
+    var now = new Date();
+    _booking.status = 'closed';
+    _booking.closedate = now;
+    if(_booking.end > _booking.closedate) {
+      _booking.end = now;
+    }
+    _booking.closeuser = req.session.user._id;
+    console.log(_booking);
+
+    bookings.save(_booking,function(_err,_booking){
+      console.log(_booking);
+      res.redirect('/bookings/');
+    })
+  })
+});
+
+
+
 /* shows a form to edit an existing booking  helper.ensureAuthenticated,*/
-router.get('/:gid/edit', function(req,res){
+router.get('/:gid/edit',helper.ensureAuthenticated, function(req,res){
   bookings.findById(req.params.gid,function(_err,_booking){
 
 
