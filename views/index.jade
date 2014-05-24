@@ -1,5 +1,87 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  #head
+    div.head
+      div.logo 
+        img(src='/img/Logo_sevenval.gif', class='logoImg') 
+        div.claim 
+          span  
+            b ODL
+            span THEK
+      ul.menu 
+        li 
+          a(href='#devices') Geräte
+        li 
+          a(href='#booking', onclick='changeCategory(); return false') Beliebt
+        li 
+          a(href='#booking', onclick='changeCategory(); return false') Buchungen
+      div#user
+        p.username Ulrich Schmidt
+        p.login Logout
+        div.profile 
+          img(src='/img/uli.jpg', class='profilImg') 
+    //- //- .clear
+    div.separator
+      div#sep.sepertatorlineDevice 
+  #content
+    #search
+     form(name='search', action='/search', method='post', id='formSearch') 
+       input(type='text', name='searchText', id='inputTextSearch', placeholder='        SEARCH' )
+       div.inputButtonSearch
+         input(type='image', name='submit', id='inputButtonSearch', src='/img/filter_btn.gif', height='33px')
+    #phones
+      h1 Smartphones
+      div.elements
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+        div.element 
+          div.images
+            img(src='/img/samsung.jpg', class='deviceImg')
+            span signal
+            span hersteller
+            span devicename
+            span os
+          
+
+      
