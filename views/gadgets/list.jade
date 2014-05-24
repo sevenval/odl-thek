@@ -32,7 +32,9 @@ block content
           .cont
             a(href="/gadgets/"+gadget._id) 
               img(src='/img/device.jpg')
-            if(gadget.booked)
+            if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
+              div.traffic_handout
+            else if(gadget.bookings&&gadget.bookings.current)
               div.traffic_reserved
             else
               div.traffic
