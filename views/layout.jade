@@ -26,14 +26,14 @@ html
               a(href="/bookings/") bookings
         #user
           if(locals.user)
-            div(style="position: absolute; top: 0; right: 100px;")
+            div(style="position: absolute; top: 25px; right: 100px;")
               span.username= user.displayname
               br
               span.login 
                 a(href="/users/logout") logout
-            div(style="position: relative; top: 0; right: 0; height:90px; width:100px;background-color: #0f0;")
+            div(style="position: relative; top: 25px; right: 25px; height:50px; width:50px;background-color: #ccc; border-radius: 0 10px 0 0; overflow:hidden;")
               if(user.avatarurl)
-                img(src=user.avatarurl, style="width:100px; border-radius: 0 10px 0 0;")
+                img(src=user.avatarurl, style="width:50px; ")
           else
             p.login
               a(href="/users/auth/github") login
