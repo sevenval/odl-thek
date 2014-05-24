@@ -6,21 +6,17 @@ var bookings = helper.db.collection('bookings');
 var router = express.Router();
 
 router.get('/', helper.ensureAuthenticated,  function(req, res) {
-  console.log(new Date());
   gadgets.find({ type :  "mobile" }).sort({brand:1}).toArray(function(_err,_result){
     if(_result&&_result!=undefined&&_result.length) {	  
 		bookings.find({ start: {$lte: new Date()}, end: {$gte: new Date()} }).toArray(function(_err,_booked_result){
 			if(_booked_result&&_booked_result!=undefined&&_booked_result.length) {
-				console.log(_booked_result);
 				for(i = 0;i < _result.length;i++) {
 					_result[i].booked = false;
 					_result[i].handout = false;
 					for(j = 0;j < _booked_result.length;j++) {
 						if(_result[i]._id == _booked_result[j].gadget && _booked_result[j].status == "handout") {
-						    console.log(_result[i]._id);
 							_result[i].handout = true;
 						} else if(_result[i]._id == _booked_result[j].gadget){
-							console.log(_result[i]._id);
 							_result[i].booked = true;
 						}
 					}
