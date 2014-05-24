@@ -14,6 +14,22 @@ block content
     ul.elements
       - each gadget in gadgets
         li.element
+          div.hide
+            div.overlay
+            div.traffic_overlay 
+            div.click
+              div.brand brand
+              div.name name
+              div.isolator
+              div.os os
+            div.lastBook ich war es nicht
+              br
+              span.user Max Mustermann
+            div.buttons
+              div.detail
+                a(href="/detail/") Details
+              div.booking
+                a(href="/detail/") Buchen
           a(href="/gadgets/"+gadget._id) 
             img(src='/img/device.jpg')
           if(gadget.booked)
@@ -27,6 +43,4 @@ block content
             div.name= gadget.name
             span.isolator
             div.os= gadget.os
-//- div.type= gadget.type
-//- span= " "
-      div.clear    
+    div.clear    

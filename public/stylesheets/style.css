@@ -5,7 +5,6 @@ body {
   background-color: #D9F1E3;
   max-width: 960px;
   margin: 0 auto;
-  
 }
 
 a {
@@ -107,13 +106,30 @@ ul {padding:0; margin: 0;}
 	height: 320px;
 	list-style: none;
 }
+.overlay {
+	border-radius: 0 10px 0 0 ;
+	display: block;
+	height: 320px;
+	width: 220px;
+	background-color: #405060;
+	text-align: center;
+}
+.hide {
+	display: none;
+}
 .element img {
 	max-width: 215px;
 	border-radius: 0 20px 0 0 ;
 	height: 220px;
 }
+.traffic_overlay {
+	background-color: #1CA055;
+	height: 15px;
+	display: block;
+	border-radius: 0 10px 0 0 ;
+}
 .traffic{
-	background-color: green;
+	background-color: #1CA055;
 	height: 5px;
 }
 .traffic_reserved{
@@ -141,6 +157,7 @@ ul {padding:0; margin: 0;}
 	font-weight: 400;
 	font-style: normal;
 	color: white;
+	display: block;
 }
 .isolator {
 	border: 1px solid #ddd;
@@ -153,12 +170,77 @@ ul {padding:0; margin: 0;}
 	font-weight: 600;
 	font-style: normal;
 	height: 41px;
+	display: block;
 }
 .os {
 	font-size: 11px;
 	color: white;
 	font-weight: 300;
 	font-style: italic;
+}
+.lastBook {
+	font-size: 16px;
+	font-weight: 700;
+	font-style: normal;
+	color: white;
+	text-align: left;
+	padding: 15px 9px 90px 9px;
+	line-height: 22px;
+}
+.lastBook .user{
+	font-weight: 400;
+}
+.buttons {
+	position: relative;
+}
+.buttons div a {
+  position: relative;
+  top: 15px;
+}
+.buttons div {
+	height: 50px;
+	width: 95px;
+	border-radius: 10px;
+	background-color: #1CA055;
+	color: white;
+	position: absolute;
+	text-align: center;
+	vertical-align: middle;
+}
+.booking {
+    background-color: #008000;
+    height: 50px;
+    left: 115px;
+    position: relative;
+    right: 9px;
+    vertical-align: bottom;
+    width: 95px;
+}
+.detail {
+    background-color: #008000;
+    height: 50px;
+    left: 9px;
+    position: relative;
+    vertical-align: bottom;
+    width: 95px;
+}
+.buttons table {
+	width: 100%
+}
+.buttons a {color: white}
+.buttons td {
+	width: 95px;
+	height: 50px;
+	background-color: #1CA055; 
+	text-align: center;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	font-style: normal;
+}
+.buttons .space {
+	width: 9px;
+  background-color: #405060;
 }
 .claim {
 	font-family: Ubuntu, sans-serif;
