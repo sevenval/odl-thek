@@ -113,6 +113,9 @@ router.get('/:id', helper.ensureAuthenticated, helper.ensureAdmin, function(req,
     bookings.find({gadget : _gadget._id.toString()}).toArray(function(_err,_bookings){
       for(var i = 0 ; i < _bookings.length ; i++) {
         _bookings[i].startdate = helper.prettyDate(_bookings[i].start);
+        if(_bookings[i].handoutdate) {
+          _bookings[i].handoutdate = helper.prettyDate(_bookings[i].handoutdate);
+        }
         _bookings[i].enddate = helper.prettyDate(_bookings[i].end);
       }
 

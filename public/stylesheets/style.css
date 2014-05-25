@@ -69,7 +69,7 @@ a {
 .introduction {
 	font-size: 60px;
 	font-weight: 700;
-	padding-top: 130px;
+	padding-top: 100px;
 }
 .introduction span {
 	font-weight: 100;
@@ -120,27 +120,34 @@ ul {padding:0; margin: 0;}
 	display: none;
 }
 .element img {
-	max-width: 215px;
-	border-radius: 0 20px 0 0 ;
-	height: 220px;
+	width:100%;
+  height:220px;
+  border-radius: 0 10px 0 0 ;
+	margin-bottom: -4px;
 }
-.traffic_overlay {
-	background-color: #1CA055;
-	height: 15px;
-	display: block;
+.info {
 	border-radius: 0 10px 0 0 ;
 }
 .traffic{
 	background-color: #1CA055;
-	height: 5px;
+	height: 15px;
+  border-radius: 0 10px 0 0 ;
 }
 .traffic_reserved{
 	background-color: yellow;
-	height: 5px;
+	height: 15px;
+  border-radius: 0 10px 0 0 ;
 }
 .traffic_handout{
 	background-color: red;
-	height: 5px;
+	height: 15px;
+  border-radius: 0 10px 0 0 ;
+}
+
+.smallline {
+  height: 5px;
+  border-radius: 0 ;
+
 }
 .spec {
 	text-align: left;
@@ -152,7 +159,7 @@ ul {padding:0; margin: 0;}
 	background-color: #405060;
 	height: 95px; 
 	display: block;
-	height: 95px;
+	height: 103px;
   text-align: left;
   padding: 0 10px; 
 	font-size: 12px;
@@ -190,7 +197,8 @@ ul {padding:0; margin: 0;}
 	font-style: normal;
 	color: white;
 	text-align: left;
-	padding: 15px 9px 90px 9px;
+  height: 115px;
+	padding: 15px 9px 9px 9px;
 	line-height: 22px;
 	background-color: #405060;
 }
@@ -365,11 +373,51 @@ ul {padding:0; margin: 0;}
 /* Book kadget Overlay */
 
 #layerBookGadget {
-	max-width: 640px;
-	max-height: 390px
+  position: fixed;
+  display: none;
+  top: 100;
+  border-radius: 0 10px 0 0 ;
+	width: 640px;
+	max-height: 410px;
 	background-color: #D9F1E3;
 	margin: 0 auto;
+  margin-left: 160px;
 /*	border: 1px solid grey;*/
+z-index: 20;
+}
+#layerBookGadget input {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 1em;
+}
+
+
+#layerBookGadget .error {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  color: #f00;
+}
+
+#layerBookGadget .ok {
+  height: 370px;
+  text-align: center;
+font-size: 36px;
+padding-top: 120px;
+font-weight: 700;
+color: #415060;
+}
+
+
+#blank {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height: 100%;
+  opacity: 0.8;
+  background-color: #000;
+  z-index: 10;
 }
 .getBook h1 {
 	padding: 16px 0 0 0;

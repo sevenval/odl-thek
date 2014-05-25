@@ -4,7 +4,7 @@ var router = express.Router();
 var helper = require('../helper.js');
 
 var users = helper.db.collection('users');
-
+var bookings = helper.db.collection('bookings');
 
 var passport = require('passport');
 
@@ -46,7 +46,18 @@ router.get('/logout', function(req, res){
 
 router.get('/:id', helper.ensureAuthenticated, function(req, res) {
   users.findById(req.params.id,function(_err,_user){
-      res.render('users/detail',{ title : 'userdetail', euser : _user});  
+
+  bookings.find( {user:req.params.id} ).toArray(function(_err,_result){
+    if(_result&&_result!=undefined&&_result.length) {
+      console.log(_result[0]);
+      for(var i = 0 ; i < _result.length ; i++) {
+        _result[i].startdate = helper.prettyDate(_result[i].start);
+        _result[i].enddate = helper.prettyDate(_result[i].end);
+      }
+    }
+	res.render('users/detail',{ title : 'userdetail', euser : _user, bookings : _result});
+  })
+	  
   })
 });
 

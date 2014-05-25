@@ -1,7 +1,8 @@
 extends ../layout
 
 block content
-  #layer
+  #layerBookGadget
+  #blank
   .box
     .detailpage
       .basic
@@ -14,10 +15,12 @@ block content
           if(gadget.image)
             img(src="../"+gadget.image,style="width: 300px;")
           else   
-            img(src='/img/device.jpg',style="width: 300px;")
+            img(src='/img/dummy_device.gif',style="width: 300px;")
     .detailcontent
       .desc!= gadget.description
-      a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
+      a.booknow(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") book
+      if(locals.user.role == 'admin')
+        a.booknow(href="/gadgets/"+gadget._id+"/edit") edit
       .info
         b version
         br
@@ -34,22 +37,34 @@ block content
         span= gadget.type
         br
     .clear
-    a(href="/gadgets/"+gadget._id+"/edit") edit gadget
-    btr
     br
     #layer
-    table(style="width:100%")
+    table.detailbookings(style="width:100%")
+      tr
+        th name
+        th start date
+        th end date
+        th handout date
+        th handout user
+        th
+
       - each booking in bookings
         tr
           td= booking.username
-          td= booking.gadgetname
           td
             if(booking.start)
               span= booking.startdate
           td
             if(booking.end)
-              span= booking.enddatecontent
+              span= booking.enddate
           td
-            a(href="/bookings/remove/"+booking._id) cancel
+            if(booking.handoutdate)
+              span= booking.handoutdate
+          td
+            if(booking.handoutuser)
+              span= booking.handoutuser
+          if(locals.user.role == 'admin')
+            td
+              a(href="/bookings/remove/"+booking._id) cancel
 
 

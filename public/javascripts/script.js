@@ -5,6 +5,7 @@ function openBookingLayer(_url) {
     console.log(_content);
     $( '#layerBookGadget' ).html(_content);
     $('#layerBookGadget').show();
+    $('#blank').show();
   });
 }
 
@@ -14,6 +15,7 @@ function bookNow() {
   $.post(book.attr('action'),book.serialize(),function(_content){
     $('#layerBookGadget').html(_content);
     $('#layerBookGadget').show();
+    $('#blank').show();
   });
 }
 
