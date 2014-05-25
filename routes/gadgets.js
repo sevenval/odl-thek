@@ -44,6 +44,46 @@ router.get('/',  helper.ensureAuthenticated, function(req, res) {
   })
 });
 
+
+
+router.get('/top',  helper.ensureAuthenticated, function(req, res) { 
+  var find = { type :  "mobile", handoutcount : {$gt : 0 } };
+  if(req.query.q) {
+    find.name = {$regex : ".*"+req.query.q+".*", $options: 'i'};
+  }
+  gadgets.find(find).sort({brand:1}).toArray(function(_err,_result){
+    if(_result&&_result!=undefined&&_result.length) {    
+    bookings.find({}).toArray(function(_err,_bookings){
+      var book = {};
+      var now = new Date();
+      for(var i = 0; i < _bookings.length ; i++) {
+        if(!book[_bookings[i].gadget]) {
+          book[_bookings[i].gadget] = {
+            last : null,
+            current : null
+          };
+        }
+        if(_bookings[i].end < now) { // todo nur übernehmen, wenn wirklich das letzte.
+          book[_bookings[i].gadget].last = _bookings[i];
+        }
+        if(_bookings[i].start < now && _bookings[i].end > now) {
+          book[_bookings[i].gadget].current = _bookings[i]; 
+        }
+      }
+      for(var i = 0 ; i < _result.length;i++) {
+        _result[i].bookings = book[_result[i]._id];
+      }
+      console.log(_result[0]);
+      res.render('gadgets/list', { title: 'Gadgets: '+_result.length, gadgets : _result});  
+    })
+    } else {
+      res.render('index', { title: 'No devices' });  
+    }
+  })
+});
+
+
+
 router.get('/new', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) { // 
   var basic = { 
   hwid: '',
