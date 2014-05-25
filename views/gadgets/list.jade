@@ -1,7 +1,8 @@
 extends ../layout
 
 block content
-  #layer
+  br
+  #layerBookGadget
   #search
     form(name='search', action='/gadgets/find/', method='get', id='formSearch') 
       input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
@@ -14,7 +15,7 @@ block content
     ul.elements
       - each gadget in gadgets
         li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
-          .hide.info
+          .hide.info.grey
             .traffic_overlay 
             .click
               div.brand= gadget.brand
