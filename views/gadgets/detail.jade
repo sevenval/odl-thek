@@ -1,28 +1,55 @@
 extends ../layout
 
 block content
-  h1= gadget.name
-  if(gadget.image)
-    img(src="../"+gadget.image,style="width: 100px;")
-  else   
-    img(src='/img/device.jpg',style="width: 100px;")
-  br
-  a(href="/gadgets/"+gadget._id+"/edit") edit gadget
-  btr
-  br
   #layer
-  table(style="width:100%")
-    - each booking in bookings
-      tr
-        td= booking.username
-        td= booking.gadgetname
-        td
-          if(booking.start)
-            span= booking.startdate
-        td
-          if(booking.end)
-            span= booking.enddate
-        td
-          a(href="/bookings/remove/"+booking._id) cancel
+  .box
+    .detailpage
+      .basic
+        a.button(href="/gadgets/")
+          span back
+        .bottom
+          h2= gadget.brand
+          h1= gadget.model
+        .image
+          if(gadget.image)
+            img(src="../"+gadget.image,style="width: 300px;")
+          else   
+            img(src='/img/device.jpg',style="width: 300px;")
+    .detailcontent
+      .desc!= gadget.description
+      a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
+      .info
+        b version
+        br
+        span= gadget.os
+        br
+        br
+        b gadget ID
+        br
+        span= gadget.hwid
+        br
+        br
+        b type
+        br
+        span= gadget.type
+        br
+    .clear
+    a(href="/gadgets/"+gadget._id+"/edit") edit gadget
+    btr
+    br
+    #layer
+    table(style="width:100%")
+      - each booking in bookings
+        tr
+          td= booking.username
+          td= booking.gadgetname
+          td
+            if(booking.start)
+              span= booking.startdate
+          td
+            if(booking.end)
+              span= booking.enddatecontent
+          td
+            a(href="/bookings/remove/"+booking._id) cancel
 
 

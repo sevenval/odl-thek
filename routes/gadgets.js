@@ -45,7 +45,7 @@ router.get('/',  helper.ensureAuthenticated, function(req, res) {
 });
 
 
-
+/* aufräumen */
 router.get('/top',  helper.ensureAuthenticated, function(req, res) { 
   var find = { type :  "mobile", handoutcount : {$gt : 0 } };
   if(req.query.q) {
@@ -115,6 +115,8 @@ router.get('/:id', helper.ensureAuthenticated, helper.ensureAdmin, function(req,
         _bookings[i].startdate = helper.prettyDate(_bookings[i].start);
         _bookings[i].enddate = helper.prettyDate(_bookings[i].end);
       }
+
+      _gadget.description = _gadget.description.replace(/\\n/g,'<br/>')
       res.render('gadgets/detail', { title: _gadget.name , gadget : _gadget, bookings : _bookings });  
     })
   })
