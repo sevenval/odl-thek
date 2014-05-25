@@ -20,9 +20,9 @@ router.get('/',helper.ensureAuthenticated, function(req, res) {
         _result[i].startdate = helper.prettyDate(_result[i].start);
         _result[i].enddate = helper.prettyDate(_result[i].end);
       }
-      res.render('bookings/list', { title: 'Bookings: '+_result.length, bookings : _result });  
+      res.render('bookings/list', { title: 'ODL: bookings', bookings : _result });  
     } else {
-      res.render('bookings/list', { title: 'No Bookings' });  
+      res.render('bookings/list', { title: 'ODL: bookings' });  
     }
   })
 });
@@ -35,7 +35,7 @@ router.get('/:id',helper.ensureAuthenticated, function(req, res) {
       console.log(_gadget);
 
     _gadget.description = _gadget.description.replace(/\\n/g,'<br/>')
-      res.render('bookings/detail', { title: 'Express', booking : _booking, gadget : _gadget }); 
+      res.render('bookings/detail', { title: 'ODL: bookings', booking : _booking, gadget : _gadget }); 
     })
   })
 });

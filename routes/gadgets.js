@@ -38,10 +38,10 @@ router.get('/',  helper.ensureAuthenticated, function(req, res) {
         _result[i].bookings = book[_result[i]._id];
       }
       console.log(_result[0]);
-      res.render('gadgets/list', { title: 'Gadgets: '+_result.length, gadgets : _result});  
+      res.render('gadgets/list', { title: 'ODL: gadgets', gadgets : _result});  
     })
     } else {
-      res.render('gadgets/list', { title: 'No devices' });  
+      res.render('gadgets/list', { title: 'ODL: gadgets' });  
     }
   })
 });
@@ -76,10 +76,10 @@ router.get('/top',  helper.ensureAuthenticated, function(req, res) {
         _result[i].bookings = book[_result[i]._id];
       }
       console.log(_result[0]);
-      res.render('gadgets/list', { title: 'Gadgets: '+_result.length, gadgets : _result});  
+      res.render('gadgets/list', { title: 'ODL: TOP gadgets', gadgets : _result});  
     })
     } else {
-      res.render('index', { title: 'No devices' });  
+      res.render('index', { title: 'ODL: TOP gadgets' });  
     }
   })
 });
@@ -97,7 +97,7 @@ router.get('/new', helper.ensureAuthenticated, helper.ensureAdmin, function(req,
   model: '',
   os: '',
   type: ''}
-    res.render('gadgets/new', { title: "new gadget" , gadget : basic});
+    res.render('gadgets/new', { title: "ODL: new gadget" , gadget : basic});
 });
 
 router.post('/new', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {

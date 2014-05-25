@@ -11,10 +11,10 @@ router.get('/',  function(req, res) {
     if(_result&&_result!=undefined&&_result.length) {
       var length = _result.length;
       _result = _result.slice(3,15);
-      res.render('index', { title: 'Gadgets: '+_result.length, gadgets : _result , devices : length});  
+      res.render('index', { title: 'ODL: welcome', gadgets : _result , devices : length});  
     } else {
       // res.render('index', { title: 'No devices' });  
-      res.render('index', { title: 'Gadgets: '+_result.length, gadgets : _result , devices : 0 });
+      res.render('index', { title: 'ODL: welcome', gadgets : _result , devices : 0 });
     }
   })
 });
