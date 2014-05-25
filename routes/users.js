@@ -10,7 +10,7 @@ var passport = require('passport');
 
 router.get('/', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
   users.find({}).toArray(function(_err,_users){
-    res.render('users/list', { title: 'users'+_users.length, users : _users});  
+    res.render('users/list', { title: 'ODL: users', users : _users});  
   })
 });
 
@@ -55,7 +55,7 @@ router.get('/:id', helper.ensureAuthenticated, function(req, res) {
         _result[i].enddate = helper.prettyDate(_result[i].end);
       }
     }
-	res.render('users/detail',{ title : 'userdetail', euser : _user, bookings : _result});
+	res.render('users/detail',{ title : 'ODL: userdetail', euser : _user, bookings : _result});
   })
 	  
   })

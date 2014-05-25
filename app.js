@@ -21,6 +21,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var gadgets = require('./routes/gadgets');
 var bookings = require('./routes/bookings');
+var impress = require('./routes/impress');
 
 var app = express();
 
@@ -87,6 +88,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/gadgets', gadgets);
 app.use('/bookings', bookings);
+app.use('/impress', impress);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

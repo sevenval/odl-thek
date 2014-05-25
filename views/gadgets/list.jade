@@ -17,71 +17,74 @@ block content
             img(src='/img/add_btn.gif')
       .clear
   #phones
-    h1 Smartphones
-    ul.elements
-      - each gadget in gadgets
-        li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
-          .hide.info 
-            if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-              div.traffic_handout
-            else if(gadget.bookings&&gadget.bookings.current)
-              div.traffic_reserved
-            else
-              div.traffic
-          .hide.info.grey
-            .click
-              div.brand= gadget.brand
-              div.name= gadget.name
-              span.isolator
-              div.os= gadget.os
-            div.lastBook 
-              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.username)
-                if(gadget.bookings.current.status=='handout')
-                  span current
-                else 
-                  span reserved
-                br
-                span.user= gadget.bookings.current.username
+    if(!gadgets)
+      h1 no gadgets for your search 
+    else 
+      h1= gadgets.length+" gadgets"
+      ul.elements
+        - each gadget in gadgets
+          li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
+            .hide.info 
+              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
+                div.traffic_handout
+              else if(gadget.bookings&&gadget.bookings.current)
+                div.traffic_reserved
               else
-                if(gadget.bookings&&gadget.bookings.last&&gadget.bookings.last.username)
-                  span last booking
+                div.traffic
+            .hide.info.grey
+              .click
+                div.brand= gadget.brand
+                div.name= gadget.name
+                span.isolator
+                div.os= gadget.os
+              div.lastBook 
+                if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.username)
+                  if(gadget.bookings.current.status=='handout')
+                    span current
+                  else 
+                    span reserved
                   br
-                  span.user= gadget.bookings.last.username
+                  span.user= gadget.bookings.current.username
+                else
+                  if(gadget.bookings&&gadget.bookings.last&&gadget.bookings.last.username)
+                    span last booking
+                    br
+                    span.user= gadget.bookings.last.username
 
-            if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-              div.buttons_handout
-                .detail
-                  a(href="/gadgets/"+gadget._id) Details
-                .booking
-                  a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
-            else if(gadget.bookings&&gadget.bookings.current)
-              div.buttons_reserved
-                .detail
-                  a(href="/gadgets/"+gadget._id) Details
-                .booking
-                  a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
-            else
-              div.buttons
-                .detail
-                  a(href="/gadgets/"+gadget._id) Details
-                .booking
-                  a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
-          .cont
-            if(gadget.image)
-              img(src="/"+gadget.image)
-            else   
-              img(src='/img/dummy_device.gif')
-            if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-              div.traffic_handout.smallline
-            else if(gadget.bookings&&gadget.bookings.current)
-              div.traffic_reserved.smallline
-            else
-              div.traffic.smallline
-            .click
-              div.spec
-              
-              div.brand= gadget.brand
-              div.name= gadget.name
-              span.isolator
-              div.os= gadget.os
+              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
+                div.buttons_handout
+                  .detail
+                    a(href="/gadgets/"+gadget._id) Details
+                  .booking
+                    a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+              else if(gadget.bookings&&gadget.bookings.current)
+                div.buttons_reserved
+                  .detail
+                    a(href="/gadgets/"+gadget._id) Details
+                  .booking
+                    a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+              else
+                div.buttons
+                  .detail
+                    a(href="/gadgets/"+gadget._id) Details
+                  .booking
+                    a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+            .cont
+              if(gadget.image)
+                img(src=gadget.image)
+              else   
+                img(src='/img/dummy_device.gif')
+              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
+                div.traffic_handout.smallline
+              else if(gadget.bookings&&gadget.bookings.current)
+                div.traffic_reserved.smallline
+              else
+                div.traffic.smallline
+              .click
+                div.spec
+                
+                div.brand= gadget.brand
+                div.name= gadget.name
+                span.isolator
+                div.os= gadget.os
     div.clear    
