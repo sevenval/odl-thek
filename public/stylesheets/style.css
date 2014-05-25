@@ -134,12 +134,12 @@ ul {padding:0; margin: 0;}
   border-radius: 0 10px 0 0 ;
 }
 .traffic_reserved{
-	background-color: yellow;
+	background-color: #e4af28;
 	height: 15px;
   border-radius: 0 10px 0 0 ;
 }
 .traffic_handout{
-	background-color: red;
+	background-color: #c64c3f;
 	height: 15px;
   border-radius: 0 10px 0 0 ;
 }
@@ -197,15 +197,15 @@ ul {padding:0; margin: 0;}
 	font-style: normal;
 	color: white;
 	text-align: left;
-  height: 115px;
-	padding: 15px 9px 9px 9px;
+  height: 125px;
+	padding: 5px 9px 5px 9px;
 	line-height: 22px;
 	background-color: #405060;
 }
 .lastBook .user{
 	font-weight: 400;
 }
-.buttons {
+.buttons,.buttons_handout,.buttons_reserved {
 	position: relative;
 	height: 66px;
 }
@@ -213,11 +213,12 @@ ul {padding:0; margin: 0;}
 	background-color: #405060;
 	border-radius: 0 10px 0 0;
 }
-.buttons div a {
+.buttons div a ,.buttons_handout div a,.buttons_reserved div a{
   position: relative;
   top: 15px;
   display: block;
-
+  color: #fff;
+  font-weight: 700;
 }
 .buttons div {
 	height: 50px;
@@ -229,6 +230,31 @@ ul {padding:0; margin: 0;}
 	text-align: center;
 	vertical-align: middle;
 }
+
+.buttons_handout div {
+  height: 50px;
+  width: 95px;
+  border-radius: 10px;
+  background-color: #c64c3f;
+  color: white;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+.buttons_reserved div {
+  height: 50px;
+  width: 95px;
+  border-radius: 10px;
+  background-color: #e4af28;
+  color: white;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
 .booking {
     background-color: #008000;
     height: 50px;

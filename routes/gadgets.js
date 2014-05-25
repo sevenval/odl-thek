@@ -126,7 +126,7 @@ router.get('/:id', helper.ensureAuthenticated, helper.ensureAdmin, function(req,
 });
 
 
-router.get('/:id/edit',function(req, res) { //  helper.ensureAuthenticated, helper.ensureAdmin, 
+router.get('/:id/edit',helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {  
   gadgets.findById(req.params.id,function(_err,_gadget){
     res.render('gadgets/edit', { title: _gadget.name , gadget : _gadget});  
   })

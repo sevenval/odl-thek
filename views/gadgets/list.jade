@@ -34,14 +34,38 @@ block content
               div.name= gadget.name
               span.isolator
               div.os= gadget.os
-            div.lastBook ich war es nicht
-              br
-              span.user Max Mustermann
-            .buttons
-              .detail
-                a(href="/gadgets/"+gadget._id) Details
-              .booking
-                a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+            div.lastBook 
+              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.username)
+                if(gadget.bookings.current.status=='handout')
+                  span current
+                else 
+                  span reserved
+                br
+                span.user= gadget.bookings.current.username
+              else
+                if(gadget.bookings&&gadget.bookings.last&&gadget.bookings.last.username)
+                  span last booking
+                  br
+                  span.user= gadget.bookings.last.username
+
+            if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
+              div.buttons_handout
+                .detail
+                  a(href="/gadgets/"+gadget._id) Details
+                .booking
+                  a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+            else if(gadget.bookings&&gadget.bookings.current)
+              div.buttons_reserved
+                .detail
+                  a(href="/gadgets/"+gadget._id) Details
+                .booking
+                  a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+            else
+              div.buttons
+                .detail
+                  a(href="/gadgets/"+gadget._id) Details
+                .booking
+                  a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
           .cont
             if(gadget.image)
               img(src="/"+gadget.image)
