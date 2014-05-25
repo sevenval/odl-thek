@@ -12,8 +12,8 @@ function bookNow() {
   var book = $('#book');
   console.log(book)
   $.post(book.attr('action'),book.serialize(),function(_content){
-    $('#layer').html(_content);
-    $('#layer').show();
+    $('#layerBookGadget').html(_content);
+    $('#layerBookGadget').show();
   });
 }
 

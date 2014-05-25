@@ -467,6 +467,69 @@ input[type="date"], input[type="time"]{
   position: absolute;
   right: 40px;
 }
+
+/* bookingList */
+.bookingList {
+	margin: 25px 40px;
+}
+.bookingList td {
+	height: 50px;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 14px;
+	color: white;
+	border: 0.1em solid;
+	padding-left: 10px;
+}
+.last {
+	border-radius: 0 10px 0 0 ;
+}
+.handOut {
+	background-image: url(/img/out_btn.gif);
+	background-repeat: no-repeat;
+	width: 50px;
+	height: 50px;
+	display: block;
+}
+
+.takeBack {
+	background-image: url(/img/in_btn.gif);
+	background-repeat: no-repeat;
+	width: 50px;
+  height: 50px;
+	display: block;
+}
+.edit {
+	background-image: url(/img/edit_btn.gif);
+	background-repeat: no-repeat;
+	width: 50px;
+	height: 50px;
+	display: block;
+}
+.cancel{
+  background-image: url(/img/del_btn.gif);
+	background-repeat: no-repeat;
+	width: 50px;	
+	height: 50px;
+	display: block;
+}
+
+tr:nth-child(odd) {background-color: #566270; border-spacing:1px;}
+tr:nth-child(even) {background-color: #405060}
+
+.bookingList th {
+	color: white;
+	font-weight: 700;
+	font-style: normal;
+	font-size: 16px;
+	height: 50px;
+  background-color: #1D9F55;
+	border-spacing: 0;
+}
+.headline {
+	border-spacing: 0px;
+	text-align: center;
+}
 /* overlay */
 #overlay {
     position:absolute;

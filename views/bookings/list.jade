@@ -3,27 +3,36 @@ extends ../layout
 block content
   #layer
   if(locals.bookings)
-    table(style="width:100%")
+    table(style="width:90%;border-spacing:0px").bookingList
+      tr.headline
+        th Name
+        th Device/ID
+        th Start Reservation
+        th End Reservation
+        th
+        th 
+        th.last 
       - each booking in bookings
         tr
-          td= booking.username
-          td= booking.gadgetname
-          td
+          td.user= booking.username
+          td.devName= booking.gadgetname
+          td.startDate
             if(booking.start)
               span= booking.startdate
-          td
+          td.endDate
             if(booking.end)
               span= booking.enddate
           td
             if(!booking.status)
-              a(href="/bookings/"+booking._id+"/handout") hand out
+              a(href="/bookings/"+booking._id+"/handout").handOut
             if(booking.status=='handout')
-              a(href="/bookings/"+booking._id+"/takeback") take back
+              a(href="/bookings/"+booking._id+"/takeback").takeBack
             if(booking.status=='closed')
               span closed
           td
-            a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')") edit
-          td
-            a(href="/bookings/remove/"+booking._id) cancel
+            a(href="/bookings/remove/"+booking._id).cancel
   else
     div No bookings.
+td
+            a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')").edit
+          
