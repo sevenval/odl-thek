@@ -34,14 +34,13 @@
 }
 
 a.loginbutton {
-  position: absolute;
-  top: 0px;
-  right: 10px;
+  display: block;
+  margin: 20px auto;
   border-radius: 10px;
-  width:95px;
+  width:155px;
   height: 32px;
   background-color: #fff;
-  color: #1CA055 !important;
+  color: #415060 !important;
   padding-top: 15px;
   text-align: center;
   font-weight: 700;
