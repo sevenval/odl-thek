@@ -4,6 +4,8 @@ var gadgets = helper.db.collection('gadgets');
 var bookings = helper.db.collection('bookings');
 var users = helper.db.collection('users');
 
+var knox = require('knox');
+
 var router = express.Router();
 
 
@@ -134,13 +136,32 @@ router.get('/:id/edit',helper.ensureAuthenticated, helper.ensureAdmin, function(
 
 
 
-router.post('/:id/upload', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
-  gadgets.findById(req.params.id,function(_err,_gadget){
-    _gadget.image = req.files.image.path.replace(/public\//,'');
-    gadgets.save(_gadget,function(_err,_result){
-      res.render('gadgets/edit', { title: _gadget.name , gadget : _gadget});  
-    })
-  })
+router.post('/:id/upload',  function(req, res) {
+  var s3 = knox.createClient({
+      key: helper.aws.ID,
+      secret: helper.aws.Secret,
+      bucket: "odlthek2"
+  });
+
+
+  var s3Headers = {
+    'Content-Type': req.files.image.mimetype,
+
+    'Content-Length': req.files.image.size,
+    'x-amz-acl': 'public-read'
+  };
+
+  console.log(s3,s3Headers,req.files.image);
+
+  s3.putFile("./"+req.files.image.path, req.files.image.name, s3Headers, function(err, s3response){
+      gadgets.findById(req.params.id,function(_err,_gadget){
+        _gadget.image = s3response.req.url;
+        gadgets.save(_gadget,function(_err,_result){
+          res.render('gadgets/edit', { title: _gadget.name , gadget : _gadget});  
+        })
+      })
+  });
+
 });
 
 

@@ -71,7 +71,7 @@ block content
                     a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
             .cont
               if(gadget.image)
-                img(src="/"+gadget.image)
+                img(src=gadget.image)
               else   
                 img(src='/img/dummy_device.gif')
               if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")

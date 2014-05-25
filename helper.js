@@ -1,4 +1,5 @@
 var github = {};
+var aws = {};
 
 try {
   github = require('./github.json');
@@ -9,11 +10,25 @@ try {
   }
 }
 
+
+try {
+  aws = require('./aws.json');
+} catch (e) {
+  aws = {  
+    "ID" : "",
+    "Secret" : ""
+  }
+}
+
 var config = {
   "github" : {
     "GITHUB_CLIENT_ID" : process.env.GITHUB_CLIENT_ID ? process.env.GITHUB_CLIENT_ID : github.GITHUB_CLIENT_ID, 
     "GITHUB_CLIENT_SECRET" : process.env.GITHUB_CLIENT_SECRET ? process.env.GITHUB_CLIENT_SECRET : github.GITHUB_CLIENT_SECRET,
     "callbackURL" : process.env.callbackURL ? process.env.callbackURL : "http://localhost:3000/users/auth/github/callback"
+  },
+  "aws" : {
+     "ID" : process.env.AWS_ID ? process.env.AWS_ID : aws.ID,
+     "Secret" : process.env.AWS_Secret ? process.env.AWS_Secret : aws.Secret
   },
   "mongourl" : process.env.mongodburl ? process.env.mongodburl : "mongodb://localhost:27017/odlthek"
 }
@@ -98,6 +113,7 @@ var checkGadgetBooking = function(_gid,_start,_end,_callback) {
 
 var helper = {
   github : config.github,
+  aws : config.aws,
   db : db,
   ensureAuthenticated : ensureAuthenticated,
   ensureAdmin : ensureAdmin,
