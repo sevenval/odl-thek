@@ -2,6 +2,9 @@ extends ../layout
 
 block content
   h1= gadget.name
+  br
+  a(href="/gadgets/"+gadget._id+"") back
+  br
   form(action="/gadgets/"+gadget._id+"/edit",method="post")
     each value,key in gadget
       if(key!="_id"&&key!="description")
@@ -16,10 +19,16 @@ block content
         br
     input(type="submit")
 
-   form(action="/gadgets/"+gadget._id+"/upload",method="post",enctype="multipart/form-data")
-      input(type="file",name="image")
-      br
-      input(type="submit")
+  if(gadget.image)
+    img(src="/"+gadget.image,style="width: 100px;")
+  else   
+    img(src='/img/device.jpg',style="width: 100px;")
+  br
+
+  form(action="/gadgets/"+gadget._id+"/upload",method="post",enctype="multipart/form-data")
+    input(type="file",name="image")
+    br
+    input(type="submit")
 
 
 

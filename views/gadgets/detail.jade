@@ -2,8 +2,13 @@ extends ../layout
 
 block content
   h1= gadget.name
-  a(href="/gadgets/"+gadget._id+"/edit") edit gadget
+  if(gadget.image)
+    img(src="../"+gadget.image,style="width: 100px;")
+  else   
+    img(src='/img/device.jpg',style="width: 100px;")
   br
+  a(href="/gadgets/"+gadget._id+"/edit") edit gadget
+  btr
   br
   #layer
   table(style="width:100%")

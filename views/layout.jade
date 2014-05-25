@@ -3,6 +3,7 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/detail.css')
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="/javascripts/script.js")
     link(href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,300italic' rel='stylesheet' type='text/css')
@@ -17,13 +18,15 @@ html
               span THEK
         ul.menu 
           if(locals.user)
-            if(user.role == 'admin')
-              li
-                a(href="/users/") users
             li
               a(href="/gadgets/") gadgets
             li
+              a(href="/gadgets/top") top
+            li
               a(href="/bookings/") bookings
+            if(user.role == 'admin')
+              li
+                a(href="/users/") users
         #user
           if(locals.user)
             if(user.avatarurl)

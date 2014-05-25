@@ -3,19 +3,29 @@ extends ../layout
 block content
   #layer
   #search
-    form(name='search', action='/gadgets/find/', method='get', id='formSearch') 
+    form(name='search', action='/gadgets/', method='get', id='formSearch') 
       input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
       div.lupe 
         input(type="image",src='/img/search.gif')
-      div.inputButtonSearch
-        input(type='image', name='submit', id='inputButtonSearch', src='/img/filter.gif', height='50px')
+      div.lupe
+        input(type='image', name='submit', src='/img/filter.gif')
+      if(locals.user.status=='admin')
+        div.lupe
+          a(href='/gadgets/new') 
+            img(src='/img/add_btn.gif')
+      .clear
   #phones
     h1 Smartphones
     ul.elements
       - each gadget in gadgets
         li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
-          .hide.info
-            .traffic_overlay 
+          .hide.info 
+            if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
+              div.traffic_handout
+            else if(gadget.bookings&&gadget.bookings.current)
+              div.traffic_reserved
+            else
+              div.traffic
             .click
               div.brand= gadget.brand
               div.name= gadget.name
@@ -31,7 +41,10 @@ block content
                 a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
           .cont
             a(href="/gadgets/"+gadget._id) 
-              img(src='/img/device.jpg')
+              if(gadget.image)
+                img(src="/"+gadget.image)
+              else   
+                img(src='/img/device.jpg')
             if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
               div.traffic_handout
             else if(gadget.bookings&&gadget.bookings.current)
