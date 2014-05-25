@@ -16,8 +16,10 @@ block content
       ul.elements
         - each gadget in gadgets
           li.element
-            img(src='/img/device.jpg')
-            div.traffic
+            if(gadget.image)
+              img(src="/"+gadget.image)
+            else   
+              img(src='/img/dummy_device.gif')
             div.click
               div.brand= gadget.brand
               div.name= gadget.name

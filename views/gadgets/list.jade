@@ -11,7 +11,7 @@ block content
         input(type="image",src='/img/search.gif')
       div.lupe
         input(type='image', name='submit', src='/img/filter.gif')
-      if(locals.user.status=='admin')
+      if(locals.user.role == 'admin')
         div.lupe
           a(href='/gadgets/new') 
             img(src='/img/add_btn.gif')
@@ -43,18 +43,17 @@ block content
               .booking
                 a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
           .cont
-            a(href="/gadgets/"+gadget._id) 
-              if(gadget.image)
-                img(src="/"+gadget.image)
-              else   
-                img(src='/img/device.jpg')
+            if(gadget.image)
+              img(src="/"+gadget.image)
+            else   
+              img(src='/img/dummy_device.gif')
             if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
               div.traffic_handout.smallline
             else if(gadget.bookings&&gadget.bookings.current)
               div.traffic_reserved.smallline
             else
               div.traffic.smallline
-            a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
+            .click
               div.spec
               
               div.brand= gadget.brand

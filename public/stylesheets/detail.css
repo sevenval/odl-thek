@@ -46,6 +46,9 @@ a.loginbutton {
   font-weight: 700;
 }
 
+.detailpage > .basic {
+  margin-bottom: 30px;
+}
 
 .detailpage > .basic  h2 {
   font-size: 16px;
@@ -63,8 +66,9 @@ a.loginbutton {
   float: left;
 }
 .detailcontent > .desc {
-  padding: 40px 10px;
+  padding: 10px 10px;
   width: 540px;
+  min-height: 400px;
   color: #415060;
 }
 
@@ -72,9 +76,39 @@ a.loginbutton {
   padding: 10px;
   width: 300px;
   margin-left: 80px;
-  margin-top: 20px;
+  margin-top: 10px;
   background-color: #415060;
   color: #fff;
   border-radius: 0 10px 0 0;
   line-height: 1.4em;
 }
+.detailcontent > a.booknow {
+  display: block;
+  float:left;
+  height: 30px;
+  padding: 15px 10px 5px 10px;
+  width: 300px;
+  margin-left: 80px;
+  margin-top: 10px;
+  background-color: #1CA055;
+  color: #fff;
+  border-radius: 0 10px 0 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.detailbookings tr > th {
+  padding:10px;
+  color: #fff;
+  background-color: #1CA055;
+}
+
+.detailbookings tr > td {
+  padding:10px;
+  color: #fff;
+}
+.detailbookings tr:nth-child(odd) {background-color: #566270; border-spacing:1px;}
+.detailbookings tr:nth-child(even) {background-color: #405060}
+
+
