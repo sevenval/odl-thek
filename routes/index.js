@@ -10,10 +10,10 @@ router.get('/',  function(req, res) {
   gadgets.find({ type :  "mobile" }).sort({brand:1}).limit(12).toArray(function(_err,_result){
     if(_result&&_result!=undefined&&_result.length) {
       console.log(_result[0]);
-      res.render('index', { title: 'Gadgets: '+_result.length, gadgets : _result });  
+      res.render('index', { title: 'ODL: welcome', gadgets : _result });  
     } else {
       // res.render('index', { title: 'No devices' });  
-      res.render('index', { title: 'Gadgets: '+_result.length, gadgets : _result });
+      res.render('index', { title: 'ODL: welcome', gadgets : _result });
     }
   })
 });
