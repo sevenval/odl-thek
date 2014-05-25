@@ -36,35 +36,38 @@ block content
         .image
           if euser.avatarurl
             img(src=euser.avatarurl, style="width:100px; ")
-        .top
-          table(style="width:100%; border-spacing:0px").detailbookingsUser
-            tr
-              th.dev Device
-              th.start Start
-              th.end End
-              th
-              th
-              th
-            - each booking in bookings
-              tr
-                td= booking.gadgetname
-                td
-                  if(booking.start)
-                    span= booking.startdate
-                td
-                  if(booking.end)
-                    span= booking.enddate
-                td
-                  if(!booking.status)
-                    a(href="/bookings/"+booking._id+"/handout").handout
-                  if(booking.status=='handout')
-                    a(href="/bookings/"+booking._id+"/takeback").takeback
-                  if(booking.status=='closed')
-                    span closed
-                td
-                  a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')").edit
-                td
-                  a(href="/bookings/remove/"+booking._id).cancel
+        .clear
+    .top
+      table(style="width:100%; border-spacing:0px").detailbookingsUser
+        tr
+          th.dev Device
+          th.start Start
+          th.end End
+          th
+          th
+          th
+        - each booking in bookings
+          tr
+            td= booking.gadgetname
+            td
+              if(booking.start)
+                span= booking.startdate
+            td
+              if(booking.end)
+                span= booking.enddate
+            td
+              if(!booking.status)
+                a(href="/bookings/"+booking._id+"/handout").handout
+              if(booking.status=='handout')
+                a(href="/bookings/"+booking._id+"/takeback").takeback
+              if(booking.status=='closed')
+                span closed
+            td
+              a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')").edit
+            td
+              a(href="/bookings/remove/"+booking._id).cancel
+
+
         
 
 
