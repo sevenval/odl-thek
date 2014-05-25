@@ -54,8 +54,8 @@ router.get('/:id', helper.ensureAuthenticated, function(req, res) {
         _result[i].startdate = helper.prettyDate(_result[i].start);
         _result[i].enddate = helper.prettyDate(_result[i].end);
       }
-      res.render('users/detail',{ title : 'userdetail', euser : _user, bookings : _result});
     }
+	res.render('users/detail',{ title : 'userdetail', euser : _user, bookings : _result});
   })
 	  
   })
