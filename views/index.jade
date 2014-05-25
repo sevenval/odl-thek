@@ -7,12 +7,12 @@ block content
       div.welcome
         div.introduction Welcome to ODL
           span THEK
-        div.introductionText Login with your GitHub account to rent a device
+        div.introductionText Login with your GitHub account to rent one of our #{devices} devices
         if(!locals.user)
           br
           div(style="text-align: center;")
             a(href="/users/auth/github",class="loginbutton") login
-      h1 Smartphones
+      h1 Top Devices
       ul.elements
         - each gadget in gadgets
           li.element
