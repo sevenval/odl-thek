@@ -120,27 +120,33 @@ ul {padding:0; margin: 0;}
 	display: none;
 }
 .element img {
-	max-width: 215px;
-	border-radius: 0 20px 0 0 ;
+	width:100%;
+  border-radius: 0 10px 0 0 ;
 	height: 220px;
 }
-.traffic_overlay {
-	background-color: #1CA055;
-	height: 15px;
-	display: block;
+.info {
 	border-radius: 0 10px 0 0 ;
 }
 .traffic{
 	background-color: #1CA055;
-	height: 5px;
+	height: 15px;
+  border-radius: 0 10px 0 0 ;
 }
 .traffic_reserved{
 	background-color: yellow;
-	height: 5px;
+	height: 15px;
+  border-radius: 0 10px 0 0 ;
 }
 .traffic_handout{
 	background-color: red;
-	height: 5px;
+	height: 15px;
+  border-radius: 0 10px 0 0 ;
+}
+
+.smallline {
+  height: 5px;
+  border-radius: 0 ;
+
 }
 .spec {
 	text-align: left;

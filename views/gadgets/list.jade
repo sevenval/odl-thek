@@ -28,7 +28,6 @@ block content
             else
               div.traffic
           .hide.info.grey
-            .traffic_overlay 
             .click
               div.brand= gadget.brand
               div.name= gadget.name
@@ -49,11 +48,11 @@ block content
               else   
                 img(src='/img/device.jpg')
             if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-              div.traffic_handout
+              div.traffic_handout.smallline
             else if(gadget.bookings&&gadget.bookings.current)
-              div.traffic_reserved
+              div.traffic_reserved.smallline
             else
-              div.traffic
+              div.traffic.smallline
             a.click(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')")
               div.spec
               
