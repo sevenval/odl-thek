@@ -1,11 +1,11 @@
 form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
   .getBook
-    h1(onclick="$('#book').hide();") Book
+    h1(onclick="$('#layerBookGadget').hide();$('#blank').hide();") Book
     span.bookBrand= gadget.brand
     span.bookName= gadget.name
     a(onclick="$('#book').hide();") X
   if(locals.error)
-    div(style="background-color: #f00;")= error
+    .error= error
   .bookingTime
     .start
       h2 Start 

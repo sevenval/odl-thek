@@ -371,11 +371,51 @@ ul {padding:0; margin: 0;}
 /* Book kadget Overlay */
 
 #layerBookGadget {
-	max-width: 640px;
-	max-height: 390px
+  position: fixed;
+  display: none;
+  top: 100;
+  border-radius: 0 10px 0 0 ;
+	width: 640px;
+	max-height: 410px;
 	background-color: #D9F1E3;
 	margin: 0 auto;
+  margin-left: 160px;
 /*	border: 1px solid grey;*/
+z-index: 20;
+}
+#layerBookGadget input {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 1em;
+}
+
+
+#layerBookGadget .error {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  color: #f00;
+}
+
+#layerBookGadget .ok {
+  height: 370px;
+  text-align: center;
+font-size: 36px;
+padding-top: 120px;
+font-weight: 700;
+color: #415060;
+}
+
+
+#blank {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height: 100%;
+  opacity: 0.8;
+  background-color: #000;
+  z-index: 10;
 }
 .getBook h1 {
 	padding: 16px 0 0 0;

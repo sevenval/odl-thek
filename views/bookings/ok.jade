@@ -1,4 +1,7 @@
 div
-  h1= gadget.name
-  h2 erfolgreich gebucht
-  div(style="text-align: right;",onclick="$('#layer').hide();") schließen
+  .getBook
+    h1(onclick="$('#layerBookGadget').hide();$('#blank').hide();") Book
+    span.bookBrand= gadget.brand
+    span.bookName= gadget.name
+    a(onclick="$('#book').hide();") X
+  .ok Buchung erfolgreich

@@ -33,6 +33,21 @@
   text-align: center;
 }
 
+a.loginbutton {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  border-radius: 10px;
+  width:95px;
+  height: 32px;
+  background-color: #fff;
+  color: #1CA055 !important;
+  padding-top: 15px;
+  text-align: center;
+  font-weight: 700;
+}
+
+
 .detailpage > .basic  h2 {
   font-size: 16px;
   font-weight: 300;
