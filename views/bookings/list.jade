@@ -10,7 +10,6 @@ block content
         th Start Reservation
         th End Reservation
         th
-        th 
         th.last 
       - each booking in bookings
         tr
@@ -22,14 +21,14 @@ block content
           td.endDate
             if(booking.end)
               span= booking.enddate
-          td
+          td.green
             if(!booking.status)
               a(href="/bookings/"+booking._id+"/handout").handOut
             if(booking.status=='handout')
               a(href="/bookings/"+booking._id+"/takeback").takeBack
             if(booking.status=='closed')
               span closed
-          td
+          td.green  
             a(href="/bookings/remove/"+booking._id).cancel
   else
     div No bookings.

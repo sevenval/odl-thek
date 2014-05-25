@@ -1,7 +1,12 @@
 extends ../layout
 
 block content
-  table(style="width: 100%")
+  table(style="width: 90%; border-spacing:0px").userlist
+    tr
+      th.userName Name
+      th.nick Nickname
+      th.role Role
+      th
     - each user in users
       tr
         td
@@ -10,5 +15,5 @@ block content
           a(href='/users/'+user._id)= user.displayname 
         td
           span= user.role
-        td
-          a(href='/users/remove/'+user._id) (löschen)
+        td.green
+          a(href='/users/remove/'+user._id).cancel

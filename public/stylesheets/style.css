@@ -503,7 +503,7 @@ input[type="date"], input[type="time"]{
 .book  {
 	height: 50px;
   width: 200px;
-  background-color: green;
+  background-color: #1D9F55;
   border-radius: 10px;
   text-align: center;
   font-size: 16px;
@@ -517,18 +517,32 @@ input[type="date"], input[type="time"]{
 }
 
 /* bookingList */
-.bookingList {
-	margin: 25px 40px;
+.green {
+	background-color: #1D9F55;
+  border-bottom:1px solid;
+  border-top:1px solid;
 }
-.bookingList td {
+.bookingList, .userlist {
+	margin: 25px 40px;
+	background-color: #D9F1E3;
+}
+.bookingList td, .userlist td {
 	height: 50px;
 	font-weight: 400;
 	font-style: normal;
 	font-size: 14px;
 	color: white;
-	border: 0.1em solid;
+	border-right: 0.2em solid;
 	padding-left: 10px;
 }
+.userlist a {
+	color: white;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+}
+.bookingList td:last-of-type{ border-right: none}
+.userlist td:last-of-type{ border-right: none}
 .last {
 	border-radius: 0 10px 0 0 ;
 }
@@ -565,7 +579,7 @@ input[type="date"], input[type="time"]{
 tr:nth-child(odd) {background-color: #566270; border-spacing:1px;}
 tr:nth-child(even) {background-color: #405060}
 
-.bookingList th {
+.bookingList th, .userlist th {
 	color: white;
 	font-weight: 700;
 	font-style: normal;
