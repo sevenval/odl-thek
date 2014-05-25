@@ -110,7 +110,7 @@ router.post('/new', helper.ensureAuthenticated, helper.ensureAdmin, function(req
   }) 
 });
 
-router.get('/:id', helper.ensureAuthenticated, helper.ensureAdmin, function(req, res) {
+router.get('/:id', helper.ensureAuthenticated, function(req, res) {
   gadgets.findById(req.params.id,function(_err,_gadget){
     bookings.find({gadget : _gadget._id.toString()}).toArray(function(_err,_bookings){
       for(var i = 0 ; i < _bookings.length ; i++) {
