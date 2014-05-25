@@ -1,15 +1,27 @@
 form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
-  h1= gadget.name
+  .getBook
+    h1(onclick="$('#book').hide();") Book
+    span.bookBrand= gadget.brand
+    span.bookName= gadget.name
+    a(onclick="$('#book').hide();") X
   if(locals.error)
     div(style="background-color: #f00;")= error
-  div
-    h2 Start
-    input(type='date',name='startdate',value=locals.sdate)
-    input(type='time',name='starttime',value=locals.stime)
-    h2 End
-    input(type='date',name='enddate',value=locals.sdate)
-    input(type='time',name='endtime',value=locals.etime)
+  .bookingTime
+    .start
+      h2 Start 
+      input(type='date',name='startdate',value=locals.sdate)
+      span.dateIcon 
+      br
+      input(type='time',name='starttime',value=locals.stime)
+      span.timeIcon
+    .btw 
+    .end
+      h2 End
+      input(type='date',name='enddate',value=locals.sdate)
+      span.dateIcon 
+      input(type='time',name='endtime',value=locals.etime)
+      span.timeIcon 
+    .clear
+    div(onclick="bookNow(); return false;").book 
+      span Buchen
   br
-  div(onclick="bookNow(); return false;") book
-  div
-    div(style="text-align: right;",onclick="$('#book').hide();") schließen

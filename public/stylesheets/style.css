@@ -192,16 +192,24 @@ ul {padding:0; margin: 0;}
 	text-align: left;
 	padding: 15px 9px 90px 9px;
 	line-height: 22px;
+	background-color: #405060;
 }
 .lastBook .user{
 	font-weight: 400;
 }
 .buttons {
 	position: relative;
+	height: 66px;
+}
+.grey {
+	background-color: #405060;
+	border-radius: 0 10px 0 0;
 }
 .buttons div a {
   position: relative;
   top: 15px;
+  display: block;
+
 }
 .buttons div {
 	height: 50px;
@@ -219,7 +227,6 @@ ul {padding:0; margin: 0;}
     left: 115px;
     position: relative;
     right: 9px;
-    vertical-align: bottom;
     width: 95px;
 }
 .detail {
@@ -355,6 +362,123 @@ ul {padding:0; margin: 0;}
 
 }
 
+/* Book kadget Overlay */
 
+#layerBookGadget {
+	max-width: 640px;
+	max-height: 390px
+	background-color: #D9F1E3;
+	margin: 0 auto;
+/*	border: 1px solid grey;*/
+}
+.getBook h1 {
+	padding: 16px 0 0 0;
+	margin: 0;
+	font-size: 36px;
+  font-weight: 700;
+  font-style: normal;
+}
+.getBook {
+	padding: 0 40px;
+	height: 100px;
+	background-color: #1CA055;
+	color: white;
+	border-radius: 0 10px 0 0 ;
+	background-image: url(/img/close_btn.gif);
+  background-repeat: no-repeat;
+  background-position: 90% center;
+}
 
+.bookBrand {
+	font-weight: 300;
+	font-size: 16px;
+	margin-right: 4px;
+}
+
+.bookName {
+	font-weight: 700;
+	font-size: 16px;
+}
+.bookingTime {
+	padding:25px 40px;
+	height: 290px;
+	position: relative;
+}
+.bookingTime h2{
+	padding: 0 ;
+	margin: 0;
+	
+}
+
+.bookingTime .start, .btw {
+	float: left;
+}
+.btw {
+	height: 200px;
+	background-image: url(/img/till_btn.gif);
+	background-position: center center;
+  background-repeat: no-repeat;
+  width: 157px;
+}
+.start h2, .end h2 {
+	font-weight: 7#40506000;
+	font-size: 16px;
+	font-style: normal;
+	color: #405060;
+	padding-bottom: 10px;
+}
+
+input[type="date"], input[type="time"]{
+  height: 50px;
+  display: block;
+  width: 150px;
+  border: none;
+  float: left;
+  margin-bottom: 25px;
+  color: #405060;
+ }
+
+.dateIcon, .timeIcon {
+	display: block;
+  background-color: #405060;
+  width: 50px;
+  height: 50px;
+	border-radius: 0 10px 0 0 ;
+  float: left;
+  background-image: url(/img/dropdown_arrow_btn.gif);
+  background-repeat: no-repeat;
+}
+.book span, .cancle span {
+  padding-top: 15px;
+  display: block;
+}
+.book  {
+	height: 50px;
+  width: 200px;
+  background-color: green;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  font-style: normal;
+  color: white;
+}
+.book {
+  position: absolute;
+  right: 40px;
+}
+/* overlay */
+#overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:10;
+    height:100%;
+    width:100%;
+    background:#000;
+    filter:alpha(opacity=60);
+    -moz-opacity:.60;
+    opacity:.60;
+    display:none;
+}
 .clear{clear: both;}
