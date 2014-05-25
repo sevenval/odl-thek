@@ -9,7 +9,7 @@ var router = express.Router();
 
 
 router.get('/',  helper.ensureAuthenticated, function(req, res) { 
-  var find = { type :  "mobile" };
+  var find = { };
   if(req.query.q) {
     find.name = {$regex : ".*"+req.query.q+".*", $options: 'i'};
   }
@@ -39,7 +39,7 @@ router.get('/',  helper.ensureAuthenticated, function(req, res) {
       res.render('gadgets/list', { title: 'ODL: gadgets', gadgets : _result});  
     })
     } else {
-      res.render('index', { title: 'ODL: gadgets' });  
+      res.render('gadgets/list', { title: 'ODL: gadgets' });  
     }
   })
 });
