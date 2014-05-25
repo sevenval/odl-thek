@@ -11,6 +11,16 @@
   bottom: 0;
   left: 10px;
 }
+.detailpage > .basic > .right {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+}
+.detailpage > .basic > .top {
+  position: absolute;
+  top: 87px;
+  left: 10px;
+}
 
 
 .detailpage > .basic > .image {
@@ -19,6 +29,18 @@
   right: 0;
 }
 
+.detailpage  .active .button {
+  position: absolute;
+  bottom: -50px;
+  right: 10px;
+  border-radius: 10px;
+  width:95px;
+  height: 32px;
+  background-color: #1CA055;
+  color: #fff;
+  padding-top: 15px;
+  text-align: center;
+}
 
 .detailpage > .basic > .button {
   position: absolute;
@@ -109,6 +131,20 @@ a.loginbutton {
   color: #fff;
 }
 .detailbookings tr:nth-child(odd) {background-color: #566270; border-spacing:1px;}
+.detailbookings tr:nth-child(even) {background-color: #405060}
+
+.detailbookingsUser tr > th {
+  height: 50px;
+  color: #fff;
+  background-color: #1CA055;
+}
+
+.detailbookingsUser tr > td {
+  height: 50px;
+  color: #fff;
+  border-right: 0.2em solid;
+}
+.detailbookingsUser tr:nth-child(odd) {background-color: #566270; border-spacing:1px;}
 .detailbookings tr:nth-child(even) {background-color: #405060}
 
 

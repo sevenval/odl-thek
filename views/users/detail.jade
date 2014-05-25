@@ -1,52 +1,73 @@
 extends ../layout
 
 block content
-  h1= euser.name
-  h2= euser.displayname
-  if euser.avatarurl
-    img(src=euser.avatarurl, style="width:100px; ")
-  p
-    form(action="/users/"+euser._id+"/setrole",method="post")
-      select(name='role')
-        if(euser.role == 'admin')
-          option(selected) admin
-        else
-          option admin
-        if(euser.role == 'user')
-          option(selected) user
-        else
-          option user
-      br
+  #layerBookGadget
+  #blank
+  .box
+    .detailpage
+      .basic
+        a.button(href="/users/")
+          span back
+        .right
+          .userdetails
+            h2= euser.displayname
+            h1= euser.name  
+          p Role: 
+            form(action="/users/"+euser._id+"/setrole",method="post")
+              select(name='role')
+                if(euser.role == 'admin')
+                  option(selected) admin
+                else
+                  option admin
+                if(euser.role == 'user')
+                  option(selected) user
+                else
+                  option user
+              .active
+                if(euser.active)
+                  input(type='checkbox',name="active",checked="checked")   
+                else 
+                  input(type='checkbox',name="active") 
+                  span Aktiv
+                input(type="submit")
+                p
+                  a(href='/users/remove/'+euser._id).button 
+                    span löschen
+        .image
+          if euser.avatarurl
+            img(src=euser.avatarurl, style="width:100px; ")
+        .top
+          table(style="width:100%; border-spacing:0px").detailbookingsUser
+            tr
+              th.dev Device
+              th.start Start
+              th.end End
+              th
+              th
+              th
+            - each booking in bookings
+              tr
+                td= booking.gadgetname
+                td
+                  if(booking.start)
+                    span= booking.startdate
+                td
+                  if(booking.end)
+                    span= booking.enddate
+                td
+                  if(!booking.status)
+                    a(href="/bookings/"+booking._id+"/handout").handout
+                  if(booking.status=='handout')
+                    a(href="/bookings/"+booking._id+"/takeback").takeback
+                  if(booking.status=='closed')
+                    span closed
+                td
+                  a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')").edit
+                td
+                  a(href="/bookings/remove/"+booking._id).cancel
+        
 
-      if(euser.active)
-        input(type='checkbox',name="active",checked="checked") 
-      else 
-        input(type='checkbox',name="active") 
-      span Aktiv
-      br
-      input(type="submit")
-  p
-    a(href='/users/remove/'+euser._id) löschen
 
-    table(style="width:100%")
-      - each booking in bookings
-        tr
-          td= booking.username
-          td= booking.gadgetname
-          td
-            if(booking.start)
-              span= booking.startdate
-          td
-            if(booking.end)
-              span= booking.enddate
-          td
-            if(!booking.status)
-              a(href="/bookings/"+booking._id+"/handout") hand out
-            if(booking.status=='handout')
-              a(href="/bookings/"+booking._id+"/takeback") take back
-            if(booking.status=='closed')
-              span closed
-          td
-            a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')") edit
-          td
-            a(href="/bookings/remove/"+booking._id) cancel
+       
+        
+    
