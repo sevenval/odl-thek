@@ -1,22 +1,39 @@
-var express = require('express');
+/*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2 */
+'use strict';
 
-var helper = require('../helper.js');
-var gadgets = helper.db.collection('gadgets');
-var count = helper.db.collection('count');
+var GadgetModel = require('../models/gadget');
+var Config      = require('../config/app');
 
-var router = express.Router();
 
-router.get('/',  function(req, res) {
-  gadgets.find({ }).sort({brand:1}).toArray(function(_err,_result){
-    if(_result&&_result!=undefined&&_result.length) {
-      var length = _result.length;
-      _result = _result.slice(3,15);
-      res.render('index', { title: 'ODL: welcome', gadgets : _result , devices : length});  
-    } else {
-      // res.render('index', { title: 'No devices' });  
-      res.render('index', { title: 'ODL: welcome', gadgets : _result , devices : 0 });
-    }
-  })
-});
+var IndexController = {
 
-module.exports = router;
+  /**
+   * Index action
+   */
+  index: function (req, res, next) {
+    GadgetModel.find({}, function (err, gadgets) {
+
+      if (err) {
+        return next(err);
+      }
+
+      res.render('index', {
+        title: 'ODL: welcome',
+        gadgets : (gadgets.length > 0) ? gadgets.slice(0, 12) : [],
+        devices : gadgets.length
+      });
+    });
+  },
+
+  /**
+   * Imprint action
+   */
+  imprint: function (req, res, next) {
+    res.render('imprint', {
+      title: 'ODL: imprint'
+    });
+  }
+
+};
+
+module.exports = IndexController;

@@ -3,15 +3,13 @@ body {
   font-family: 'Ubuntu', sans-serif;
   font-style: normal;
   background-color: #D9F1E3;
-  max-width: 960px;
-  margin: 0 auto;
 }
 
 a {
-  text-decoration: none;
-  font-family: Ubuntu, sans-serif;
+	text-decoration: none;
+	font-family: Ubuntu, sans-serif;
 	font-size: 0.9em;
-  color: #1CA055;
+	color: #1CA055;
 }
 #layer {
   display: none;
@@ -63,7 +61,7 @@ a {
 	color: white;
 	background-color: #1F2022;
 	background-image: url(/img/skyline.png);
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	background-position: bottom;
 }
 .introduction {
@@ -151,17 +149,17 @@ ul {padding:0; margin: 0;}
 }
 .spec {
 	text-align: left;
-	
-	
+
+
 }
 .click{
 	font-weight: normal;
 	background-color: #405060;
-	height: 95px; 
+	height: 95px;
 	display: block;
 	height: 103px;
   text-align: left;
-  padding: 0 10px; 
+  padding: 0 10px;
 	font-size: 12px;
 }
 .brand {
@@ -278,7 +276,7 @@ ul {padding:0; margin: 0;}
 .buttons td {
 	width: 95px;
 	height: 50px;
-	background-color: #1CA055; 
+	background-color: #1CA055;
 	text-align: center;
 	border-radius: 10px;
 	font-size: 16px;
@@ -388,7 +386,7 @@ ul {padding:0; margin: 0;}
 #inputButtonSearch{
 	margin-top: 2px;
 	padding-bottom: 2px;
-	background-color: #1CA055;  
+	background-color: #1CA055;
 	border-radius: 0 10px 0 0 ;
 }
 
@@ -481,7 +479,7 @@ color: #415060;
 .bookingTime h2{
 	padding: 0 ;
 	margin: 0;
-	
+
 }
 
 .bookingTime .start, .btw {
@@ -549,7 +547,7 @@ input[type="date"], input[type="time"]{
   border-top:1px solid;
 }
 .bookingList, .userlist {
-	margin: 25px 40px;
+	margin: 25px 0;
 	background-color: #D9F1E3;
 }
 .bookingList td, .userlist td {
@@ -565,7 +563,6 @@ input[type="date"], input[type="time"]{
 	color: white;
 	font-style: normal;
 	font-weight: 400;
-	font-size: 16px;
 }
 .bookingList td:last-of-type{ border-right: none}
 .userlist td:last-of-type{ border-right: none}
@@ -597,7 +594,7 @@ input[type="date"], input[type="time"]{
 .cancel{
   background-image: url(/img/del_btn.gif);
 	background-repeat: no-repeat;
-	width: 50px;	
+	width: 50px;
 	height: 50px;
 	display: block;
 }
@@ -611,12 +608,14 @@ tr:nth-child(even) {background-color: #405060}
 	font-style: normal;
 	font-size: 16px;
 	height: 50px;
-  background-color: #1D9F55;
+	background-color: #1D9F55;
 	border-spacing: 0;
+	text-align: left;
+	padding-left: 10px;
 }
 .headline {
 	border-spacing: 0px;
-	text-align: center;
+	text-align: left;
 }
 /* overlay */
 #overlay {
@@ -633,3 +632,72 @@ tr:nth-child(even) {background-color: #405060}
     display:none;
 }
 .clear{clear: both;}
+
+
+/*** JF ***/
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+#wrapper {
+	position: relative;
+	min-height: 100%;
+	max-width: 960px;
+ 	margin: 0 auto !important;
+}
+
+
+table {
+	width: 100%;
+	border: none;
+	border-spacing: 0;
+}
+
+td, tr {
+	border: none !important;
+}
+
+table a {
+	color: #fff;
+	font-size: 14px;
+}
+
+.btn {
+	display: inline-block;
+	width: auto;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: normal;
+	cursor: pointer;
+	color: #fff;
+	background: #3C3E43;
+	border: none;
+	text-align: center;
+}
+
+.btn-large {
+	padding: 13px;
+	border-radius: 0 10px 0 0 ;
+	margin-right: 10px;
+	color: #fff;
+	background: #1CA055;
+	border: none;
+}
+
+#filter-box {
+	height: 0;
+	margin: 10px;
+	overflow: hidden;
+	transition: height 200ms linear;
+}
+
+#filter-box.box-open {
+	height: 100px;
+}

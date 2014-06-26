@@ -2,8 +2,12 @@
 var debug = require('debug')('odl-thek');
 var app = require('../app');
 
-app.set('port', process.env.PORT || 3000); 
+var env = process.env.NODE_ENV || 'DEVELOPMENT';
 
-var server = app.listen(app.get('port'), function() {
+app.set('port', process.env.PORT || 3000);
+app.set('env', env.toUpperCase());
+
+
+var server = app.listen(app.get('port'), function () {
   debug('Express server listening on port ' + server.address().port);
 });

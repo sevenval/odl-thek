@@ -52,11 +52,9 @@ block content
         tr
           td= booking.username
           td
-            if(booking.start)
-              span= booking.startdate
+            =fmtDatetime(booking.start)
           td
-            if(booking.end)
-              span= booking.enddate
+             =fmtDatetime(booking.end)
           td
             if(booking.handoutdate)
               span= booking.handoutdate

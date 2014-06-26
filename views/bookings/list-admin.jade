@@ -1,0 +1,102 @@
+extends ../layout
+
+block content
+  #layerBookGadget
+  #blank
+  if(locals.bookings && locals.bookings.open)
+    h4 Upcoming
+    table.bookingList
+      tr.headline
+        th Name
+        th Device/ID
+        th Start Reservation
+        th End Reservation
+        th
+        th.last
+      - each booking in bookings.open
+        tr
+          td.user= booking.username
+          td.devName= booking.gadgetname
+          td.startDate
+            = fmtDatetime(booking.start)
+          td.endDate
+            = fmtDatetime(booking.end)
+          td
+            if(booking.status == 'open')
+              a(href="/bookings/"+booking._id+"/handout")
+                  i.fa.fa-share.fa-lg
+            if(booking.status == 'handout')
+              a(href="/bookings/"+booking._id+"/takeback")
+                i.fa.fa-reply.fa-lg
+            if(booking.status == 'closed')
+              span closed
+          td
+            a(href="/bookings/remove/"+booking._id)
+              i.fa.fa-trash-o.fa-lg
+
+  if(locals.bookings && locals.bookings.handout)
+    h4 Active
+    table.bookingList
+      tr.headline
+        th Name
+        th Device/ID
+        th Start Reservation
+        th End Reservation
+        th
+        th.last
+      - each booking in bookings.handout
+        tr
+          td.user= booking.username
+          td.devName= booking.gadgetname
+          td.startDate
+            if(booking.startdate)
+              span= fmtDatetime(booking.start)
+          td.endDate
+            if(booking.enddate)
+              span= fmtDatetime(booking.end)
+          td
+            if(booking.status == 'open')
+              a(href="/bookings/"+booking._id+"/handout")
+                  i.fa.fa-share.fa-lg
+            if(booking.status == 'handout')
+              a(href="/bookings/"+booking._id+"/takeback")
+                i.fa.fa-reply.fa-lg
+            if(booking.status == 'closed')
+              span closed
+          td
+            a(href="/bookings/remove/"+booking._id)
+              i.fa.fa-trash-o.fa-
+
+
+  if(locals.bookings && locals.bookings.closed)
+    h4 Closed
+    table.bookingList
+      tr.headline
+        th Name
+        th Device/ID
+        th Start Reservation
+        th End Reservation
+        th
+        th.last
+      - each booking in bookings.closed
+        tr
+          td.user= booking.username
+          td.devName= booking.gadgetname
+          td.startDate
+            if(booking.startdate)
+              span= fmtDatetime(booking.start)
+          td.endDate
+            if(booking.enddate)
+              span= fmtDatetime(booking.end)
+          td
+            if(booking.status == 'open')
+              a(href="/bookings/"+booking._id+"/handout")
+                  i.fa.fa-share.fa-lg
+            if(booking.status == 'handout')
+              a(href="/bookings/"+booking._id+"/takeback")
+                i.fa.fa-reply.fa-lg
+            if(booking.status == 'closed')
+              span closed
+          td
+            a(href="/bookings/remove/"+booking._id)
+              i.fa.fa-trash-o.fa-

@@ -1,3 +1,5 @@
+'use strict';
+
 var github = {};
 var aws = {};
 
@@ -5,11 +7,10 @@ try {
   github = require('./github.json');
 } catch (e) {
   github = {  
-    GITHUB_CLIENT_ID : "",
-    GITHUB_CLIENT_SECRET : ""
+    GITHUB_CLIENT_ID : "aa8e3665f93ee81d67fc",
+    GITHUB_CLIENT_SECRET : "224c80c352126f65f26b1e7fd4092d015caf9b87"
   }
 }
-
 
 try {
   aws = require('./aws.json');

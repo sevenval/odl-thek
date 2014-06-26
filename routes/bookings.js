@@ -1,171 +1,217 @@
-var express = require('express');
-var helper = require('../helper.js');
-var bookings = helper.db.collection('bookings');
-var gadgets = helper.db.collection('gadgets');
-var router = express.Router();
+/*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2, todo: true */
+'use strict';
 
 
+var _             = require('underscore');
+var moment        = require('moment');
+var BookingModel  = require('../models/booking');
+var GadgetModel   = require('../models/gadget');
 
-/* all bookings */
-router.get('/',helper.ensureAuthenticated, function(req, res) {
-  var find = {};
-  if(req.session.user.role != 'admin'){
-     find.user = req.session.user._id;
+
+function renderBookings(res, gadget, data, error) {
+  res.render('bookings/new', {
+    gadget: gadget,
+    data: data,
+    error: error
+  });
+}
+
+
+var BookingsController = {
+
+  /**
+   * Lists all open and closed bookings for the current user. When the current
+   * has admin permissions, all bookins are shown.
+   *
+   * @todo: Pagination?
+   */
+  listAll: function (req, res, next) {
+    var where = {};
+
+    if (req.session.user.role !== 'admin') {
+      // limit bookings to current user when users role is not admin
+      where.user = req.session.user._id;
+    }
+
+    BookingModel.find(where)
+      .sort({'startdate': 1})
+      .exec(function (err, bookings) {
+
+        if (err) {
+          return next(err);
+        }
+
+        if (req.session.user.role === 'admin') {
+          // render admin view
+          res.render('bookings/list-admin', {
+            title: 'bookings',
+            bookings : _.groupBy(bookings, 'status')
+          });
+        } else {
+          // render user view
+          res.render('bookings/list', {
+            title: 'bookings',
+            bookings : bookings
+          });
+        }
+
+      });
+
+  },
+
+
+  newBooking: function (req, res, next) {
+
+    var data = {
+      startdate: moment().add(1, 'day').format('YYYY-MM-DD'),
+      enddate: moment().add(2, 'days').format('YYYY-MM-DD'),
+      starttime: moment().add(1, 'hour').format('HH:00'),
+      endtime: moment().add(1, 'hour').format('HH:00')
+    };
+
+    GadgetModel.findById(req.params.id, function (err, gadget) {
+      res.render('bookings/new', {
+        gadget: gadget,
+        data: data
+      });
+    });
+  },
+
+
+  saveBooking: function (req, res, next) {
+
+    var sBooking, eBooking, error;
+
+    sBooking = new Date(req.body.startdate + 'T' + req.body.starttime);
+    eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
+
+    if (sBooking.getTime() < Date.now()) {
+      error = 'Start date not valid';
+    } else if (eBooking.getTime() < sBooking.getTime()) {
+      error = 'End date not valid';
+    }
+
+    GadgetModel.findById(req.params.id, function (err, gadget) {
+
+      if (error) {
+        return renderBookings(res, gadget, req.body, error);
+      }
+
+      BookingModel.count({
+        // FIXME: Not covering all ranges!
+        gadget: gadget._id,
+        $or: [{
+          // Is the start date within a reserved booking range?
+          start: { $lte: sBooking.toISOString() },
+          end: { $gte: sBooking.toISOString() }
+        }, {
+          // Is the end date within a reserved booking range?
+          start: { $lte: eBooking.toISOString() },
+          end: { $gte: eBooking.toISOString() }
+        }]
+      }, function (err, bookings) {
+
+        if (bookings !== 0) {
+          error = 'Gadget not available in selected time range';
+          return renderBookings(res, gadget, req.body, error);
+        }
+
+        BookingModel.create({
+          gadget: gadget._id,
+          gadgetname: gadget.detailedName,
+          user: req.session.user._id,
+          username: req.session.user.displayname,
+          start: sBooking.toISOString(),
+          end: eBooking.toISOString()
+        });
+
+        res.render('bookings/ok', { gadget : gadget });
+
+      });
+    });
+  },
+
+
+  handout: function (req, res, next) {
+
+    // if(_booking.start < _booking.handoutdate) {
+    //  _booking.start = now;
+    // }
+
+    BookingModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          status: 'handout',
+          handoutdate: new Date(),
+          handoutuser: req.session.user._id
+        }
+      },
+      function (err, booking) {
+        if (err) {
+          return next(err);
+        }
+
+        GadgetModel.findByIdAndUpdate(
+          booking.gadget,
+          {
+            $inc: { handoutcount: 1 }
+          },
+          function (err, result) {
+            res.redirect('/bookings/');
+          }
+        );
+      }
+    );
+  },
+
+
+  takeback: function (req, res, next) {
+    BookingModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          status: 'closed',
+          closedate: new Date(),
+          closeduser: req.session.user._id
+        }
+      },
+      function (err, booking) {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect('/bookings/');
+      }
+    );
+  },
+
+
+  delBooking: function (req, res, next) {
+    BookingModel.remove({ _id: req.params.id }, function (err, result) {
+
+      if (err) return next(err);
+
+      res.redirect('/bookings/');
+    });
+  },
+
+
+  editBooking: function (req, res, next) {
+    BookingModel.findById(req.params.id, function (err, booking) {
+
+      if (err) return next(err);
+
+      res.render('bookings/edit', {
+        booking: booking,
+        startdate: moment(booking.startdate).format('YYYY-MM-DD'),
+        starttime: moment(booking.startdate).format('HH:mm'),
+        enddate: moment(booking.enddate).format('YYYY-MM-DD'),
+        endtime: moment(booking.endtime).format('HH:mm'),
+      });
+    });
   }
 
-  bookings.find(find).toArray(function(_err,_result){
-    if(_result&&_result!=undefined&&_result.length) {
-      console.log(_result[0]);
-      for(var i = 0 ; i < _result.length ; i++) {
-        _result[i].startdate = helper.prettyDate(_result[i].start);
-        _result[i].enddate = helper.prettyDate(_result[i].end);
-      }
-      res.render('bookings/list', { title: 'ODL: bookings', bookings : _result });  
-    } else {
-      res.render('bookings/list', { title: 'ODL: bookings' });  
-    }
-  })
-});
+};
 
-
-router.get('/:id',helper.ensureAuthenticated, function(req, res) {
-  bookings.findById(req.params.id,function(_err,_booking){
-    console.log(_booking);
-    gadgets.findById(_booking.gadget,function(_err,_gadget){
-      console.log(_gadget);
-
-    _gadget.description = _gadget.description.replace(/\\n/g,'<br/>')
-      res.render('bookings/detail', { title: 'ODL: bookings', booking : _booking, gadget : _gadget }); 
-    })
-  })
-});
-
-
-/* just set the status to handout */
-router.get('/:gid/handout', helper.ensureAuthenticated, function(req,res){
-  bookings.findById(req.params.gid,function(_err,_booking){
-    var now = new Date();
-    _booking.status = 'handout';
-    _booking.handoutdate = now;
-    if(_booking.start < _booking.handoutdate) {
-      _booking.start = now;
-    }
-    _booking.handoutuser = req.session.user._id;
-    bookings.save(_booking,function(_err,_result){
-      gadgets.findById(_booking.gadget,function(_err,_gadget){
-        _gadget.handoutcount = _gadget.handoutcount ? _gadget.handoutcount+1 : 1;
-        gadgets.save(_gadget,function(_err,_effected){
-          console.log('saved');
-        })
-      })
-      res.redirect('/bookings/');
-    })
-  })
-});
-
-
-/* just set the status to takeout */
-router.get('/:gid/takeback', helper.ensureAuthenticated, function(req,res){
-  bookings.findById(req.params.gid,function(_err,_booking){
-    var now = new Date();
-    _booking.status = 'closed';
-    _booking.closedate = now;
-    if(_booking.end > _booking.closedate) {
-      _booking.end = now;
-    }
-    _booking.closeuser = req.session.user._id;
-    console.log(_booking);
-
-    bookings.save(_booking,function(_err,_booking){
-      console.log(_booking);
-      res.redirect('/bookings/');
-    })
-  })
-});
-
-
-
-/* shows a form to edit an existing booking  helper.ensureAuthenticated,*/
-router.get('/:gid/edit',helper.ensureAuthenticated, function(req,res){
-  bookings.findById(req.params.gid,function(_err,_booking){
-
-
-    res.render('bookings/edit', { booking : _booking, stime : helper.getTime(_booking.start), etime : helper.getTime(_booking.end), sdate : helper.getDate(_booking.start), edate : helper.getDate(_booking.end)});
-  })
-});
-
-
-
-/* shows a form to insert a new booking */
-router.get('/:gid/new',helper.ensureAuthenticated, function(req,res){
-  gadgets.findById(req.params.gid,function(_err,_gadget){
-    res.render('bookings/new', { gadget : _gadget, stime : helper.now(), etime : helper.now()});
-  })
-});
-
-/* insert new booking */
-router.post('/:gid/new',helper.ensureAuthenticated, function(req,res){
-   gadgets.findById(req.params.gid,function(_err,_gadget){
-    console.log(req.body);
-    var start = req.body.startdate;
-    var starttime = req.body.starttime;
-    var end = req.body.enddate;
-    var endtime = req.body.endtime;
-    /* wenn das datum leer ist, wird generell abgewiesen */
-    if(start==undefined||start==''||end==undefined||end=='') {
-      res.render('bookings/new', { gadget : _gadget, error : 'Datum nicht ausgewählt.' })
-    } else {
-      if(starttime!=undefined&&starttime!='') {
-        start = start+'T'+starttime;
-      }
-      if(endtime!=undefined&&endtime!='') {
-        end = end+'T'+endtime;
-      }
-      var start = new Date(start);
-      var end = new Date(end);
-	  
-      /* if start is to big, reverse them both */
-  	  if( start > end ){
-    		tmp_start = start;
-    		start = end;
-    		end = tmp_start;
-  	  }
-
-      helper.checkGadgetBooking(_gadget._id,start,end,function(_result,_info){
-        if(_result) {
-          /* ist frei, also buchen */
-          var booking = {
-            gadget : req.params.gid,
-            gadgetname : _gadget.name+'('+_gadget.hwid+')',
-            user : req.session.user._id,
-            username : req.session.user.displayname,
-            start : start,
-            end : end
-          }
-          bookings.insert(booking,function(_err,_booking){
-            res.render('bookings/ok',{ gadget : _gadget});
-          }) 
-        } else {
-          res.render('bookings/new', { gadget : _gadget, error : 'Datum belegt.'+_info })
-        }
-      })
-
- 
-    }
-    
-  })
-})
-
-
-
-
-router.get('/remove/:id', helper.ensureAuthenticated, function(req, res) {
-  bookings.findById(req.params.id,function(_err,_booking){
-    bookings.remove(_booking,function(_err,_result){
-      res.redirect('/bookings/');  
-    })
-  })
-});
-
-
-module.exports = router;
+module.exports = BookingsController;

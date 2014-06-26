@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  
+
   #content
     #phones
       div.welcome
@@ -11,14 +11,15 @@ block content
         if(!locals.user)
           br
           div(style="text-align: center;")
-            a(href="/users/auth/github",class="loginbutton") login
+            a(href="/users/auth/github",class="loginbutton") login with Github
+            a(href="/users/auth/google",class="loginbutton") login with Google
       h1 Top Devices
       ul.elements
         - each gadget in gadgets
           li.element
             if(gadget.image)
               img(src=gadget.image)
-            else   
+            else
               img(src='/img/dummy_device.gif')
             div.click
               div.brand= gadget.brand
@@ -26,4 +27,3 @@ block content
               span.isolator
               div.os= gadget.os
       div.clear
-  

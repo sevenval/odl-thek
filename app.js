@@ -1,125 +1,145 @@
+/*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2, white: false */
+'use strict';
+
 var express = require('express');
-var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-
-var multer  = require('multer')
-
-
+var multer  = require('multer');
 var helper = require('./helper.js');
-
-var passport = require('passport');
 var util = require('util');
-var GitHubStrategy = require('passport-github').Strategy;
-
-
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var gadgets = require('./routes/gadgets');
 var bookings = require('./routes/bookings');
-var imprint = require('./routes/imprint');
 
-var app = express();
+var moment              = require('moment');
+var passport            = require('passport');
+var GitHubStrategy      = require('passport-github').Strategy;
+var GoogleStrategy      = require('passport-google-oauth').OAuth2Strategy;
+var Mongoose            = require('mongoose');
+var MongoStore          = require('connect-mongo')(session);
+var Config              = require('./config/app');
+var IndexController     = require('./routes/index');
+var BookingsController  = require('./routes/bookings');
 
-passport.serializeUser(function(user, done) {
+
+//
+// Setup passport strategies
+//
+passport.use(new GitHubStrategy(Config.auth.github, function (at, rt, user, cb) {
+  return cb(null, user);
+}));
+
+passport.use(new GoogleStrategy(Config.auth.google, function (at, rt, user, cb) {
+  return cb(null, user);
+}));
+
+passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+passport.deserializeUser(function (user, done) {
+  done(null, user);
 });
 
 
-passport.use(new GitHubStrategy({
-    clientID: helper.github.GITHUB_CLIENT_ID,
-    clientSecret: helper.github.GITHUB_CLIENT_SECRET,
-    callbackURL: helper.github.callbackURL
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      console.log('new',profile);
-      // To keep the example simple, the user's GitHub profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the GitHub account with a user record in your database,
-      // and return that user instead.
-      return done(null, profile);
-    });
-  }
-));
+//
+// Setup mongodb
+//
+Mongoose.connect(Config.db.url + Config.db.name);
+Mongoose.set('debug', true);
 
 
-
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
+//
+// Setup express
+//
+var app = express();
+app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-
 app.disable('view cache');
 app.disable('etag');
-
 app.use(favicon());
 app.use(logger('dev'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(session({ secret: 'odl-theklafksjd flaksjdflkajsdlkfjalksdjf', name : 'sid' }));
+//app.use(session({ secret: 'odl-theklafksjd flaksjdflkajsdlkfjalksdjf', name : 'sid' }));
+app.use(session({ secret: '***SECRET***', store: new MongoStore({ db: Config.db.name }) }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(multer({ dest: './public/uploads/',
+app.use(multer({
+  dest: './public/uploads/',
   rename: function (fieldname, filename) {
-    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
-  }}))
+    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
+  }
+}));
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(function(req, res, next){
-  res.locals.user = req.session.user;
-  console.log('user',res.locals.user);
+app.use(function (req, res, next) {
+  // make current user obj available in templates
+  app.locals.user = req.session.user;
   next();
 });
 
+//
+// View helper
+//
+app.locals.fmtDatetime = function (datetime) {
+  return moment(datetime).format('YYYY-MM-DD HH:mm');
+};
 
-app.use('/', routes);
+
+//
+// Setup routing
+//
+app.get('/',                          IndexController.index);
+app.get('/imprint',                   IndexController.imprint);
+
+// AUTH ROUTES
+// app.all('/',                AuthController.isAuthenticated);
+app.get('/bookings',                  BookingsController.listAll);
+
+// ADMIN ROUTES
+// app.all('/',                AuthController.isAdmin);
+app.get('/bookings/:id/handout',      BookingsController.handout);
+app.get('/bookings/:id/takeback',     BookingsController.takeback);
+app.get('/bookings/:id/new',          BookingsController.newBooking);
+app.post('/bookings/:id/new',         BookingsController.saveBooking);
+app.get('/bookings/:id/edit',         BookingsController.editBooking);
+app.post('/bookings/:id/edit',        BookingsController.saveBooking);
+app.get('/bookings/:id/delete',       BookingsController.delBooking);
+
 app.use('/users', users);
 app.use('/gadgets', gadgets);
-app.use('/bookings', bookings);
-app.use('/imprint', imprint);
 
-/// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+
+// error handling
+app.use(function (err, req, res, next) {
+
+  if (!module.parent) {
+    console.error(err.stack);
+  }
+
+  res.status  = err.status || 500;
+  err.message = err.message || 'Internal server error';
+
+  res.render('error', {
+    title: 'Something went wrong',
+    error: err,
+    showStacktrace: (app.get('env') !== 'PRODUCTION')
+  });
 });
 
 
-/// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+// assume 404 since no middleware responded
+app.use(function (req, res) {
+  res.status(404).render('404', {
+    title: '404',
+    url: req.originalUrl
+  });
 });
 
 

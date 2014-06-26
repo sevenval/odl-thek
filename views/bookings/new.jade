@@ -1,4 +1,4 @@
-form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
+form(method='post',action="/bookings/" + gadget._id + "/new",id="book")
   .getBook
     h1(onclick="$('#layerBookGadget').hide();$('#blank').hide();") Book
     span.bookBrand= gadget.brand
@@ -8,20 +8,20 @@ form(method='post',action="/bookings/"+gadget._id+"/new",id="book")
     .error= error
   .bookingTime
     .start
-      h2 Start 
-      input(type='date',name='startdate',value=locals.sdate)
-      span.dateIcon 
+      h2 Start
+      input(type='date', name='startdate', value=data.startdate)
+      span.dateIcon
       br
-      input(type='time',name='starttime',value=locals.stime)
+      input(type='time', name='starttime', value=data.starttime)
       span.timeIcon
-    .btw 
+    .btw
     .end
       h2 End
-      input(type='date',name='enddate',value=locals.sdate)
-      span.dateIcon 
-      input(type='time',name='endtime',value=locals.etime)
-      span.timeIcon 
+      input(type='date', name='enddate', value=data.enddate)
+      span.dateIcon
+      input(type='time', name='endtime', value=data.endtime)
+      span.timeIcon
     .clear
-    div(onclick="bookNow(); return false;").book 
+    div(onclick="bookNow(); return false;").book
       span Buchen
   br
