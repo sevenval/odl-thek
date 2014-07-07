@@ -168,7 +168,7 @@ router.get('/logout', function(req, res){
 
 
 router.get('/:id', helper.ensureAuthenticated, function(req, res) {
-  users.findById(req.params.id,function(_err,_user){
+  users.findById(req.params.id, function(_err,_user){
 
   bookings.find( {user:req.params.id} ).toArray(function(_err,_result){
     if(_result&&_result!=undefined&&_result.length) {
@@ -178,12 +178,22 @@ router.get('/:id', helper.ensureAuthenticated, function(req, res) {
         _result[i].enddate = helper.prettyDate(_result[i].end);
       }
     }
-	res.render('users/detail',{ title : 'ODL: userdetail', euser : _user, bookings : _result});
+
+	  res.render('users/detail',{
+      title : 'userdetail',
+      euser : _user,
+      bookings : _result,
+      breadcrumb: [
+        { url: '/users/', name: 'Users' },
+        { name: req.session.user.email }
+      ]
+    });
   })
   })
 });
 
 
+// TODO: Delete related bookings (?)
 router.get('/remove/:id', helper.ensureAuthenticated, function(req, res) {
   console.log('ID',req.params.id);
   users.findById(req.params.id,function(_err,_user){

@@ -19,8 +19,8 @@ var IndexController = {
 
       res.render('index', {
         title: 'ODL: welcome',
-        gadgets : (gadgets.length > 0) ? gadgets.slice(0, 12) : [],
-        devices : gadgets.length
+        gadgets: (gadgets.length > 0) ? gadgets.slice(0, 12) : [],
+        devices: gadgets.length
       });
     });
   },

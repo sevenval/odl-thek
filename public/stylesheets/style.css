@@ -634,6 +634,12 @@ tr:nth-child(even) {background-color: #405060}
 .clear{clear: both;}
 
 
+
+
+
+
+
+
 /*** JF ***/
 
 html, body {
@@ -650,6 +656,13 @@ html, body {
  	margin: 0 auto !important;
 }
 
+.breadcrumb {
+	padding: 10px 5px;
+}
+
+.breadcrumb, .breadcrumb a {
+	font-size: 13px;
+}
 
 table {
 	width: 100%;
@@ -666,20 +679,34 @@ table a {
 	font-size: 14px;
 }
 
+table .spacer, table .spacer th {
+	background: none;
+	height: 20px;
+}
+
+table .section th {
+	height: 20px;
+	font-size: 12px;
+}
+
 .btn {
 	display: inline-block;
-	width: auto;
-	height: 30px;
 	line-height: 30px;
-	padding: 0 8px;
-	border-radius: 3px;
-	font-size: 12px;
-	font-weight: normal;
-	cursor: pointer;
+	width: auto;
+	height: auto;
+	padding: 8px 22px;
+	font-weight: bold;
+	border-radius: 10px;
 	color: #fff;
-	background: #3C3E43;
+	background-color: #1CA055;
+	font-size: 12px;
+	cursor: pointer;
 	border: none;
 	text-align: center;
+}
+
+.btn-attention {
+	background: #dd4b39 !important;
 }
 
 .btn-large {

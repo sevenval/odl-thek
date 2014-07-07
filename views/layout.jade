@@ -2,9 +2,13 @@ doctype html
 html
   head
     title= "ODL: " + title
+    //link(rel='stylesheet', href='/stylesheets/normalize.css')
+
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/detail.css')
     link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
+    //link(rel='stylesheet', href='/stylesheets/foundation.min.css')
+
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="/javascripts/script.js")
     link(href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,300italic' rel='stylesheet' type='text/css')
@@ -53,6 +57,7 @@ html
                   span.login
                     a(href="/users/logout") logout
 
+      !{createBreadcrumbs(breadcrumb)}
       block content
 
       #footer

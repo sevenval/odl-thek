@@ -32,3 +32,5 @@ node_modules
 mongodb
 db
 git_status
+
+.DS_Store

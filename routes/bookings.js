@@ -8,6 +8,10 @@ var BookingModel  = require('../models/booking');
 var GadgetModel   = require('../models/gadget');
 
 
+//
+// private functions
+//
+
 function renderBookings(res, gadget, data, error) {
   res.render('bookings/new', {
     gadget: gadget,
@@ -21,7 +25,7 @@ var BookingsController = {
 
   /**
    * Lists all open and closed bookings for the current user. When the current
-   * has admin permissions, all bookins are shown.
+   * user has admin permissions, all bookings are shown.
    *
    * @todo: Pagination?
    */
@@ -37,9 +41,7 @@ var BookingsController = {
       .sort({'startdate': 1})
       .exec(function (err, bookings) {
 
-        if (err) {
-          return next(err);
-        }
+        if (err) { return next(err); }
 
         if (req.session.user.role === 'admin') {
           // render admin view
@@ -54,9 +56,7 @@ var BookingsController = {
             bookings : bookings
           });
         }
-
       });
-
   },
 
 
@@ -94,28 +94,26 @@ var BookingsController = {
     GadgetModel.findById(req.params.id, function (err, gadget) {
 
       if (error) {
+        // start or end date not valid -> return
         return renderBookings(res, gadget, req.body, error);
       }
 
       BookingModel.count({
-        // FIXME: Not covering all ranges!
+        // count bookings colliding with requested date range...
         gadget: gadget._id,
-        $or: [{
-          // Is the start date within a reserved booking range?
-          start: { $lte: sBooking.toISOString() },
-          end: { $gte: sBooking.toISOString() }
-        }, {
-          // Is the end date within a reserved booking range?
-          start: { $lte: eBooking.toISOString() },
-          end: { $gte: eBooking.toISOString() }
-        }]
+        start: { $lte: eBooking.toISOString() },
+        end: { $gte: sBooking.toISOString() }
       }, function (err, bookings) {
 
+        if (err) { return next(err); }
+
         if (bookings !== 0) {
+          // ...if number of bookings is not zero, the gadget is not available
           error = 'Gadget not available in selected time range';
           return renderBookings(res, gadget, req.body, error);
         }
 
+        // gadget available -> create booking entry
         BookingModel.create({
           gadget: gadget._id,
           gadgetname: gadget.detailedName,
@@ -123,21 +121,19 @@ var BookingsController = {
           username: req.session.user.displayname,
           start: sBooking.toISOString(),
           end: eBooking.toISOString()
+        }, function (err) {
+
+          if (err) { return next(err); }
+
+          res.render('bookings/ok', { gadget : gadget });
+
         });
-
-        res.render('bookings/ok', { gadget : gadget });
-
       });
     });
   },
 
 
   handout: function (req, res, next) {
-
-    // if(_booking.start < _booking.handoutdate) {
-    //  _booking.start = now;
-    // }
-
     BookingModel.findByIdAndUpdate(
       req.params.id,
       {
@@ -148,9 +144,7 @@ var BookingsController = {
         }
       },
       function (err, booking) {
-        if (err) {
-          return next(err);
-        }
+        if (err) { return next(err); }
 
         GadgetModel.findByIdAndUpdate(
           booking.gadget,
@@ -177,9 +171,7 @@ var BookingsController = {
         }
       },
       function (err, booking) {
-        if (err) {
-          return next(err);
-        }
+        if (err) { return next(err); }
 
         res.redirect('/bookings/');
       }
@@ -190,7 +182,7 @@ var BookingsController = {
   delBooking: function (req, res, next) {
     BookingModel.remove({ _id: req.params.id }, function (err, result) {
 
-      if (err) return next(err);
+      if (err) { return next(err); }
 
       res.redirect('/bookings/');
     });
@@ -200,7 +192,7 @@ var BookingsController = {
   editBooking: function (req, res, next) {
     BookingModel.findById(req.params.id, function (err, booking) {
 
-      if (err) return next(err);
+      if (err) { return next(err); }
 
       res.render('bookings/edit', {
         booking: booking,

@@ -24,6 +24,7 @@ var MongoStore          = require('connect-mongo')(session);
 var Config              = require('./config/app');
 var IndexController     = require('./routes/index');
 var BookingsController  = require('./routes/bookings');
+var GadgetsController   = require('./routes/gadgets');
 
 
 //
@@ -88,7 +89,22 @@ app.use(function (req, res, next) {
 // View helper
 //
 app.locals.fmtDatetime = function (datetime) {
-  return moment(datetime).format('YYYY-MM-DD HH:mm');
+  return moment.utc(datetime).format('YYYY-MM-DD HH:mm');
+};
+
+app.locals.createBreadcrumbs = function (breadcrumb) {
+  if (!breadcrumb) { return ''; }
+  var bc = [];
+  breadcrumb.forEach(function (bcObj) {
+    if (bcObj.url) {
+      bc.push('<a href="' + bcObj.url + '">' + bcObj.name + '</a>');
+    } else {
+      bc.push(bcObj.name);
+    }
+  });
+  return '<div class="breadcrumb">' +
+    '<a href="/gadgets">Start</a> &raquo; ' + bc.join(' &raquo; ') +
+    '</div>';
 };
 
 
@@ -110,10 +126,22 @@ app.get('/bookings/:id/new',          BookingsController.newBooking);
 app.post('/bookings/:id/new',         BookingsController.saveBooking);
 app.get('/bookings/:id/edit',         BookingsController.editBooking);
 app.post('/bookings/:id/edit',        BookingsController.saveBooking);
-app.get('/bookings/:id/delete',       BookingsController.delBooking);
+app.get('/bookings/:id/remove',       BookingsController.delBooking);
 
 app.use('/users', users);
-app.use('/gadgets', gadgets);
+
+
+app.get('/gadgets',                   GadgetsController.listAll);
+app.get('/gadgets/top',               GadgetsController.listTop);
+app.get('/gadgets/new',               GadgetsController.create);
+app.get('/gadgets/:id',               GadgetsController.list);
+app.get('/gadgets/:id/edit',          GadgetsController.edit);
+app.post('/gadgets/:id/save',         GadgetsController.save);
+app.get('/gadgets/:id/remove',        GadgetsController.remove);
+
+
+
+//app.use('/gadgets', gadgets);
 
 
 // error handling

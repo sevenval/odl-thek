@@ -5,26 +5,26 @@ block content
   #layerBookGadget
   #blank
   #search
-    form(name='search', action='/gadgets/', method='get', id='formSearch') 
+    form(name='search', action='/gadgets/', method='get', id='formSearch')
       input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
-      div.lupe 
+      div.lupe
         input(type="image",src='/img/search.gif')
       div.lupe
         input(type='image', name='submit', src='/img/filter.gif')
       if(locals.user.role == 'admin')
         div.lupe
-          a(href='/gadgets/new') 
+          a(href='/gadgets/new')
             img(src='/img/add_btn.gif')
       .clear
   #phones
     if(!gadgets)
-      h1 no gadgets for your search 
-    else 
+      h1 no gadgets for your search
+    else
       h1= gadgets.length+" gadgets"
       ul.elements
         - each gadget in gadgets
           li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
-            .hide.info 
+            .hide.info
               if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
                 div.traffic_handout
               else if(gadget.bookings&&gadget.bookings.current)
@@ -37,11 +37,11 @@ block content
                 div.name= gadget.name
                 span.isolator
                 div.os= gadget.os
-              div.lastBook 
+              div.lastBook
                 if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.username)
                   if(gadget.bookings.current.status=='handout')
                     span current
-                  else 
+                  else
                     span reserved
                   br
                   span.user= gadget.bookings.current.username
@@ -72,7 +72,7 @@ block content
             .cont
               if(gadget.image)
                 img(src=gadget.image)
-              else   
+              else
                 img(src='/img/dummy_device.gif')
               if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
                 div.traffic_handout.smallline
@@ -82,9 +82,9 @@ block content
                 div.traffic.smallline
               .click
                 div.spec
-                
+
                 div.brand= gadget.brand
                 div.name= gadget.name
                 span.isolator
                 div.os= gadget.os
-    div.clear    
+    div.clear

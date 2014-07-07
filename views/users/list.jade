@@ -5,8 +5,8 @@ block content
     tr
       th Name
       th Email
-      th Role
       th Type
+      th Role
       th
       th
     - each user in users
@@ -20,8 +20,6 @@ block content
         td
           =user.role
         td
-          a(href='/users/'+user._id)
-            i.fa.fa-fw.fa-pencil.fa-lg
+          a(href='/users/'+user._id).edit
         td
-          a(href='/users/remove/'+user._id)
-            i.fa.fa-fw.fa-trash-o.fa-lg
+          a(href='/users/remove/'+user._id).cancel

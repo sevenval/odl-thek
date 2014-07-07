@@ -6,14 +6,13 @@ block content
   .box
     .detailpage
       .basic
-        a.button(href="/users/")
-          span back
         .right
           .userdetails
             h2= euser.displayname
-            h1= euser.name  
-          p Role: 
-            form(action="/users/"+euser._id+"/setrole",method="post")
+            h1= euser.name
+            form(action="/users/"+euser._id+"/setrole", method="post")
+
+              p Role:
               select(name='role')
                 if(euser.role == 'admin')
                   option(selected) admin
@@ -23,16 +22,15 @@ block content
                   option(selected) user
                 else
                   option user
-              .active
-                if(euser.active)
-                  input(type='checkbox',name="active",checked="checked")   
-                else 
-                  input(type='checkbox',name="active") 
-                  span Aktiv
-                input(type="submit")
+
+                input(type='checkbox',name="active",checked="euser.active")
+
                 p
-                  a(href='/users/remove/'+euser._id).button 
-                    span löschen
+                  input(type="submit", value="Speichern").btn
+
+                  a(href='/users/remove/'+euser._id).btn.btn-attention
+                    | Löschen
+
         .image
           if euser.avatarurl
             img(src=euser.avatarurl, style="width:100px; ")
@@ -68,9 +66,9 @@ block content
               a(href="/bookings/remove/"+booking._id).cancel
 
 
-        
 
 
-       
-        
-    
+
+
+
+

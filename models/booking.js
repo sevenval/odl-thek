@@ -15,7 +15,8 @@ var BookingSchema = new Mongoose.Schema({
   },
 
   user: {
-    type: String
+    type: String,
+    ref: 'User'
   },
 
   gadgetname: {

@@ -14,13 +14,16 @@ block content
         .image
           if(gadget.image)
             img(src=gadget.image,style="width: 300px;")
-          else   
+          else
             img(src='/img/dummy_device.gif',style="width: 300px;")
     .detailcontent
       .desc!= gadget.description
-      a.booknow(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") book
+      a.booknow(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+
       if(locals.user.role == 'admin')
-        a.booknow(href="/gadgets/"+gadget._id+"/edit") edit
+        a.booknow(href="/gadgets/"+gadget._id+"/edit") Edit
+        a.booknow.btn-attention(href="/gadgets/"+gadget._id+"/delete") Delete
+
       .info
         b version
         br
@@ -39,7 +42,7 @@ block content
     .clear
     br
     #layer
-    table.detailbookings(style="width:100%")
+    table.detailbookings
       tr
         th name
         th start date
@@ -47,22 +50,22 @@ block content
         th handout date
         th handout user
         th
-
       - each booking in bookings
         tr
-          td= booking.username
+          td
+            if(booking.user)
+              =booking.user.email
           td
             =fmtDatetime(booking.start)
           td
-             =fmtDatetime(booking.end)
+            =fmtDatetime(booking.end)
           td
-            if(booking.handoutdate)
-              span= booking.handoutdate
+            =fmtDatetime(booking.handoutdate)
           td
             if(booking.handoutuser)
-              span= booking.handoutuser
-          if(locals.user.role == 'admin')
+              =booking.handoutuser.email
+          if(user.role == 'admin')
             td
-              a(href="/bookings/remove/"+booking._id) cancel
+              a(href="/bookings/remove/"+booking._id) remove
 
 

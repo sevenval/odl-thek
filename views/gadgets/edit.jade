@@ -3,25 +3,65 @@ extends ../layout
 block content
   h1= gadget.name
   br
-  a(href="/gadgets/"+gadget._id+"") back
+  a(href="/gadgets/"+gadgetId+"") back
   br
-  form(action="/gadgets/"+gadget._id+"/edit",method="post")
-    each value,key in gadget
-      if(key!="_id"&&key!="description")
-        span= key
-        br
-        input(type="text",name=key,value=value)
-        br
-      if(key=='description')
-        span description
-        br
-        textarea(name=key,rows="4")= value
-        br
+  form(action="/gadgets/" + gadget._id + "/save",method="post")
+    span| HWID:
+    br
+    input(type="text", name='hwid', value=gadget.hwid)
+    br
+    br
+
+    span| Name:
+    br
+    input(type="text", name='name', value=gadget.name)
+    br
+    br
+
+    span| Brand:
+    br
+    input(type="text", name='brand', value=gadget.brand)
+    br
+    br
+
+    span| Model:
+    br
+    input(type="text", name='model', value=gadget.model)
+    br
+    br
+
+    span| Description:
+    br
+    textarea(name='description')
+      = gadget.description
+    br
+    br
+
+    span| OS:
+    br
+    input(type="text", name='os', value=gadget.os)
+    br
+    br
+
+    span| Type:
+    br
+    input(type="text", name='type', value=gadget.type)
+    br
+    br
+
+    span| Location:
+    br
+    input(type="text", name='location', value=gadget.location)
+    br
+    br
+
     input(type="submit")
+
+  hr
 
   if(gadget.image)
     img(src=gadget.image,style="width: 100px;")
-  else   
+  else
     img(src='/img/device.jpg',style="width: 100px;")
   br
 
