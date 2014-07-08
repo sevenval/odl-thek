@@ -55,8 +55,8 @@
 }
 
 a.loginbutton {
-  display: block;
-  margin: 20px auto;
+  display: inline-block;
+  margin: 20px;
   border-radius: 10px;
   width:155px;
   height: 32px;

@@ -2,7 +2,6 @@
 'use strict';
 
 var GadgetModel = require('../models/gadget');
-var Config      = require('../config/app');
 
 
 var IndexController = {

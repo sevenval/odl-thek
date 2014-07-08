@@ -7,12 +7,12 @@ block content
       div.welcome
         div.introduction Welcome to ODL
           span THEK
-        div.introductionText Login with your GitHub account to rent one of our #{devices} devices
+        div.introductionText Login below to rent one of our #{devices} devices
         if(!locals.user)
           br
-          div(style="text-align: center;")
-            a(href="/users/auth/github",class="loginbutton") login with Github
-            a(href="/users/auth/google",class="loginbutton") login with Google
+          div.t-center
+            a(href="/users/auth/github").loginbutton Login with Github
+            a(href="/users/auth/google").loginbutton Login with Google
       h1 Top Devices
       ul.elements
         - each gadget in gadgets
@@ -21,7 +21,7 @@ block content
               img(src=gadget.image)
             else
               img(src='/img/dummy_device.gif')
-            div.click
+            div.details
               div.brand= gadget.brand
               div.name= gadget.name
               span.isolator

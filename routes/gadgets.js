@@ -1,16 +1,48 @@
 /*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2, todo: true */
 'use strict';
 
-
+var Mongoose      = require('mongoose');
+var Knox          = require('knox');
+var Config        = require('../config/app');
 var GadgetModel   = require('../models/gadget');
 var BookingModel  = require('../models/booking');
 
+
+/**
+ * Fetches active and last bookings for gadgets.
+ * @private
+ */
+function createGadgetStats(cb) {
+
+  var stats = {}, now = new Date();
+
+  BookingModel.find({}, function (err, bookings) {
+
+    // create booking stats per gadget (last and current booking)
+    bookings.forEach(function (booking) {
+
+      // index gadgets by id
+      stats[booking.gadget] = stats[booking.gadget] || {};
+
+      if (booking.end < now) {
+         // todo nur übernehmen, wenn wirklich das letzte.
+        stats[booking.gadget].last = booking;
+      }
+      if (booking.start < now && booking.end > now) {
+        stats[booking.gadget].current = booking;
+      }
+    });
+
+    cb(stats);
+  });
+}
 
 
 var GadgetController = {
 
   /**
-   * List all gadgets.
+   * Lists all gadgets.
+   * @todo Pagination needed?
    */
   listAll: function (req, res, next) {
 
@@ -22,74 +54,44 @@ var GadgetController = {
 
     GadgetModel.find(where)
       .sort({ brand: 1 })
+      .limit(750)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
-        res.render('gadgets/list', {
-          title: 'gadgets',
-          gadgets: gadgets
+        createGadgetStats(function (stats) {
+          res.render('gadgets/list', {
+            title: 'gadgets',
+            gadgets: gadgets,
+            stats: stats
+          });
         });
+
       });
   },
 
-  /*
-  // REFACTOR in listAll
-  router.get('/',  helper.ensureAuthenticated, function(req, res) {
-    var find = { };
-    if(req.query.q) {
-      find.name = {$regex : ".*"+req.query.q+".*", $options: 'i'};
-    }
-    gadgets.find(find).sort({brand:1}).toArray(function(_err,_result){
-      if(_result&&_result!=undefined&&_result.length) {
-      bookings.find({}).toArray(function(_err,_bookings){
-        var book = {};
-        var now = new Date();
-        for(var i = 0; i < _bookings.length ; i++) {
-          if(!book[_bookings[i].gadget]) {
-            book[_bookings[i].gadget] = {
-              last : null,
-              current : null
-            };
-          }
-          if(_bookings[i].end < now) { // todo nur übernehmen, wenn wirklich das letzte.
-            book[_bookings[i].gadget].last = _bookings[i];
-          }
-          if(_bookings[i].start < now && _bookings[i].end > now) {
-            book[_bookings[i].gadget].current = _bookings[i];
-          }
-        }
-        for(var i = 0 ; i < _result.length;i++) {
-          _result[i].bookings = book[_result[i]._id];
-        }
-        console.log(_result[0]);
-        res.render('gadgets/list', { title: 'ODL: gadgets', gadgets : _result});
-      })
-      } else {
-        res.render('gadgets/list', { title: 'ODL: gadgets' });
-      }
-    })
-  });
-  */
 
   listTop: function (req, res, next) {
-    GadgetModel.find({ type :  "mobile", handoutcount : {$gt : 0 } })
+    GadgetModel.find({ type: "mobile", handoutcount : {$gt : 0 } })
       .sort({ brand: 1 })
+      .limit(20)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
-        res.render('gadgets/list', {
-          title: 'top gadgets',
-          gadgets: gadgets
+        createGadgetStats(function (stats) {
+          res.render('gadgets/list', {
+            title: 'top gadgets',
+            gadgets: gadgets,
+            stats: stats
+          });
         });
       });
   },
 
 
   /**
-   * Display gadget details page with booking history.
+   * Displays the gadget overview page with booking history.
    */
   list: function (req, res, next) {
-
     GadgetModel.findById(req.params.id, function (err, gadget) {
       if (err) { return next(err); }
 
@@ -111,14 +113,17 @@ var GadgetController = {
   },
 
 
+  /**
+   * Renders the blank gadget details form.
+   */
   create: function (req, res, next) {
-    res.render('gadgets/edit', {
-      title: "ODL: new gadget",
-      gadget: {}
-    });
+    res.render('gadgets/edit', { title: 'New Gadget', gadget: {} });
   },
 
 
+  /**
+   * Renders the filled gadget details form.
+   */
   edit: function (req, res, next) {
     GadgetModel.findById(req.params.id, function (err, gadget) {
       if (err) { return next(err); }
@@ -131,80 +136,76 @@ var GadgetController = {
   },
 
 
+  /**
+   * Updates or inserts a gadget. Inserting is done when no id is passed.
+   */
   save: function (req, res, next) {
 
-    console.log('a');
-    console.dir(req.body);
-
-    var where = {};
-
-    if (req.params.id !== 'undefined') {
-      where._id = req.params.id;
+    if (req.params.id === 'undefined') {
+      req.params.id = new Mongoose.Types.ObjectId();
     }
 
-    GadgetModel.findOneAndUpdate(
-      where,
+    GadgetModel.update(
+      { _id: req.params.id },
       req.body,
-      {
-        // create gadget if not exists
-        upsert: true
-      },
+      { upsert: true },
       function (err, gadget) {
-
-        console.dir(err);
-
         if (err) { return next(err); }
 
-        var id = req.params.id || gadget._id;
-
-        res.redirect('/gadgets/' + id + '/edit');
+        res.redirect('/gadgets/' + req.params.id + '/edit');
       }
     );
   },
 
 
   /**
-   * Delete a gadget.
-   * @todo: Delete related bookings
+   * Deletes a gadget and related bookings.
    */
   remove: function (req, res, next) {
-    GadgetModel.remove({ _id: req.params.id }, function (err, result) {
+    GadgetModel.remove({ _id: req.params.id }, function (err) {
       if (err) { return next(err); }
-      res.redirect('/gadgets/');
-    });
-  }
 
+      BookingModel.remove({ gadget: req.params.id }, function (err) {
+        if (err) { return next(err); }
+
+        res.redirect('/gadgets/');
+
+      });
+    });
+  },
+
+
+  /**
+   * Uploads a file to S3.
+   */
+  upload: function (req, res, next) {
+    var s3 = Knox.createClient(Config.aws);
+
+    s3.putFile(
+      "./" + req.files.image.path,
+      req.files.image.name,
+      {
+        'Content-Type': req.files.image.mimetype,
+        'Content-Length': req.files.image.size,
+        'x-amz-acl': 'public-read'
+      },
+      function (err, s3response) {
+        if (err) { return next(err); }
+
+        GadgetModel.findByIdAndUpdate(
+          req.params.id,
+          { image: s3response.req.url },
+          { new: true },
+          function (err, gadget) {
+            if (err) { return next(err); }
+
+            res.render('gadgets/edit', { title: gadget.name, gadget: gadget });
+          }
+        );
+
+      }
+    );
+  }
 };
 
 module.exports = GadgetController;
-
-
-/*
-// TODO REFACTOR
-router.post('/:id/upload',  function(req, res) {
-  var s3 = knox.createClient({
-      key: helper.aws.ID,
-      secret: helper.aws.Secret,
-      bucket: "odlthek2"
-  });
-
-
-  var s3Headers = {
-    'Content-Type': req.files.image.mimetype,
-
-    'Content-Length': req.files.image.size,
-    'x-amz-acl': 'public-read'
-  };
-
-  console.log(s3,s3Headers,req.files.image);
-
-  s3.putFile("./"+req.files.image.path, req.files.image.name, s3Headers, function(err, s3response){
-      gadgets.findById(req.params.id,function(_err,_gadget){
-        _gadget.image = s3response.req.url;
-        gadgets.save(_gadget,function(_err,_result){
-          res.render('gadgets/edit', { title: _gadget.name , gadget : _gadget});
-        })
-      })
-  });
-});
-*/

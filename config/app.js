@@ -5,7 +5,8 @@
 var DEVELOPMENT = {
   db: {
     url: 'mongodb://localhost/',
-    name: 'odlthek'
+    name: 'odlthek',
+    debug: true
   },
   auth: {
     github: {
@@ -25,6 +26,11 @@ var DEVELOPMENT = {
         hostedDomain: 'sevenval.com'
       }
     }
+  },
+  aws: {
+    key: '',
+    secret: '',
+    bucket: "odlthek2"
   }
 };
 

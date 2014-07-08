@@ -6,7 +6,7 @@ block content
   .box
     .detailpage
       .basic
-        a.button(href="/users/")
+        a.button(href="/gadgets/")
           span back
         .bottom
           h2= gadget.brand
@@ -20,9 +20,9 @@ block content
       .desc!= gadget.description
       a.booknow(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
 
-      if(locals.user.role == 'admin')
+      if(user.role == 'admin')
         a.booknow(href="/gadgets/"+gadget._id+"/edit") Edit
-        a.booknow.btn-attention(href="/gadgets/"+gadget._id+"/delete") Delete
+        a.booknow.btn-attention(href="/gadgets/"+gadget._id+"/remove") Delete
 
       .info
         b version

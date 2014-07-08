@@ -3,7 +3,7 @@ extends ../layout
 block content
   h1= gadget.name
   br
-  a(href="/gadgets/"+gadgetId+"") back
+  a(href="/gadgets/"+ gadget._id +"") back
   br
   form(action="/gadgets/" + gadget._id + "/save",method="post")
     span| HWID:

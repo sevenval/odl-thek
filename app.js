@@ -51,7 +51,7 @@ passport.deserializeUser(function (user, done) {
 // Setup mongodb
 //
 Mongoose.connect(Config.db.url + Config.db.name);
-Mongoose.set('debug', true);
+Mongoose.set('debug', Config.db.debug);
 
 
 //
@@ -84,6 +84,7 @@ app.use(function (req, res, next) {
   app.locals.user = req.session.user;
   next();
 });
+
 
 //
 // View helper
@@ -138,10 +139,8 @@ app.get('/gadgets/:id',               GadgetsController.list);
 app.get('/gadgets/:id/edit',          GadgetsController.edit);
 app.post('/gadgets/:id/save',         GadgetsController.save);
 app.get('/gadgets/:id/remove',        GadgetsController.remove);
+app.get('/gadgets/:id/upload',        GadgetsController.upload);
 
-
-
-//app.use('/gadgets', gadgets);
 
 
 // error handling

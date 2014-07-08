@@ -94,18 +94,22 @@ a {
 .elements {
 	/*padding: 0 10px;*/
 }
+
 ul {padding:0; margin: 0;}
-.elements .element{
+
+.elements .element {
 	float: left;
 	width: 220px;
-	margin: 9px 9px;
-	border:1px solid white;
-	background-color: white;
+	height: 320px;
+	margin: 10px;
+/*	border:1px solid white;
+	background-color: white;*/
 	text-align: center;
 	border-radius: 0 10px 0 0 ;
-	height: 320px;
 	list-style: none;
+	overflow: hidden;
 }
+
 .overlay {
 	border-radius: 0 10px 0 0 ;
 	display: block;
@@ -119,8 +123,8 @@ ul {padding:0; margin: 0;}
 }
 .element img {
 	width:100%;
-  height:220px;
-  border-radius: 0 10px 0 0 ;
+	height:220px;
+	border-radius: 0 10px 0 0 ;
 	margin-bottom: -4px;
 }
 .info {
@@ -149,19 +153,8 @@ ul {padding:0; margin: 0;}
 }
 .spec {
 	text-align: left;
-
-
 }
-.click{
-	font-weight: normal;
-	background-color: #405060;
-	height: 95px;
-	display: block;
-	height: 103px;
-  text-align: left;
-  padding: 0 10px;
-	font-size: 12px;
-}
+
 .brand {
 	padding: 10px 0 5px 0;
 	font-size: 12px;
@@ -203,22 +196,22 @@ ul {padding:0; margin: 0;}
 .lastBook .user{
 	font-weight: 400;
 }
-.buttons,.buttons_handout,.buttons_reserved {
+/*.buttons,.buttons_handout,.buttons_reserved {
 	position: relative;
 	height: 66px;
 }
 .grey {
 	background-color: #405060;
 	border-radius: 0 10px 0 0;
-}
-.buttons div a ,.buttons_handout div a,.buttons_reserved div a{
+}*/
+/*.buttons div a ,.buttons_handout div a,.buttons_reserved div a{
   position: relative;
   top: 15px;
   display: block;
   color: #fff;
   font-weight: 700;
-}
-.buttons div {
+}*/
+/*.buttons div {
 	height: 50px;
 	width: 95px;
 	border-radius: 10px;
@@ -227,8 +220,8 @@ ul {padding:0; margin: 0;}
 	position: absolute;
 	text-align: center;
 	vertical-align: middle;
-}
-
+}*/
+/*
 .buttons_handout div {
   height: 50px;
   width: 95px;
@@ -251,7 +244,7 @@ ul {padding:0; margin: 0;}
   text-align: center;
   vertical-align: middle;
 }
-
+*/
 
 .booking {
     background-color: #008000;
@@ -664,6 +657,10 @@ html, body {
 	font-size: 13px;
 }
 
+.t-center{
+	text-align: center;
+}
+
 table {
 	width: 100%;
 	border: none;
@@ -727,4 +724,38 @@ table .section th {
 
 #filter-box.box-open {
 	height: 100px;
+}
+
+.element-front {
+	display: block;
+	height: 320px;
+}
+
+.element-back {
+	display: none;
+	height: 320px;
+	background-color: #405060;
+	border-radius: 0 10px 0 0;
+}
+
+.element .details {
+	height: 100px;
+	background-color: #405060;
+	font-weight: normal;
+	text-align: left;
+	padding: 0 10px;
+	font-size: 12px;
+}
+
+.element .btn {
+	font-weight: 700;
+	margin: 5px;
+}
+
+.element.showDetails .element-back {
+	display: block !important;
+}
+
+.element.showDetails .element-front {
+	display: none !important;
 }

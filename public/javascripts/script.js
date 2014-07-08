@@ -3,21 +3,6 @@
 'use strict';
 
 
-
-$(document).ready(function () {
-
-
-  $('a#filter-btn').click(function (e) {
-    $('#filter-box').toggleClass('box-open');
-  });
-
-  $('#filter-box input[type="checkbox"]').change(function (e) {
-    $(e.target).closest('form').submit();
-  });
-
-});
-
-
 function openBookingLayer(_url) {
   $.ajax({
     url: _url
@@ -36,3 +21,27 @@ function bookNow() {
     $('#blank').show();
   });
 }
+
+$(function () {
+
+  $('a#filter-btn').click(function (e) {
+    $('#filter-box').toggleClass('box-open');
+  });
+
+  $('#filter-box input[type="checkbox"]').change(function (e) {
+    $(e.target).closest('form').submit();
+  });
+
+  $('.element').mouseover(function (e) {
+    $(this).addClass('showDetails');
+  });
+
+  $('.element').mouseout(function (e) {
+    $(this).removeClass('showDetails');
+  });
+
+  $('.book-btn').click(function (e) {
+    openBookingLayer($(this).data('url'));
+  });
+
+});

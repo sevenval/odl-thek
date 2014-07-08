@@ -4,73 +4,63 @@ block content
   #layerBookGadget
   #blank
 
-  table.bookingList
-    tr.headline
-      th Name
-      th Device/ID
-      th Start Reservation
-      th End Reservation
-      th
-      th.last
-    tr.section
-      th(colspan=6)
-        | Upcoming bookings
-    if(bookings && bookings.open)
-      - each booking in bookings.open
-        tr
-          td
-            =booking.username
-          td
-            =booking.gadgetname
-          td
-            =fmtDatetime(booking.start)
-          td
-            =fmtDatetime(booking.end)
-          td.green
-            a(href="/bookings/"+booking._id+"/handout").handOut
-          td.green
-            a(href="/bookings/"+booking._id+"/remove").cancel
+  if(bookings && (bookings.open || bookings.handout || bookings.closed))
+    table.bookingList
+      tr.headline
+        th Name
+        th Device/ID
+        th Start Reservation
+        th End Reservation
+        th
+        th.last
+      if(bookings && bookings.open)
+        tr.section
+          th(colspan=6)
+            | Upcoming bookings
+        - each booking in bookings.open
+          tr
+            td=booking.username
+            td=booking.gadgetname
+            td=fmtDatetime(booking.start)
+            td=fmtDatetime(booking.end)
+            td.green
+              a(href="/bookings/"+booking._id+"/handout").handOut
+            td.green
+              a(href="/bookings/"+booking._id+"/remove").cancel
 
+      if(bookings && bookings.handout)
+        tr.spacer
+          th(colspan=6)
+        tr.section
+          th(colspan=6)
+            | Active bookings
+        - each booking in bookings.handout
+          tr
+            td=booking.username
+            td=booking.gadgetname
+            td=fmtDatetime(booking.start)
+            td=fmtDatetime(booking.end)
+            td.green
+              a(href="/bookings/"+booking._id+"/takeback").takeBack
+            td.green
+              a(href="/bookings/"+booking._id+"/remove").cancel
 
-    if(bookings && bookings.handout)
-      tr.spacer
-        th(colspan=6)
-      tr.section
-        th(colspan=6)
-          | Active bookings
-      - each booking in bookings.handout
-        tr
-          td
-            =booking.username
-          td
-            =booking.gadgetname
-          td
-            =fmtDatetime(booking.start)
-          td
-            =fmtDatetime(booking.end)
-          td.green
-            a(href="/bookings/"+booking._id+"/takeback").takeBack
-          td.green
-            a(href="/bookings/"+booking._id+"/remove").cancel
+      if(bookings && bookings.closed)
+        tr.spacer
+          th(colspan=6)
+        tr.section
+          th(colspan=6)
+            | Closed bookings
+        - each booking in bookings.closed
+          tr
+            td=booking.username
+            td=booking.gadgetname
+            td=fmtDatetime(booking.start)
+            td=fmtDatetime(booking.end)
+            td.green
+              |closed
+            td.green
+              a(href="/bookings/"+booking._id+"/remove").cancel
 
-
-    if(bookings && bookings.closed)
-      tr.spacer
-        th(colspan=6)
-      tr.section
-        th(colspan=6)
-          | Closed bookings
-      - each booking in bookings.closed
-        tr
-          td
-            =booking.username
-          td
-            =booking.gadgetname
-          td
-            =fmtDatetime(booking.start)
-          td
-            =fmtDatetime(booking.end)
-          td.green
-            |closed
-          td.green
-            a(href="/bookings/"+booking._id+"/remove").cancel
+  else
+    | No bookings...
