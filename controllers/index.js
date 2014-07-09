@@ -6,15 +6,20 @@ var GadgetModel = require('../models/gadget');
 
 var IndexController = {
 
+
   /**
-   * Index action
+   * Renders the startpage or redirects to /gadget for authenticated users.
    */
   index: function (req, res, next) {
+
+    if (req.isAuthenticated()) {
+      // redirect authenticated users to gadget list instead of startpage
+      return res.redirect('/gadgets/');
+    }
+
     GadgetModel.find({}, function (err, gadgets) {
 
-      if (err) {
-        return next(err);
-      }
+      if (err) { return next(err); }
 
       res.render('index', {
         title: 'ODL: welcome',
@@ -24,14 +29,16 @@ var IndexController = {
     });
   },
 
+
   /**
-   * Imprint action
+   * Renders the imprint page
    */
   imprint: function (req, res, next) {
     res.render('imprint', {
       title: 'ODL: imprint'
     });
   }
+
 
 };
 

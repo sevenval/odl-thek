@@ -9,7 +9,7 @@ block content
     form(name='search', action='/gadgets/', method='get', id='formSearch')
       input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
       div.lupe
-        input(type="submit", style="background-image: url(/img/search.gif);")
+        input(type="image",src='/img/search.gif')
       div.lupe
         input(type='image', name='submit', src='/img/filter.gif')
       if(locals.user.role == 'admin')
@@ -17,7 +17,6 @@ block content
           a(href='/gadgets/new')
             img(src='/img/add_btn.gif')
       .clear
-
   #phones
     if(!gadgets)
       h1 no gadgets for your search

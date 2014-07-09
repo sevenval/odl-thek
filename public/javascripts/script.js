@@ -44,4 +44,9 @@ $(function () {
     openBookingLayer($(this).data('url'));
   });
 
+  $('.cancel-booking').click(function (e) {
+    $('#delete-booking-modal .modal-footer a').attr('href', $(this).data('href'));
+    $('#delete-booking-modal').modal('show');
+  });
+
 });

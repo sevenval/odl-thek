@@ -1,6 +1,18 @@
 extends ../layout
 
 block content
+
+  div.modal.fade(id="modal")
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          button(type="button", class="close", data-dismiss="modal") x
+          h3 Delete gadget?
+        div.modal-body
+          p Deleting a gadget will also delete all related bookings. Are you sure?
+        div.modal-footer
+          a.btn.btn-attention(href="/gadgets/" + gadget._id + "/remove") Delete gadget
+
   #layerBookGadget
   #blank
   .box
@@ -22,7 +34,7 @@ block content
 
       if(user.role == 'admin')
         a.booknow(href="/gadgets/"+gadget._id+"/edit") Edit
-        a.booknow.btn-attention(href="/gadgets/"+gadget._id+"/remove") Delete
+        a.booknow.btn-attention.btn-confirm(data-toggle="modal" data-target="#modal") Delete
 
       .info
         b version

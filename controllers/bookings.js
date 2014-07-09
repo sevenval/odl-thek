@@ -8,10 +8,9 @@ var BookingModel  = require('../models/booking');
 var GadgetModel   = require('../models/gadget');
 
 
-//
-// private functions
-//
-
+/**
+ * @private
+ */
 function renderBookings(res, gadget, data, error) {
   res.render('bookings/new', {
     gadget: gadget,
@@ -60,7 +59,7 @@ var BookingsController = {
   },
 
 
-  newBooking: function (req, res, next) {
+  create: function (req, res, next) {
 
     var data = {
       startdate: moment().add(1, 'day').format('YYYY-MM-DD'),
@@ -78,18 +77,33 @@ var BookingsController = {
   },
 
 
-  saveBooking: function (req, res, next) {
+  edit: function (req, res, next) {
+    BookingModel.findById(req.params.id, function (err, booking) {
+
+      if (err) { return next(err); }
+
+      res.render('bookings/edit', {
+        booking: booking,
+        startdate: moment(booking.startdate).format('YYYY-MM-DD'),
+        starttime: moment(booking.startdate).format('HH:mm'),
+        enddate: moment(booking.enddate).format('YYYY-MM-DD'),
+        endtime: moment(booking.endtime).format('HH:mm'),
+      });
+    });
+  },
+
+  save: function (req, res, next) {
 
     var sBooking, eBooking, error;
 
     sBooking = new Date(req.body.startdate + 'T' + req.body.starttime);
     eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
 
-    // if (sBooking.getTime() < Date.now()) {
-    //   error = 'Start date not valid';
-    // } else if (eBooking.getTime() < sBooking.getTime()) {
-    //   error = 'End date not valid';
-    // }
+    if (sBooking.getTime() < Date.now()) {
+      error = 'Start date not valid';
+    } else if (eBooking.getTime() < sBooking.getTime()) {
+      error = 'End date not valid';
+    }
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
 
@@ -122,11 +136,9 @@ var BookingsController = {
           start: sBooking.toISOString(),
           end: eBooking.toISOString()
         }, function (err) {
-
           if (err) { return next(err); }
 
           res.render('bookings/ok', { gadget : gadget });
-
         });
       });
     });
@@ -179,28 +191,12 @@ var BookingsController = {
   },
 
 
-  delBooking: function (req, res, next) {
+  remove: function (req, res, next) {
     BookingModel.remove({ _id: req.params.id }, function (err, result) {
 
       if (err) { return next(err); }
 
       res.redirect('/bookings/');
-    });
-  },
-
-
-  editBooking: function (req, res, next) {
-    BookingModel.findById(req.params.id, function (err, booking) {
-
-      if (err) { return next(err); }
-
-      res.render('bookings/edit', {
-        booking: booking,
-        startdate: moment(booking.startdate).format('YYYY-MM-DD'),
-        starttime: moment(booking.startdate).format('HH:mm'),
-        enddate: moment(booking.enddate).format('YYYY-MM-DD'),
-        endtime: moment(booking.endtime).format('HH:mm'),
-      });
     });
   }
 

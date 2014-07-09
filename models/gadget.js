@@ -6,7 +6,8 @@ var Mongoose  = require('mongoose');
 var GadgetSchema = new Mongoose.Schema({
 
   hwid: {
-    type: Number
+    type: Number,
+    unique: true
   },
 
   name: {
@@ -14,9 +15,9 @@ var GadgetSchema = new Mongoose.Schema({
     required: true
   },
 
-  // TODO:
   available: {
-    type: String
+    type: Boolean,
+    default: true
   },
 
   location: {
@@ -44,12 +45,21 @@ var GadgetSchema = new Mongoose.Schema({
   },
 
   type: {
-    type: String
+    type: String,
+    enum: [
+      'mobile',
+      'tablet'
+    ],
+    default: 'mobile'
   },
 
   handoutcount: {
     type: Number,
     default: 0
+  },
+
+  keywords: {
+    type: [ String ]
   }
 
 });
@@ -57,6 +67,14 @@ var GadgetSchema = new Mongoose.Schema({
 
 GadgetSchema.virtual('detailedName').get(function () {
   return this.name + ' (' + this.hwid + ')';
+});
+
+GadgetSchema.pre('init', function (next) {
+  this.keywords = [
+    this.name,
+    'other'
+  ];
+  next();
 });
 
 

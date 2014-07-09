@@ -8,7 +8,6 @@ block content
       th Type
       th Role
       th
-      th
     - each user in users
       tr
         td
@@ -20,6 +19,4 @@ block content
         td
           =user.role
         td
-          a(href='/users/'+user._id).edit
-        td
-          a(href='/users/remove/'+user._id).cancel
+          a(href='/users/' + user._id).edit

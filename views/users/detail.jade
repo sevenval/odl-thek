@@ -1,6 +1,18 @@
 extends ../layout
 
 block content
+
+  div.modal.fade(id="modal")
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          button(type="button", class="close", data-dismiss="modal") x
+          h3 Delete user?
+        div.modal-body
+          p Deleting a user will also delete related bookings. Are you sure?
+        div.modal-footer
+          a.btn.btn-attention(href='/users/' + euser._id + '/remove') Delete user
+
   #layerBookGadget
   #blank
   .box
@@ -10,7 +22,7 @@ block content
           .userdetails
             h2= euser.displayname
             h1= euser.name
-            form(action="/users/"+euser._id+"/setrole", method="post")
+            form(action="/users/" + euser._id, method="post")
 
               p Role:
               select(name='role')
@@ -23,20 +35,21 @@ block content
                 else
                   option user
 
-                input(type='checkbox',name="active",checked="euser.active")
+                if (euser.active)
+                  input(type='checkbox', name="active", checked="true")
+                else
+                  input(type='checkbox', name="active")
 
                 p
                   input(type="submit", value="Speichern").btn
-
-                  a(href='/users/remove/'+euser._id).btn.btn-attention
-                    | Löschen
+                  a.btn.btn-attention(data-toggle="modal" data-target="#modal") Delete
 
         .image
           if euser.avatarurl
             img(src=euser.avatarurl, style="width:100px; ")
         .clear
     .top
-      table(style="width:100%; border-spacing:0px").detailbookingsUser
+      table.detailbookingsUser
         tr
           th.dev Device
           th.start Start
@@ -49,10 +62,10 @@ block content
             td= booking.gadgetname
             td
               if(booking.start)
-                span= booking.startdate
+                span= fmtDatetime(booking.startdate)
             td
               if(booking.end)
-                span= booking.enddate
+                span= fmtDatetime(booking.enddate)
             td
               if(!booking.status)
                 a(href="/bookings/"+booking._id+"/handout").handout
@@ -61,14 +74,6 @@ block content
               if(booking.status=='closed')
                 span closed
             td
-              a(onclick="openBookingLayer('/bookings/"+booking._id+"/edit')").edit
+              a(onclick="openBookingLayer('/bookings/" + booking._id + "')").edit
             td
-              a(href="/bookings/remove/"+booking._id).cancel
-
-
-
-
-
-
-
-
+              a(href="/bookings/" + booking._id + '/remove').cancel

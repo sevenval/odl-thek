@@ -49,7 +49,7 @@ var GadgetController = {
     var where = {};
 
     if (req.query.q) {
-      where.name = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
+      where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
     }
 
     GadgetModel.find(where)
@@ -206,6 +206,7 @@ var GadgetController = {
       }
     );
   }
+
 };
 
 module.exports = GadgetController;
