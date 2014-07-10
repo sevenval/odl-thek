@@ -22,7 +22,7 @@ var UserController      = require('./controllers/users');
 
 
 // Setup mongodb
-Mongoose.connect(Config.db.url + Config.db.name);
+Mongoose.connect(process.env.mongodburl || Config.db.url);
 Mongoose.set('debug', Config.db.debug);
 
 
@@ -59,7 +59,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
   secret: '00c282c815f5336757e1953af53b37ec',
-  store: new MongoStore({ db: Config.db.name })
+  store: new MongoStore({ db: Mongoose.connection.db })
 }));
 app.use(passport.initialize());
 app.use(passport.session());

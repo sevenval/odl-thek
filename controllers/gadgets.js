@@ -5,7 +5,6 @@ var Mongoose      = require('mongoose');
 var Formidable    = require('formidable');
 var fs            = require('fs');
 var async         = require('async');
-var Promise       = require('bluebird');
 var Config        = require('../config/app');
 var Utils         = require('../lib/utils');
 var GadgetModel   = require('../models/gadget');

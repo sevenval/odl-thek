@@ -4,8 +4,7 @@
 
 var DEVELOPMENT = {
   db: {
-    url: 'mongodb://localhost/',
-    name: 'odlthek',
+    url: 'mongodb://localhost/odlthek',
     debug: true
   },
   auth: {
