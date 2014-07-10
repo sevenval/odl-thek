@@ -14,15 +14,16 @@ block content
       a(href='/gadgets/new').btn.btn-add
 
 
-  if(!gadgets)
-    h1 no gadgets for your search
+
+  if(!gadgets || gadgets.length === 0)
+    h4 Sorry, no gadgets found
   else
-    h1= gadgets.length + " gadgets"
+    h4= gadgets.length + " gadgets"
+    
     ul.elements
+  
       - each gadget in gadgets
-        li.element
-
-
+        li
           .element-front
             if(gadget.hasImage)
               img(src=gadget.imagePath)
@@ -81,4 +82,4 @@ block content
             a(data-url="/bookings/" + gadget._id + "/new").book-btn.btn
               |Book
 
-  div.clear
+  div.clearfix
