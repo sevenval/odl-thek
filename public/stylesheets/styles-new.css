@@ -1,25 +1,144 @@
+a:focus,a:active
+button:focus,button:active,
+input:focus,input:active,
+select:focus,select:active,
+textarea:focus,textarea:active {
+    outline: none !important;
+}
+
 body {
-  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
-  font-family: 'Ubuntu', sans-serif;
-  font-style: normal;
-  background-color: #D9F1E3;
+  	font-family: 'Ubuntu', sans-serif;
+	background: #D9F1E3;
+	color: #435060;
+  	-webkit-font-smoothing: antialiased;
+}
+
+#wrapper {
+	position: relative;
+	min-height: 100%;
+	max-width: 960px;
+ 	margin: 0 auto !important;
+}
+
+#content {
+	padding: 20px 40px;
 }
 
 a {
 	text-decoration: none;
-	font-size: 0.9em;
-	color: #1CA055;
+	color: #fff;
 }
 
-#layer {
-  display: none;
-}
-#content {
-	width: 100%;
-	}
-
-header {
+/*******************************************************************************
+ * HEADER
+ ******************************************************************************/
+.header {
+	position: relative;
 	height: 100px;
-	background-color: #5DA056;
-	overflow: hidden;
+	background-color: #1CA055;
 }
+
+.header .logo {
+	position: absolute;
+	left: 25px;
+	top: 19px;
+	font-size: 1.18em;
+}
+
+.header .logo img {
+	width: 170px;
+}
+
+.header .nav {
+	position: absolute;
+	bottom: 0;
+	left: 280px;
+}
+
+.header .nav li {
+	padding: 0 20px 0 0;
+}
+
+.header .nav li a {
+	color: #fff;
+	background: none;
+	font-size: 1.18em;
+	padding: 15px 0;
+	border-radius: 0;
+}
+
+.header .nav li.active a {
+	background: none;
+}
+
+.header .nav li.active a {
+	border-bottom: 5px solid #008237;
+}
+
+.header .account {
+	position: absolute;
+	top: 25px;
+	right: 25px;
+	color: #fff;
+}
+
+.header .account img {
+	width: 50px;
+	margin-left: 10px;
+}
+
+/*******************************************************************************
+ * FORMs
+ ******************************************************************************/
+
+.btn {
+	border-radius: 0 10px 0 0;
+	background-color: #1CA055;
+}
+
+
+/*******************************************************************************
+ * SEARCH
+ ******************************************************************************/
+#search {
+	margin-bottom: 20px;
+}
+
+#search > input[type="text"] {
+	width: calc(100% - 110px);
+	height: 50px;
+	border: 0;
+	padding: 0 15px;
+	float: left;
+}
+
+.admin-ui #search > input[type="text"] {
+	width: calc(100% - 170px);
+}
+
+#search .btn {
+	width: 50px;
+	height: 50px;
+	border: 0;
+	padding: 0;
+	float: left;
+}
+
+#search .btn:not(:last-child) {
+	margin-right: 10px;
+}
+
+#search .btn-search {
+	background-image: url('/img/search.gif');
+}
+
+#search .btn-filter {
+	background-image: url('/img/filter.gif');
+}
+
+#search .btn-add {
+	background-image: url('/img/add_btn.gif');
+}
+
+
+

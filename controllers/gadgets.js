@@ -64,7 +64,7 @@ var GadgetController = {
 
   /**
    * Lists all gadgets.
-   * @todo Pagination?
+   * @todo Pagination? / Endless scrolling?
    */
   listAll: function (req, res, next) {
     console.time('listAll');
@@ -76,10 +76,11 @@ var GadgetController = {
 
     GadgetModel.find(where)
       .sort({ brand: 1 })
-      .limit(60)
+      .limit(750)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
+        // TODO: Do we need this on each gadget request?
         writeGadgetImages(gadgets, createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'gadgets',
@@ -100,13 +101,14 @@ var GadgetController = {
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
-        createGadgetStats(function (stats) {
+        // TODO: Do we need this on each gadget request?
+        writeGadgetImages(gadgets, createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'top gadgets',
             gadgets: gadgets,
             stats: stats
           });
-        });
+        }));
       });
   },
 
@@ -200,6 +202,8 @@ var GadgetController = {
 
   /**
    * Uploads a file to S3.
+   * @todo Max upload size?
+   * @todo Image resizing?
    */
   upload: function (req, res, next) {
 
@@ -208,9 +212,7 @@ var GadgetController = {
     form.uploadDir = '/tmp/';
 
     form.parse(req, function (err, fields, files) {
-      if (err) { return res.end('You found error'); }
-
-      console.log(files.image);
+      if (err) { return next(err); }
 
       fs.readFile(files.image.path, function (err, data) {
         var base64data = new Buffer(data).toString('base64');
@@ -224,11 +226,12 @@ var GadgetController = {
             }
           },
           function (err) {
+            if (err) { return next(err); }
+
             res.redirect('/gadgets/' + req.params.id);
           }
         );
       });
-
     });
   }
 

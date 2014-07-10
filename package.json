@@ -1,6 +1,6 @@
 {
   "name": "odl-thek",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node app.js"
@@ -15,16 +15,10 @@
     "express": "~4.2.0",
     "express-session": "~1.2.0",
     "formidable": "^1.0.15",
-    "gridform": "^0.1.7",
     "jade": "~1.3.0",
     "knox": "*",
     "moment": "latest",
-    "mongodb": "^1.4.7",
     "mongoose": "latest",
-    "mongoose-thumbnail": "0.0.1",
-    "mongoskin": "~1.4.4",
-    "morgan": "~1.0.0",
-    "multer": "~0.0.7",
     "passport": "~0.2.0",
     "passport-github": "*",
     "passport-google-oauth": "latest",

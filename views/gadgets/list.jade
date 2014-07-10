@@ -1,88 +1,84 @@
 extends ../layout
 
 block content
-  br
   #layerBookGadget
   #blank
 
-  #search
-    form(name='search', action='/gadgets/', method='get', id='formSearch')
-      input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
-      div.lupe
-        input(type="image",src='/img/search.gif')
-      div.lupe
-        input(type='image', name='submit', src='/img/filter.gif')
-      if(locals.user.role == 'admin')
-        div.lupe
-          a(href='/gadgets/new')
-            img(src='/img/add_btn.gif')
-      .clear
-  #phones
-    if(!gadgets)
-      h1 no gadgets for your search
-    else
-      h1= gadgets.length + " gadgets"
-      ul.elements
-        - each gadget in gadgets
-          li.element
+  form(action='/gadgets/', method='get', id='search').clearfix
+    input(type='text', name='q', placeholder='Search gadgets...' )
+
+    input(type="submit", value="").btn.btn-search
+    a.btn.btn-filter
+
+    if(user.role == 'admin')
+      a(href='/gadgets/new').btn.btn-add
 
 
-            .element-front
-              if(gadget.hasImage)
-                img(src=gadget.imagePath)
+  if(!gadgets)
+    h1 no gadgets for your search
+  else
+    h1= gadgets.length + " gadgets"
+    ul.elements
+      - each gadget in gadgets
+        li.element
+
+
+          .element-front
+            if(gadget.hasImage)
+              img(src=gadget.imagePath)
+            else
+              img(src='/img/dummy_device.gif')
+
+            if(stats[gadget._id] && stats[gadget._id].current)
+              if(stats[gadget._id].current.status === 'handout')
+                div.traffic_handout.smallline
               else
-                img(src='/img/dummy_device.gif')
+                div.traffic_reserved.smallline
+            else
+              div.traffic.smallline
 
+            .details
+              div.spec
+              div.brand= gadget.brand
+              div.name= gadget.name
+              span.isolator
+              div.os= gadget.os
+
+
+          .element-back
+            if(stats[gadget._id] && stats[gadget._id].current)
+              if(stats[gadget._id].current.status === "handout")
+                div.traffic_handout
+              else
+                div.traffic_reserved
+            else
+              div.traffic
+
+            div.details
+              div.brand= gadget.brand
+              div.name= gadget.name
+              span.isolator
+              div.os= gadget.os
+
+            div.lastBook
               if(stats[gadget._id] && stats[gadget._id].current)
                 if(stats[gadget._id].current.status === 'handout')
-                  div.traffic_handout.smallline
+                  |current
                 else
-                  div.traffic_reserved.smallline
-              else
-                div.traffic.smallline
+                  |reserved
+                br
+                span.user=stats[gadget._id].current.username
+                br
+                br
 
-              .details
-                div.spec
-                div.brand= gadget.brand
-                div.name= gadget.name
-                span.isolator
-                div.os= gadget.os
+              if(stats[gadget._id] && stats[gadget._id].last)
+                span last booking
+                br
+                span.user=stats[gadget._id].last.username
 
+            a(href="/gadgets/" + gadget._id).btn
+              |Details
+            a(data-url="/bookings/" + gadget._id + "/new").book-btn.btn
+              |Book
 
-            .element-back
-              if(stats[gadget._id] && stats[gadget._id].current)
-                if(stats[gadget._id].current.status === "handout")
-                  div.traffic_handout
-                else
-                  div.traffic_reserved
-              else
-                div.traffic
-
-              div.details
-                div.brand= gadget.brand
-                div.name= gadget.name
-                span.isolator
-                div.os= gadget.os
-
-              div.lastBook
-                if(stats[gadget._id] && stats[gadget._id].current)
-                  if(stats[gadget._id].current.status === 'handout')
-                    |current
-                  else
-                    |reserved
-                  br
-                  span.user=stats[gadget._id].current.username
-                  br
-                  br
-
-                if(stats[gadget._id] && stats[gadget._id].last)
-                  span last booking
-                  br
-                  span.user=stats[gadget._id].last.username
-
-              a(href="/gadgets/" + gadget._id).btn
-                |Details
-              a(data-url="/bookings/" + gadget._id + "/new").book-btn.btn
-                |Book
-
-    div.clear
+  div.clear

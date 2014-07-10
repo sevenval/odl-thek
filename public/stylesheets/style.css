@@ -1,8 +1,7 @@
 body {
-  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
-  font-family: 'Ubuntu', sans-serif;
-  font-style: normal;
-  background-color: #D9F1E3;
+	font-family: 'Ubuntu', sans-serif;
+	font-style: normal;
+	background-color: #D9F1E3;
 }
 
 a {
@@ -12,6 +11,8 @@ a {
 	color: #1CA055;
 }
 
+/* #008038 */
+
 #layer {
   display: none;
 }
@@ -19,15 +20,14 @@ a {
 	width: 100%;
 }
 
-header {
+#head {
 	height: 100px;
 	overflow: hidden;
-	background-color: #5DA056;
+	background-color: #1CA055;
 	vertical-align: bottom;
 	position: relative;
 }
-
-header a {
+#head a {
   color: #fff;
 }
 .head {
@@ -41,6 +41,7 @@ header a {
 .logoImg {
 	width: 80%;
 }
+
 
 #footer {
 	background-color: #1F2022;
