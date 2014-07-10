@@ -9,9 +9,9 @@ var DEVELOPMENT = {
   },
   auth: {
     github: {
-      clientID: 'aa8e3665f93ee81d67fc',
-      clientSecret: '224c80c352126f65f26b1e7fd4092d015caf9b87',
-      callbackURL: 'http://127.0.0.1:3000/users/auth/github/callback'
+      clientID: process.env.GITHUB_CLIENT_ID || 'aa8e3665f93ee81d67fc',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || '224c80c352126f65f26b1e7fd4092d015caf9b87',
+      callbackURL: process.env.GITHUB_CALLBACK || 'http://127.0.0.1:3000/users/auth/github/callback'
     },
     google: {
       clientID: '1011998292679-n8capudopv0mnt8pcfgd0jumltmdbjtr.apps.googleusercontent.com',
