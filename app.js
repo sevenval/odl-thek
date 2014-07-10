@@ -7,7 +7,6 @@ var logger              = require('morgan');
 var cookieParser        = require('cookie-parser');
 var bodyParser          = require('body-parser');
 var session             = require('express-session');
-var multer              = require('multer');
 var moment              = require('moment');
 var passport            = require('passport');
 var GitHubStrategy      = require('passport-github').Strategy;
@@ -56,7 +55,7 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
   secret: '00c282c815f5336757e1953af53b37ec',
@@ -64,12 +63,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(multer({
-  dest: './public/uploads/',
-  rename: function (fieldname, filename) {
-    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
-  }
-}));
 
 app.use(function (req, res, next) {
   // make current user obj available in templates
@@ -107,7 +100,7 @@ app.get ('/gadgets/:id',                  AuthController.isAuth,    GadgetsContr
 app.get ('/gadgets/:id/edit',             AuthController.isAdmin,   GadgetsController.edit);
 app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsController.save);
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
-app.get ('/gadgets/:id/upload',           AuthController.isAdmin,   GadgetsController.upload);
+app.post('/gadgets/:id/upload',           AuthController.isAdmin,   GadgetsController.upload);
 app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
 app.post('/bookings/:id/new',             AuthController.isAuth,    BookingsController.save);

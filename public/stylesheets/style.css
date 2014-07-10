@@ -11,20 +11,23 @@ a {
 	font-size: 0.9em;
 	color: #1CA055;
 }
+
 #layer {
   display: none;
 }
 #content {
 	width: 100%;
-	}
-#head {
+}
+
+header {
 	height: 100px;
 	overflow: hidden;
-	background-color: #1CA055;
+	background-color: #5DA056;
 	vertical-align: bottom;
 	position: relative;
 }
-#head a {
+
+header a {
   color: #fff;
 }
 .head {

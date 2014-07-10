@@ -2,63 +2,78 @@ doctype html
 html
   head
     title= "ODL // " + title
+    meta(name="viewport" content="width=device-width, initial-scale=1")
     link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    //link(rel='stylesheet', href='/stylesheets/styles-new.css')
     link(rel='stylesheet', href='/stylesheets/detail.css')
     link(href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,300italic' rel='stylesheet' type='text/css')
-    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-    script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
-    script(src="/javascripts/script.js")
   body
     #wrapper
-      #head
-        div.head
-          a(href="/")
-            div.logo
-              img(src='/img/Logo_sevenval.gif', class='logoImg')
-              div.claim
-                span
-                  b ODL
-                  span THEK
-          ul.menu
-            if(locals.user)
-              li
-                a(href="/gadgets/") gadgets
-              li
-                a(href="/gadgets/top") top
-              li
-                a(href="/bookings/") bookings
-              if(user.role == 'admin')
-                li
-                  a(href="/users/") users
-          #user
-            if(locals.user)
-              if(user.avatarurl)
-                div(style="position: absolute; top: 25px; right: 100px;")
-                  if(user.name)
-                    span.username= user.name
-                  else
-                    span.username= user.displayname
-                  br
-                  span.login
-                    a(href="/users/logout") logout
-                div(style="position: relative; top: 25px; right: 25px; height:50px; width:50px;background-color: #ccc; border-radius: 0 10px 0 0; overflow:hidden;")
-                  img(src=user.avatarurl, style="width:50px; ")
-              else
-                div(style="position: absolute; top: 25px; right: 10px;")
-                  if(user.name)
-                    span.username= user.name
-                  else
-                    span.username= user.displayname
-                  br
-                  span.login
-                    a(href="/users/logout") logout
 
-      //div !{createBreadcrumbs(breadcrumb)}
+      //- div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+      //-   div.container
+      //-     div.navbar-header
+      //-       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+      //-         span.icon-bar
+      //-         span.icon-bar
+      //-         span.icon-bar
+      //-       a.navbar-brand(href="#")
+      //-         | Program Name
+      //-     div.collapse.navbar-collapse
+      //-       ul.nav.navbar-nav
+      //-         li.active
+      //-           a(href="#") Home
+      //-         li
+      //-           a(href="#about") About
+      //-         li
+      //-           a(href="#contact") Contact
+
+      header
+        a(href="/")
+          img(src='/img/odlthek-logo.png')
+        ul.menu
+          if(locals.user)
+            li
+              a(href="/gadgets/") gadgets
+            li
+              a(href="/gadgets/top") top
+            li
+              a(href="/bookings/") bookings
+            if(user.role == 'admin')
+              li
+                a(href="/users/") users
+        #user
+          if(locals.user)
+            if(user.avatarurl)
+              div(style="position: absolute; top: 25px; right: 100px;")
+                if(user.name)
+                  span.username= user.name
+                else
+                  span.username= user.displayname
+                br
+                span.login
+                  a(href="/users/logout") logout
+              div(style="position: relative; top: 25px; right: 25px; height:50px; width:50px;background-color: #ccc; border-radius: 0 10px 0 0; overflow:hidden;")
+                img(src=user.avatarurl, style="width:50px; ")
+            else
+              div(style="position: absolute; top: 25px; right: 10px;")
+                if(user.name)
+                  span.username= user.name
+                else
+                  span.username= user.displayname
+                br
+                span.login
+                  a(href="/users/logout") logout
+
       block content
 
       #footer
         a(href='/imprint') imprint
+
+      script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+      script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
+      script(src="/javascripts/script.js")
       script.
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

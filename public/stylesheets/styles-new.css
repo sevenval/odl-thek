@@ -1,0 +1,25 @@
+body {
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+  font-family: 'Ubuntu', sans-serif;
+  font-style: normal;
+  background-color: #D9F1E3;
+}
+
+a {
+	text-decoration: none;
+	font-size: 0.9em;
+	color: #1CA055;
+}
+
+#layer {
+  display: none;
+}
+#content {
+	width: 100%;
+	}
+
+header {
+	height: 100px;
+	background-color: #5DA056;
+	overflow: hidden;
+}

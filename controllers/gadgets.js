@@ -2,8 +2,12 @@
 'use strict';
 
 var Mongoose      = require('mongoose');
-var Knox          = require('knox');
+var Formidable    = require('formidable');
+var fs            = require('fs');
+var async         = require('async');
+var Promise       = require('bluebird');
 var Config        = require('../config/app');
+var Utils         = require('../lib/utils');
 var GadgetModel   = require('../models/gadget');
 var BookingModel  = require('../models/booking');
 
@@ -38,14 +42,33 @@ function createGadgetStats(cb) {
 }
 
 
+/**
+ * Checks if a gadget image exists in local fs and creates it if not.
+ * @private
+ */
+function writeGadgetImages(gadgets, finalCb) {
+  async.each(gadgets, function (gadget, cb) {
+    fs.exists('public' + gadget.imagePath, function (imgExists) {
+      if (!imgExists && gadget.image.data) {
+        fs.writeFile(
+          'public' + gadget.imagePath,
+          new Buffer(gadget.image.data, 'base64'),
+          cb
+        );
+      }
+    });
+  }, finalCb);
+}
+
+
 var GadgetController = {
 
   /**
    * Lists all gadgets.
-   * @todo Pagination needed?
+   * @todo Pagination?
    */
   listAll: function (req, res, next) {
-
+    console.time('listAll');
     var where = {};
 
     if (req.query.q) {
@@ -54,17 +77,18 @@ var GadgetController = {
 
     GadgetModel.find(where)
       .sort({ brand: 1 })
-      .limit(750)
+      .limit(60)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
-        createGadgetStats(function (stats) {
+        writeGadgetImages(gadgets, createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'gadgets',
             gadgets: gadgets,
-            stats: stats
+            stats: {}
           });
-        });
+          console.timeEnd('listAll');
+        }));
 
       });
   },
@@ -179,32 +203,34 @@ var GadgetController = {
    * Uploads a file to S3.
    */
   upload: function (req, res, next) {
-    var s3 = Knox.createClient(Config.aws);
 
-    s3.putFile(
-      "./" + req.files.image.path,
-      req.files.image.name,
-      {
-        'Content-Type': req.files.image.mimetype,
-        'Content-Length': req.files.image.size,
-        'x-amz-acl': 'public-read'
-      },
-      function (err, s3response) {
-        if (err) { return next(err); }
+    var form = new Formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.uploadDir = '/tmp/';
 
-        GadgetModel.findByIdAndUpdate(
-          req.params.id,
-          { image: s3response.req.url },
-          { new: true },
-          function (err, gadget) {
-            if (err) { return next(err); }
+    form.parse(req, function (err, fields, files) {
+      if (err) { return res.end('You found error'); }
 
-            res.render('gadgets/edit', { title: gadget.name, gadget: gadget });
+      console.log(files.image);
+
+      fs.readFile(files.image.path, function (err, data) {
+        var base64data = new Buffer(data).toString('base64');
+
+        GadgetModel.update(
+          {_id: req.params.id},
+          {
+            image: {
+              data: base64data,
+              extension: Utils.getFileExtension(files.image.path)
+            }
+          },
+          function (err) {
+            res.redirect('/gadgets/' + req.params.id);
           }
         );
+      });
 
-      }
-    );
+    });
   }
 
 };

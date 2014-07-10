@@ -2,6 +2,8 @@
 'use strict';
 
 var Mongoose  = require('mongoose');
+var Thumbnail = require('mongoose-thumbnail');
+
 
 var GadgetSchema = new Mongoose.Schema({
 
@@ -53,6 +55,15 @@ var GadgetSchema = new Mongoose.Schema({
     default: 'mobile'
   },
 
+  image: {
+    data: {
+      type: String
+    },
+    extension: {
+      type: String
+    }
+  },
+
   handoutcount: {
     type: Number,
     default: 0
@@ -69,6 +80,20 @@ GadgetSchema.virtual('detailedName').get(function () {
   return this.name + ' (' + this.hwid + ')';
 });
 
+
+GadgetSchema.virtual('hasImage').get(function () {
+  return this.image.data && this.image.data.length > 0;
+});
+
+
+GadgetSchema.virtual('imagePath').get(function () {
+  return '/img/cache/' + this._id + '.' + this.image.extension;
+});
+
+
+//
+// TODO: Add/update search keywords on every insert/update
+//
 GadgetSchema.pre('init', function (next) {
   this.keywords = [
     this.name,
