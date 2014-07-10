@@ -22,7 +22,7 @@ var UserController      = require('./controllers/users');
 
 
 // Setup mongodb
-Mongoose.connect(process.env.mongodburl || Config.db.url);
+Mongoose.connect(process.env.MONGOLAB_URI || Config.db.url);
 Mongoose.set('debug', Config.db.debug);
 
 
