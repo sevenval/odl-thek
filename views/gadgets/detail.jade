@@ -1,45 +1,70 @@
 extends ../layout
 
 block content
-  #layerBookGadget
-  #blank
-  .box
-    .detailpage
-      .basic
-        a.button(href="/users/")
-          span back
-        .bottom
-          h2= gadget.brand
-          h1= gadget.model
-        .image
-          if(gadget.image)
-            img(src=gadget.image,style="width: 300px;")
-          else   
-            img(src='/img/dummy_device.gif',style="width: 300px;")
-    .detailcontent
-      .desc!= gadget.description
-      a.booknow(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") book
-      if(locals.user.role == 'admin')
-        a.booknow(href="/gadgets/"+gadget._id+"/edit") edit
-      .info
-        b version
+
+  div.modal(id="modal")
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          button(type="button", class="close", data-dismiss="modal")
+          h3 Delete gadget?
+        div.modal-body
+          p Deleting a gadget will also delete all related bookings. Are you sure?
+        div.modal-footer
+          a.btn.btn-danger(href="/gadgets/" + gadget._id + "/remove") Delete gadget
+
+  .details
+    .row
+      .col-md-8
         br
-        span= gadget.os
-        br
-        br
-        b gadget ID
-        br
-        span= gadget.hwid
-        br
-        br
-        b type
-        br
-        span= gadget.type
-        br
-    .clear
+        a.btn(href="/gadgets/") back
+        h2= gadget.brand
+        h1= gadget.model
+
+      .col-md-4
+        if(gadget.hasImage)
+          img(src=gadget.imagePath)
+        else
+          img(src='/img/dummy_device.gif')
+
     br
-    #layer
-    table.detailbookings(style="width:100%")
+
+    .row
+      .col-md-8
+        = gadget.description
+        br
+        br
+
+      .col-md-4.tools-box
+        a.btn(
+          href="/bookings/" + gadget._id + "/new",
+          data-toggle="modal",
+          data-target="#bookingModal"
+        ).book-btn.btn|Book
+
+        if(user.role == 'admin')
+          a.btn(href="/gadgets/"+gadget._id+"/edit") Edit
+          a.btn.btn-danger(data-toggle="modal" data-target="#modal") Delete
+
+        .info
+          b version
+          br
+          span= gadget.os
+          br
+          br
+          b gadget ID
+          br
+          span= gadget.hwid
+          br
+          br
+          b type
+          br
+          span= gadget.type
+          br
+
+    br
+    br
+    table.table
       tr
         th name
         th start date
@@ -47,24 +72,22 @@ block content
         th handout date
         th handout user
         th
-
       - each booking in bookings
         tr
-          td= booking.username
           td
-            if(booking.start)
-              span= booking.startdate
+            if(booking.user)
+              =booking.user.email
           td
-            if(booking.end)
-              span= booking.enddate
+            =fmtDatetime(booking.start)
           td
-            if(booking.handoutdate)
-              span= booking.handoutdate
+            =fmtDatetime(booking.end)
+          td
+            =fmtDatetime(booking.handoutdate)
           td
             if(booking.handoutuser)
-              span= booking.handoutuser
-          if(locals.user.role == 'admin')
-            td
-              a(href="/bookings/remove/"+booking._id) cancel
+              =booking.handoutuser.email
+          if(user.role == 'admin')
+            td.green
+              a(href="/bookings/remove/"+booking._id).cancel
 
 

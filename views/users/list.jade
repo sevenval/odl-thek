@@ -1,29 +1,22 @@
 extends ../layout
 
 block content
-  table(style="width: 90%; border-spacing:0px").userlist
+  table.userlist
     tr
-      th.userName Name
-      th.nick Nickname
-      th.role Role
+      th Name
+      th Email
+      th Type
+      th Role
       th
     - each user in users
       tr
         td
-          a(href='/users/'+user._id)= user.name
+          =user.name
         td
-          a(href='/users/'+user._id)= user.displayname 
+          =user.email
         td
-          span= user.role
+          =user.type
+        td
+          =user.role
         td.green
-          a(href='/users/remove/'+user._id).cancel
-  br
-  br
-  br
-  br
-  br
-  br
-  br
-  br
-  br
-  
+          a(href='/users/' + user._id).edit

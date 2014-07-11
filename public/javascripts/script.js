@@ -1,21 +1,35 @@
-function openBookingLayer(_url) {
-  $.ajax({
-    url: _url
-  }).done(function(_content) {
-    console.log(_content);
-    $( '#layerBookGadget' ).html(_content);
-    $('#layerBookGadget').show();
-    $('#blank').show();
-  });
-}
+/*jslint unparam: true, plusplus: true, nomen: true, indent: 2 */
+/*global $, document */
+'use strict';
 
 function bookNow() {
   var book = $('#book');
-  console.log(book)
-  $.post(book.attr('action'),book.serialize(),function(_content){
-    $('#layerBookGadget').html(_content);
-    $('#layerBookGadget').show();
-    $('#blank').show();
+  $.post(book.attr('action'), book.serialize(), function (_content) {
+    $('#bookingModal .modal-content').html(_content);
   });
 }
 
+$(function () {
+
+  $('a#filter-btn').click(function (e) {
+    $('#filter-box').toggleClass('box-open');
+  });
+
+  $('#filter-box input[type="checkbox"]').change(function (e) {
+    $(e.target).closest('form').submit();
+  });
+
+  $('.gadet-entry').mouseover(function (e) {
+    $(this).addClass('showDetails');
+  });
+
+  $('.gadet-entry').mouseout(function (e) {
+    $(this).removeClass('showDetails');
+  });
+
+  $('.cancel-booking').click(function (e) {
+    $('#delete-booking-modal .modal-footer a').attr('href', $(this).data('href'));
+    $('#delete-booking-modal').modal('show');
+  });
+
+});

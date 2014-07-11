@@ -1,35 +1,67 @@
 extends ../layout
 
 block content
-  h1= gadget.name
-  br
-  a(href="/gadgets/"+gadget._id+"") back
-  br
-  form(action="/gadgets/"+gadget._id+"/edit",method="post")
-    each value,key in gadget
-      if(key!="_id"&&key!="description")
-        span= key
-        br
-        input(type="text",name=key,value=value)
-        br
-      if(key=='description')
-        span description
-        br
-        textarea(name=key,rows="4")= value
-        br
-    input(type="submit")
 
-  if(gadget.image)
-    img(src=gadget.image,style="width: 100px;")
-  else   
-    img(src='/img/device.jpg',style="width: 100px;")
-  br
+  .details
+    .row
+      .col-md-8
+        br
+        if (gadget._id)
+          a(href="/gadgets/"+ gadget._id +"").btn back
+        else
+          a(href="/gadgets/").btn back
 
-  form(action="/gadgets/"+gadget._id+"/upload",method="post",enctype="multipart/form-data")
-    input(type="file",name="image")
+        h1= (gadget.name) ? gadget.name : "New gadget"
+      .col-md-4
+
     br
-    input(type="submit")
 
+    form(action="/gadgets/" + gadget._id + "/save", method="post", enctype="multipart/form-data", role="form").row
+      .col-md-8
+
+        .form-group
+          label HWID:
+          input(type="text", name='hwid', value=gadget.hwid).form-control
+
+        .form-group
+          label Name:
+          input(type="text", name='name', value=gadget.name).form-control
+
+        .form-group
+          label Brand:
+          input(type="text", name='brand', value=gadget.brand).form-control
+
+        .form-group
+          label Model:
+          input(type="text", name='model', value=gadget.model).form-control
+
+        .form-group
+          label Description:
+          textarea(name='description').form-control
+
+        .form-group
+          label OS:
+          input(type="text", name='os', value=gadget.os).form-control
+
+        .form-group
+          label Type:
+          input(type="text", name='type', value=gadget.type).form-control
+
+        .form-group
+          label Location:
+          input(type="text", name='location', value=gadget.location).form-control
+
+        .form-group
+          label Thumbnail:
+          if(gadget.hasImage)
+            img(src=gadget.imagePath)
+          else
+            img(src='/img/dummy_device.gif')
+
+          input(type="file", id="image", name="image")
+
+      .col-md-4.tools-box
+        input(type="submit", value="Save").btn
 
 
 

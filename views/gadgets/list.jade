@@ -1,90 +1,75 @@
 extends ../layout
 
 block content
-  br
-  #layerBookGadget
-  #blank
-  #search
-    form(name='search', action='/gadgets/', method='get', id='formSearch') 
-      input(type='text', name='q',style="padding-left: 40px;" id='inputTextSearch', placeholder='SEARCH' )
-      div.lupe 
-        input(type="image",src='/img/search.gif')
-      div.lupe
-        input(type='image', name='submit', src='/img/filter.gif')
-      if(locals.user.role == 'admin')
-        div.lupe
-          a(href='/gadgets/new') 
-            img(src='/img/add_btn.gif')
-      .clear
-  #phones
-    if(!gadgets)
-      h1 no gadgets for your search 
-    else 
-      h1= gadgets.length+" gadgets"
-      ul.elements
-        - each gadget in gadgets
-          li.element(onmouseover="$(this).find('.hide').show();$(this).find('.cont').hide();",onmouseout="$(this).find('.hide').hide();$(this).find('.cont').show();")
-            .hide.info 
-              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-                div.traffic_handout
-              else if(gadget.bookings&&gadget.bookings.current)
-                div.traffic_reserved
-              else
-                div.traffic
-            .hide.info.grey
-              .click
-                div.brand= gadget.brand
-                div.name= gadget.name
-                span.isolator
-                div.os= gadget.os
-              div.lastBook 
-                if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.username)
-                  if(gadget.bookings.current.status=='handout')
-                    span current
-                  else 
-                    span reserved
-                  br
-                  span.user= gadget.bookings.current.username
-                else
-                  if(gadget.bookings&&gadget.bookings.last&&gadget.bookings.last.username)
-                    span last booking
-                    br
-                    span.user= gadget.bookings.last.username
 
-              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-                div.buttons_handout
-                  .detail
-                    a(href="/gadgets/"+gadget._id) Details
-                  .booking
-                    a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
-              else if(gadget.bookings&&gadget.bookings.current)
-                div.buttons_reserved
-                  .detail
-                    a(href="/gadgets/"+gadget._id) Details
-                  .booking
-                    a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
+  div.modal.fade(id="bookingModal")
+    div.modal-dialog
+      div.modal-content
+
+  form(action='/gadgets/', method='get', id='search').clearfix
+    input(type='text', name='q', placeholder='Search gadgets...' )
+
+    input(type="submit", value="").btn.btn-search
+    a.btn.btn-filter
+
+    if(user.role == 'admin')
+      a(href='/gadgets/new').btn.btn-add
+
+
+  if(!gadgets || gadgets.length === 0)
+    h4 Sorry, no gadgets found
+  else
+    h4= gadgets.length + " gadgets"
+
+    ul.gadget-list
+
+      - each gadget in gadgets
+        li.gadet-entry
+
+
+          .content-slider
+            if(gadget.hasImage)
+              img(src=gadget.imagePath)
+            else
+              img(src='/img/dummy_device.gif')
+
+
+            if(stats[gadget._id])
+              div(class="gadget-" + stats[gadget._id].status).smallline
+            else
+              div.smallline.gadget-available
+
+            .details
+              div.brand= gadget.brand
+              div.name= gadget.name
+              hr
+              div.os= gadget.os
+
+            .booking-details
+
+              b Current status:
+              br
+              if(!stats[gadget._id])
+                p Available
+
               else
-                div.buttons
-                  .detail
-                    a(href="/gadgets/"+gadget._id) Details
-                  .booking
-                    a(onclick="openBookingLayer('/bookings/"+gadget._id+"/new')") Book
-            .cont
-              if(gadget.image)
-                img(src=gadget.image)
-              else   
-                img(src='/img/dummy_device.gif')
-              if(gadget.bookings&&gadget.bookings.current&&gadget.bookings.current.status == "handout")
-                div.traffic_handout.smallline
-              else if(gadget.bookings&&gadget.bookings.current)
-                div.traffic_reserved.smallline
-              else
-                div.traffic.smallline
-              .click
-                div.spec
-                
-                div.brand= gadget.brand
-                div.name= gadget.name
-                span.isolator
-                div.os= gadget.os
-    div.clear    
+                if(stats[gadget._id].status === 'open')
+                  p Reserved
+                else
+                  p Not available
+
+                if(stats[gadget._id].lastBooking)
+                  b Last booked by:
+                  br
+                  =stats[gadget._id].lastBooking.email
+
+              .controls
+                a(href="/gadgets/" + gadget._id).btn
+                  |Details
+                a(
+                  href="/bookings/" + gadget._id + "/new",
+                  data-toggle="modal",
+                  data-target="#bookingModal"
+                ).book-btn.btn|Book
+
+  div.clearfix
