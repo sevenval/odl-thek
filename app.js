@@ -22,7 +22,8 @@ var UserController      = require('./controllers/users');
 
 
 // Setup mongodb
-Mongoose.connect(process.env.MONGOLAB_URI || Config.db.url);
+// Todo: Use unique process env var
+Mongoose.connect(process.env.MONGOLAB_URI || process.env.mongodburl || Config.db.url);
 Mongoose.set('debug', Config.db.debug);
 
 
