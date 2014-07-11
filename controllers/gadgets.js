@@ -75,7 +75,8 @@ var GadgetController = {
     var where = {};
 
     if (req.query.q) {
-      where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
+      //where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
+      where.name = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
     }
 
     GadgetModel.find(where)
