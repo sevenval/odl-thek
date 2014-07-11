@@ -79,18 +79,18 @@ var BookingsController = {
 
   edit: function (req, res, next) {
     BookingModel.findById(req.params.id, function (err, booking) {
-
       if (err) { return next(err); }
 
       res.render('bookings/edit', {
         booking: booking,
-        startdate: moment(booking.startdate).format('YYYY-MM-DD'),
-        starttime: moment(booking.startdate).format('HH:mm'),
-        enddate: moment(booking.enddate).format('YYYY-MM-DD'),
-        endtime: moment(booking.endtime).format('HH:mm'),
+        startdate: moment.utc(booking.start).format('YYYY-MM-DD'),
+        starttime: moment.utc(booking.start).format('HH:mm'),
+        enddate: moment.utc(booking.end).format('YYYY-MM-DD'),
+        endtime: moment.utc(booking.end).format('HH:mm'),
       });
     });
   },
+
 
   save: function (req, res, next) {
 
@@ -113,12 +113,13 @@ var BookingsController = {
       }
 
       BookingModel.count({
-        // count bookings colliding with requested date range...
+        // count bookings colliding with requested date range and exclude the
+        // current booking (on updates)...
+        _id: { $ne: req.params.id },
         gadget: gadget._id,
         start: { $lte: eBooking.toISOString() },
         end: { $gte: sBooking.toISOString() }
       }, function (err, bookings) {
-
         if (err) { return next(err); }
 
         if (bookings !== 0) {
@@ -128,18 +129,25 @@ var BookingsController = {
         }
 
         // gadget available -> create booking entry
-        BookingModel.create({
-          gadget: gadget._id,
-          gadgetname: gadget.detailedName,
-          user: req.session.user._id,
-          username: req.session.user.displayname,
-          start: sBooking.toISOString(),
-          end: eBooking.toISOString()
-        }, function (err) {
-          if (err) { return next(err); }
+        BookingModel.findByIdAndUpdate(
+          req.params.id,
+          {
+            gadget: gadget._id,
+            gadgetname: gadget.detailedName,
+            user: req.session.user._id,
+            username: req.session.user.displayname,
+            start: sBooking.toUTCString(),
+            end: eBooking.toUTCString()
+          },
+          {
+            upsert: true
+          },
+          function (err) {
+            if (err) { return next(err); }
 
-          res.render('bookings/ok', { gadget : gadget });
-        });
+            res.render('bookings/ok', { gadget : gadget });
+          }
+        );
       });
     });
   },

@@ -11,69 +11,75 @@ block content
         div.modal-body
           p Deleting a user will also delete related bookings. Are you sure?
         div.modal-footer
-          a.btn.btn-attention(href='/users/' + euser._id + '/remove') Delete user
+          a.btn.btn-danger(href='/users/' + euser._id + '/remove') Delete user
 
-  #layerBookGadget
-  #blank
-  .box
-    .detailpage
-      .basic
-        .right
-          .userdetails
-            h2= euser.displayname
-            h1= euser.name
-            form(action="/users/" + euser._id, method="post")
+  .details.user-details
+    .row
+      .col-md-8
+        br
+        a.btn(href="/gadgets/") back
+        h2= euser.displayname
+        h1= euser.name
 
-              p Role:
-              select(name='role')
-                if(euser.role == 'admin')
-                  option(selected) admin
-                else
-                  option admin
-                if(euser.role == 'user')
-                  option(selected) user
-                else
-                  option user
+      .col-md-4
+        if euser.avatarurl
+          img(src=euser.avatarurl)
 
-                if (euser.active)
-                  input(type='checkbox', name="active", checked="true")
-                else
-                  input(type='checkbox', name="active")
+    br
+    br
+    .row
+      .col-md-8
+        form(action="/users/" + euser._id, method="post", role="form")
 
-                p
-                  input(type="submit", value="Speichern").btn
-                  a.btn.btn-attention(data-toggle="modal" data-target="#modal") Delete
+          .form-group
+            label Email:
+            input(value=euser.email, readonly="true").form-control
 
-        .image
-          if euser.avatarurl
-            img(src=euser.avatarurl, style="width:100px; ")
-        .clear
-    .top
-      table.detailbookingsUser
+          .form-group
+            label Role:
+            select(name='role').form-control
+              if(euser.role == 'admin')
+                option(selected) admin
+              else
+                option admin
+              if(euser.role == 'user')
+                option(selected) user
+              else
+                option user
+
+          .form-group
+            label Status:
+            select(name='active').form-control
+              option(selected= ( euser.active) ? "selected" : "") Active
+              option(selected= (!euser.active) ? "selected" : "") Deactive
+
+      .col-md-4.tools-box
+        input(type="submit", value="Speichern").btn
+        a.btn.btn-danger(data-toggle="modal" data-target="#modal") Delete
+
+    br
+    br
+    br
+    h4 Bookings
+    table.table
+      tr
+        th Device (ID)
+        th Start reservation
+        th End reservation
+        th Status
+        th
+        th
+      - each booking in bookings
         tr
-          th.dev Device
-          th.start Start
-          th.end End
-          th
-          th
-          th
-        - each booking in bookings
-          tr
-            td= booking.gadgetname
-            td
-              if(booking.start)
-                span= fmtDatetime(booking.startdate)
-            td
-              if(booking.end)
-                span= fmtDatetime(booking.enddate)
-            td
-              if(!booking.status)
-                a(href="/bookings/"+booking._id+"/handout").handout
-              if(booking.status=='handout')
-                a(href="/bookings/"+booking._id+"/takeback").takeback
-              if(booking.status=='closed')
-                span closed
-            td
-              a(onclick="openBookingLayer('/bookings/" + booking._id + "')").edit
-            td
-              a(href="/bookings/" + booking._id + '/remove').cancel
+          td= booking.gadgetname
+          td= fmtDatetime(booking.start)
+          td= fmtDatetime(booking.end)
+          td= booking.status
+          td.green
+            a(
+                href="/bookings/" + booking._id + "/edit",
+                data-toggle="modal",
+                data-target="#bookingModal"
+              ).edit
+          td.green
+            a(href="/bookings/" + booking._id + '/remove').cancel

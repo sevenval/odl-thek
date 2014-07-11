@@ -59,6 +59,8 @@ var BookingSchema = new Mongoose.Schema({
     ref: 'User'
   }
 
+}, {
+  strict: true
 });
 
 module.exports = Mongoose.model('Booking', BookingSchema);

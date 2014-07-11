@@ -24,15 +24,16 @@ function createGadgetStats(cb) {
     // create booking stats per gadget (last and current booking)
     bookings.forEach(function (booking) {
 
-      // index gadgets by id
-      stats[booking.gadget] = stats[booking.gadget] || {};
-
-      if (booking.end < now) {
+      if (booking.end < now && booking.status === 'closed') {
          // todo nur übernehmen, wenn wirklich das letzte.
-        stats[booking.gadget].last = booking;
+        stats[booking.gadget] = { lastBooking: booking };
       }
-      if (booking.start < now && booking.end > now) {
-        stats[booking.gadget].current = booking;
+
+      if (booking.status !== 'closed' && booking.start < now && booking.end > now) {
+        stats[booking.gadget] = {
+          status: booking.status,
+          booking: booking
+        };
       }
     });
 
@@ -47,6 +48,7 @@ function createGadgetStats(cb) {
  */
 function writeGadgetImages(gadgets, finalCb) {
   async.each(gadgets, function (gadget, cb) {
+
     fs.exists('public' + gadget.imagePath, function (imgExists) {
       if (!imgExists && gadget.image.data) {
         fs.writeFile(
@@ -54,6 +56,8 @@ function writeGadgetImages(gadgets, finalCb) {
           new Buffer(gadget.image.data, 'base64'),
           cb
         );
+      } else {
+        cb();
       }
     });
   }, finalCb);
@@ -75,7 +79,11 @@ var GadgetController = {
     }
 
     GadgetModel.find(where)
-      .sort({ brand: 1 })
+      .sort({
+        brand: 1,
+        name: 1,
+        _id: 1
+      })
       .limit(750)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
@@ -85,7 +93,7 @@ var GadgetController = {
           res.render('gadgets/list', {
             title: 'gadgets',
             gadgets: gadgets,
-            stats: {}
+            stats: stats
           });
           console.timeEnd('listAll');
         }));
@@ -154,7 +162,7 @@ var GadgetController = {
       if (err) { return next(err); }
 
       res.render('gadgets/edit', {
-        title: gadget.name,
+        title: gadget && gadget.name,
         gadget: gadget
       });
     });
@@ -163,6 +171,7 @@ var GadgetController = {
 
   /**
    * Updates or inserts a gadget. Inserting is done when no id is passed.
+   * @todo Refactor!
    */
   save: function (req, res, next) {
 
@@ -170,16 +179,42 @@ var GadgetController = {
       req.params.id = new Mongoose.Types.ObjectId();
     }
 
-    GadgetModel.update(
-      { _id: req.params.id },
-      req.body,
-      { upsert: true },
-      function (err, gadget) {
-        if (err) { return next(err); }
+    var form = new Formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.uploadDir = '/tmp/';
 
-        res.redirect('/gadgets/' + req.params.id + '/edit');
-      }
-    );
+    form.parse(req, function (err, fields, files) {
+      if (err) { return next(err); }
+
+      fs.readFile(files.image.path, function (err, data) {
+
+        if (!err && files) {
+          // image passed
+          var base64data = new Buffer(data).toString('base64');
+          fields.image = {
+            data: base64data,
+            extension: Utils.getFileExtension(files.image.path)
+          };
+          // TODO: Callback / error handling
+          fs.unlink('public/img/cache/' + req.params.id + '.' + Utils.getFileExtension(files.image.path));
+        }
+
+        GadgetModel.findByIdAndUpdate(
+          req.params.id,
+          fields,
+          {
+            upsert: true
+          },
+          function (err, gadget) {
+            if (err) { return next(err); }
+
+            writeGadgetImages([ gadget ], function () {
+              res.redirect('/gadgets/' + req.params.id + '/edit');
+            });
+          }
+        );
+      });
+    });
   },
 
 
@@ -198,42 +233,6 @@ var GadgetController = {
       });
     });
   },
-
-
-  /**
-   * Uploads a file to S3.
-   * @todo Max upload size?
-   * @todo Image resizing?
-   */
-  upload: function (req, res, next) {
-
-    var form = new Formidable.IncomingForm();
-    form.keepExtensions = true;
-    form.uploadDir = '/tmp/';
-
-    form.parse(req, function (err, fields, files) {
-      if (err) { return next(err); }
-
-      fs.readFile(files.image.path, function (err, data) {
-        var base64data = new Buffer(data).toString('base64');
-
-        GadgetModel.update(
-          {_id: req.params.id},
-          {
-            image: {
-              data: base64data,
-              extension: Utils.getFileExtension(files.image.path)
-            }
-          },
-          function (err) {
-            if (err) { return next(err); }
-
-            res.redirect('/gadgets/' + req.params.id);
-          }
-        );
-      });
-    });
-  }
 
 };
 

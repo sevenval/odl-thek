@@ -67,6 +67,17 @@ app.use(passport.session());
 app.use(function (req, res, next) {
   // make current user obj available in templates
   app.locals.user = req.session.user;
+
+  if (req.url.indexOf('/gadgets/top') !== -1) {
+    app.locals.page = 'top';
+  } else if (req.url.indexOf('/gadgets/') !== -1) {
+    app.locals.page = 'gadgets';
+  } else  if (req.url.indexOf('/bookings') !== -1) {
+    app.locals.page = 'bookings';
+  } else if (req.url.indexOf('/users') !== -1) {
+    app.locals.page = 'users';
+  }
+
   next();
 });
 
@@ -100,7 +111,6 @@ app.get ('/gadgets/:id',                  AuthController.isAuth,    GadgetsContr
 app.get ('/gadgets/:id/edit',             AuthController.isAdmin,   GadgetsController.edit);
 app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsController.save);
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
-app.post('/gadgets/:id/upload',           AuthController.isAdmin,   GadgetsController.upload);
 app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
 app.post('/bookings/:id/new',             AuthController.isAuth,    BookingsController.save);

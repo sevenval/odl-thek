@@ -9,7 +9,8 @@ var GadgetSchema = new Mongoose.Schema({
 
   hwid: {
     type: Number,
-    unique: true
+    unique: true,
+    required: true
   },
 
   name: {

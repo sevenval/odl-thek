@@ -4,15 +4,17 @@ html
     title= "ODL // " + title
     meta(name="viewport" content="width=device-width, initial-scale=1")
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/styles-new.css')
-    //link(rel='stylesheet', href='/stylesheets/style.css')
-    //link(rel='stylesheet', href='/stylesheets/detail.css')
+    link(rel='stylesheet', href='/stylesheets/styles.css')
     link(href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,300italic' rel='stylesheet' type='text/css')
     body(class= (user && user.role === "admin" ? "admin-ui" : ""))
+
+    div.modal.fade(id="bookingModal")
+      div.modal-dialog
+        div.modal-content
+
     .container
 
       .header
-
         .logo
           a(href="/")
             img(src='/img/Logo_sevenval.gif', class='logoImg')
@@ -20,16 +22,16 @@ html
             b ODL
             span THEK
 
-        if(locals.user)
+        if(user)
           ul.nav.nav-pills
-            li.active
+            li(class= (page === 'gadgets') ? "active" : "")
               a(href="/") Gadgets
-            li
+            li(class= (page === 'top') ? "active" : "")
               a(href="/gadgets/top") Top
-            li
+            li(class= (page === 'bookings') ? "active" : "")
               a(href="/bookings") Bookings
             if(user.role == 'admin')
-              li
+              li(class= (page === 'users') ? "active" : "")
                 a(href="/users/") Users
 
           .account.text-right

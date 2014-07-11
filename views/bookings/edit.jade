@@ -1,26 +1,32 @@
-form(method='post',action="/bookings/"+booking.gadget+"/edit",id="book")
-.getBook
-    h1(onclick="$('#layerBookGadget').hide();$('#blank').hide();") Update Booking
-    span.bookBrand= booking.gadgetname
-    a(onclick="$('#book').hide();") X
-  if(locals.error)
-    .error= error
-  .bookingTime
-    .start
-      h2 Start
-      input(type='date', name='startdate', value=startdate)
-      span.dateIcon
-      br
-      input(type='time', name='starttime', value=starttime)
-      span.timeIcon
-    .btw
-    .end
-      h2 End
-      input(type='date', name='enddate', value=enddate)
-      span.dateIcon
-      input(type='time', name='endtime', value=endtime)
-      span.timeIcon
-    .clear
-    div(onclick="bookNow(); return false;").book
-      span Speichern
-  br
+form(method='post', action="/bookings/" + booking.gadget + "/edit", id="book")
+  div.modal-header
+    button(type="button", class="close", data-dismiss="modal")
+    h3 Update booking
+    = booking.gadgetname
+
+  div.modal-body
+    .row
+      .col-md-5
+        h4 Start
+        input(type='date', name='startdate', value=startdate)
+        span.dateIcon
+        br
+        input(type='time', name='starttime', value=starttime)
+        span.timeIcon
+
+      .col-md-2.btw
+
+      .col-md-5
+        h4 End
+        input(type='date', name='enddate', value=enddate)
+        span.dateIcon
+        input(type='time', name='endtime', value=endtime)
+        span.timeIcon
+      .clear
+
+    if(locals.error)
+      p.text-danger= error
+
+  div.modal-footer
+    a.btn(onclick="bookNow(); return false;") Save
+

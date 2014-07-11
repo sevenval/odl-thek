@@ -1,7 +1,9 @@
-div
-  .getBook
-    h1(onclick="$('#layerBookGadget').hide();$('#blank').hide();") Book
-    span.bookBrand= gadget.brand
-    span.bookName= gadget.name
-    a(onclick="$('#book').hide();") X
-  .ok Buchung erfolgreich
+div.modal-header
+	button(type="button", class="close", data-dismiss="modal")
+	h3 Booking successful
+	= gadget.brand
+	| 
+	b= gadget.name
+
+div.modal-body.text-center
+	img(src="/img/booking-ok.png")

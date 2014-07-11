@@ -2,23 +2,10 @@
 /*global $, document */
 'use strict';
 
-
-function openBookingLayer(_url) {
-  $.ajax({
-    url: _url
-  }).done(function (_content) {
-    $('#layerBookGadget').html(_content);
-    $('#layerBookGadget').show();
-    $('#blank').show();
-  });
-}
-
 function bookNow() {
   var book = $('#book');
   $.post(book.attr('action'), book.serialize(), function (_content) {
-    $('#layerBookGadget').html(_content);
-    $('#layerBookGadget').show();
-    $('#blank').show();
+    $('#bookingModal .modal-content').html(_content);
   });
 }
 
@@ -32,16 +19,12 @@ $(function () {
     $(e.target).closest('form').submit();
   });
 
-  $('.element').mouseover(function (e) {
+  $('.gadet-entry').mouseover(function (e) {
     $(this).addClass('showDetails');
   });
 
-  $('.element').mouseout(function (e) {
+  $('.gadet-entry').mouseout(function (e) {
     $(this).removeClass('showDetails');
-  });
-
-  $('.book-btn').click(function (e) {
-    openBookingLayer($(this).data('url'));
   });
 
   $('.cancel-booking').click(function (e) {

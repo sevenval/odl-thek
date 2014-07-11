@@ -1,8 +1,10 @@
 extends ../layout
 
 block content
-  #layerBookGadget
-  #blank
+
+  div.modal.fade(id="bookingModal")
+    div.modal-dialog
+      div.modal-content
 
   form(action='/gadgets/', method='get', id='search').clearfix
     input(type='text', name='q', placeholder='Search gadgets...' )
@@ -14,72 +16,60 @@ block content
       a(href='/gadgets/new').btn.btn-add
 
 
-
   if(!gadgets || gadgets.length === 0)
     h4 Sorry, no gadgets found
   else
     h4= gadgets.length + " gadgets"
-    
-    ul.elements
-  
+
+    ul.gadget-list
+
       - each gadget in gadgets
-        li
-          .element-front
+        li.gadet-entry
+
+
+          .content-slider
             if(gadget.hasImage)
               img(src=gadget.imagePath)
             else
               img(src='/img/dummy_device.gif')
 
-            if(stats[gadget._id] && stats[gadget._id].current)
-              if(stats[gadget._id].current.status === 'handout')
-                div.traffic_handout.smallline
-              else
-                div.traffic_reserved.smallline
+
+            if(stats[gadget._id])
+              div(class="gadget-" + stats[gadget._id].status).smallline
             else
-              div.traffic.smallline
+              div.smallline.gadget-available
 
             .details
-              div.spec
               div.brand= gadget.brand
               div.name= gadget.name
-              span.isolator
+              hr
               div.os= gadget.os
 
+            .booking-details
 
-          .element-back
-            if(stats[gadget._id] && stats[gadget._id].current)
-              if(stats[gadget._id].current.status === "handout")
-                div.traffic_handout
+              b Current status:
+              br
+              if(!stats[gadget._id])
+                p Available
+
               else
-                div.traffic_reserved
-            else
-              div.traffic
-
-            div.details
-              div.brand= gadget.brand
-              div.name= gadget.name
-              span.isolator
-              div.os= gadget.os
-
-            div.lastBook
-              if(stats[gadget._id] && stats[gadget._id].current)
-                if(stats[gadget._id].current.status === 'handout')
-                  |current
+                if(stats[gadget._id].status === 'open')
+                  p Reserved
                 else
-                  |reserved
-                br
-                span.user=stats[gadget._id].current.username
-                br
-                br
+                  p Not available
 
-              if(stats[gadget._id] && stats[gadget._id].last)
-                span last booking
-                br
-                span.user=stats[gadget._id].last.username
+                if(stats[gadget._id].lastBooking)
+                  b Last booked by:
+                  br
+                  =stats[gadget._id].lastBooking.email
 
-            a(href="/gadgets/" + gadget._id).btn
-              |Details
-            a(data-url="/bookings/" + gadget._id + "/new").book-btn.btn
-              |Book
+              .controls
+                a(href="/gadgets/" + gadget._id).btn
+                  |Details
+                a(
+                  href="/bookings/" + gadget._id + "/new",
+                  data-toggle="modal",
+                  data-target="#bookingModal"
+                ).book-btn.btn|Book
 
   div.clearfix
