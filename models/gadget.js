@@ -2,7 +2,6 @@
 'use strict';
 
 var Mongoose  = require('mongoose');
-var Thumbnail = require('mongoose-thumbnail');
 
 
 var GadgetSchema = new Mongoose.Schema({
