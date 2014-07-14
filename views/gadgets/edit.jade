@@ -58,7 +58,9 @@ block content
           else
             img(src='/img/dummy_device.gif')
 
-          input(type="file", id="image", name="image")
+          input(type="file", name="image", accept="image/*")
+          p.help-block
+            | Image will be resized to 210x210 Pixel
 
       .col-md-4.tools-box
         input(type="submit", value="Save").btn

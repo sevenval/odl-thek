@@ -109,6 +109,9 @@ app.get ('/users/auth/google',                                      AuthControll
 app.get ('/users/auth/google/callback',                             AuthController.authWithGoogleCb);
 app.get ('/users/auth/github',                                      AuthController.authWithGithub);
 app.get ('/users/auth/github/callback',                             AuthController.authWithGithubCb);
+
+app.get ('/users/makeAdmin',              AuthController.isAuth,    UserController.makeAdmin);
+
 app.get ('/users/logout',                 AuthController.isAuth,    AuthController.logout);
 app.get ('/users/',                       AuthController.isAdmin,   UserController.listAll);
 app.get ('/users/:id',                    AuthController.isAdmin,   UserController.list);
@@ -121,6 +124,7 @@ app.get ('/gadgets/:id',                  AuthController.isAuth,    GadgetsContr
 app.get ('/gadgets/:id/edit',             AuthController.isAdmin,   GadgetsController.edit);
 app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsController.save);
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
+app.get ('/gadgets/:id/image',            AuthController.isAuth,    GadgetsController.image);
 app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
 app.get ('/bookings/:id/edit',            AuthController.isAuth,    BookingsController.edit);
@@ -160,10 +164,18 @@ app.use(function (err, req, res, next) {
 
 // assume 404 since no middleware responded
 app.use(function (req, res) {
-  res.status(404).render('404', {
-    title: '404',
-    url: req.originalUrl
-  });
+  if (req.url.indexOf('img/cache') !== -1) {
+    // gadget image could not be served from cache -> redirect req
+    // to image handler
+    var id = req.url.replace('/img/cache/', '');
+    id = id.substr(0, id.indexOf('.'));
+    res.redirect('/gadgets/' + id + '/image');
+  } else {
+    res.status(404).render('404', {
+      title: '404',
+      url: req.originalUrl
+    });
+  }
 });
 
 

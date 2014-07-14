@@ -4,7 +4,7 @@
 var Mongoose      = require('mongoose');
 var Formidable    = require('formidable');
 var fs            = require('fs');
-var async         = require('async');
+var gm            = require('gm');
 var Config        = require('../config/app');
 var Utils         = require('../lib/utils');
 var GadgetModel   = require('../models/gadget');
@@ -42,26 +42,35 @@ function createGadgetStats(cb) {
 }
 
 
-/**
- * Checks if a gadget image exists in local fs and creates it if not.
- * @private
- */
-function writeGadgetImages(gadgets, finalCb) {
-  async.each(gadgets, function (gadget, cb) {
+function handleImage(gadgetId, fields, files, cb) {
+  if (!files) {
+    return cb();
+  }
 
-    fs.exists('public' + gadget.imagePath, function (imgExists) {
-      if (!imgExists && gadget.image.data) {
-        fs.writeFile(
-          'public' + gadget.imagePath,
-          new Buffer(gadget.image.data, 'base64'),
-          cb
-        );
-      } else {
-        cb();
-      }
+  fs.unlink('public/img/cache/' + gadgetId + '.jpg', function (err) {
+    // ignore errors here (e.g. file not found)
+
+    fs.readFile(files.image.path, function (err, data) {
+      if (err) { return cb(err); }
+
+      // resize image and convert to jpg
+      gm(data)
+        .options({ imageMagick: true })
+        .resize(210)
+        .toBuffer('jpg', function (err, buffer) {
+          fields.image = {
+            data: buffer.toString('base64'),
+            extension: Utils.getFileExtension(files.image.path)
+          };
+
+          cb(err, fields);
+        });
+
     });
-  }, finalCb);
+  });
 }
+
+
 
 
 var GadgetController = {
@@ -89,15 +98,16 @@ var GadgetController = {
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
-        // TODO: Do we need this on each gadget request?
-        writeGadgetImages(gadgets, createGadgetStats(function (stats) {
+        createGadgetStats(function (stats) {
+
+          console.log('render');
           res.render('gadgets/list', {
             title: 'gadgets',
             gadgets: gadgets,
             stats: stats
           });
           console.timeEnd('listAll');
-        }));
+        });
 
       });
   },
@@ -110,14 +120,13 @@ var GadgetController = {
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
-        // TODO: Do we need this on each gadget request?
-        writeGadgetImages(gadgets, createGadgetStats(function (stats) {
+        createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'top gadgets',
             gadgets: gadgets,
             stats: stats
           });
-        }));
+        });
       });
   },
 
@@ -172,7 +181,6 @@ var GadgetController = {
 
   /**
    * Updates or inserts a gadget. Inserting is done when no id is passed.
-   * @todo Refactor!
    */
   save: function (req, res, next) {
 
@@ -187,34 +195,21 @@ var GadgetController = {
     form.parse(req, function (err, fields, files) {
       if (err) { return next(err); }
 
-      fs.readFile(files.image.path, function (err, data) {
-
-        if (!err && files) {
-          // image passed
-          var base64data = new Buffer(data).toString('base64');
-          fields.image = {
-            data: base64data,
-            extension: Utils.getFileExtension(files.image.path)
-          };
-          // TODO: Callback / error handling
-          fs.unlink('public/img/cache/' + req.params.id + '.' + Utils.getFileExtension(files.image.path));
-        }
+      handleImage(req.params.id, fields, files, function (err, fields) {
+        if (err) { return next(err); }
 
         GadgetModel.findByIdAndUpdate(
           req.params.id,
           fields,
-          {
-            upsert: true
-          },
+          { upsert: true },
           function (err, gadget) {
             if (err) { return next(err); }
 
-            writeGadgetImages([ gadget ], function () {
-              res.redirect('/gadgets/' + req.params.id + '/edit');
-            });
+            res.redirect('/gadgets/' + req.params.id + '/edit');
           }
         );
       });
+
     });
   },
 
@@ -234,6 +229,22 @@ var GadgetController = {
       });
     });
   },
+
+
+  /**
+   * Loads the gadget image from mongodb and stores it in the filesystem.
+   */
+  image: function (req, res, next) {
+    GadgetModel.findById(req.params.id, function (err, gadget) {
+      var buf = new Buffer(gadget.image.data, 'base64');
+      gm(buf)
+        .options({ imageMagick: true })
+        .resize(210)
+        .write('public' + gadget.imagePath, function () {
+          res.end(buf);
+        });
+    });
+  }
 
 };
 

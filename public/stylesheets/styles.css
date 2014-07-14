@@ -76,6 +76,7 @@ a:hover {
 	padding: 15px 0;
 	border-radius: 0;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+	border-bottom: 5px solid transparent;
 }
 
 .header .nav li.active a {
@@ -110,7 +111,6 @@ a:hover {
 .btn:not(.btn-danger) {
 	border-radius: 10px;
 	background-color: #1CA055;
-
 	font-weight: 600;
 	padding: 10px 15px;
 }
@@ -140,6 +140,10 @@ a:hover {
 
 .cancel{
 	background-image: url(/img/del_btn.gif);
+}
+
+.help-block {
+	color: inherit;
 }
 
 
@@ -341,6 +345,7 @@ td.green {
 	background: #1D9F55;
 	padding: 0;
 	text-align: center;
+	width: 50px
 }
 
 table th:last-of-type {
@@ -384,7 +389,8 @@ table tr.section th:last-of-type {
 }
 
 .details img {
-	width: 100%;
+	display: block;
+	margin: auto;
 }
 
 .details .tools-box {
@@ -410,6 +416,7 @@ table tr.section th:last-of-type {
 
 .user-details img {
 	padding: 20px;
+	width: 100%;
 }
 
 /*******************************************************************************

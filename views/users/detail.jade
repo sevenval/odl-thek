@@ -6,7 +6,7 @@ block content
     div.modal-dialog
       div.modal-content
         div.modal-header
-          button(type="button", class="close", data-dismiss="modal") x
+          button(type="button", class="close", data-dismiss="modal")
           h3 Delete user?
         div.modal-body
           p Deleting a user will also delete related bookings. Are you sure?
@@ -27,13 +27,17 @@ block content
 
     br
     br
-    .row
-      .col-md-8
-        form(action="/users/" + euser._id, method="post", role="form")
 
+    .row
+      form(action="/users/" + euser._id, method="post", role="form")
+        .col-md-8
           .form-group
             label Email:
             input(value=euser.email, readonly="true").form-control
+
+          .form-group
+            label Name:
+            input(value=euser.name, readonly="true").form-control
 
           .form-group
             label Role:
@@ -47,15 +51,15 @@ block content
               else
                 option user
 
-          .form-group
-            label Status:
-            select(name='active').form-control
-              option(selected= ( euser.active) ? "selected" : "") Active
-              option(selected= (!euser.active) ? "selected" : "") Deactive
+          //- .form-group
+          //-   label Status:
+          //-   select(name='active').form-control
+          //-     option(selected= ( euser.active) ? "selected" : "") Active
+          //-     option(selected= (!euser.active) ? "selected" : "") Deactive
 
-      .col-md-4.tools-box
-        input(type="submit", value="Speichern").btn
-        a.btn.btn-danger(data-toggle="modal" data-target="#modal") Delete
+        .col-md-4.tools-box
+          input(type="submit", value="Speichern").btn
+          a.btn.btn-danger(data-toggle="modal" data-target="#modal") Delete
 
     br
     br
@@ -77,9 +81,9 @@ block content
           td= booking.status
           td.green
             a(
-                href="/bookings/" + booking._id + "/edit",
-                data-toggle="modal",
-                data-target="#bookingModal"
-              ).edit
+              href="/bookings/" + booking._id + "/edit",
+              data-toggle="modal",
+              data-target="#bookingModal"
+            ).edit
           td.green
             a(href="/bookings/" + booking._id + '/remove').cancel
