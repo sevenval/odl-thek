@@ -5,6 +5,7 @@
 var _             = require('underscore');
 var moment        = require('moment');
 var Mongoose      = require('mongoose');
+var Mailer        = require('../lib/mailer');
 var BookingModel  = require('../models/booking');
 var GadgetModel   = require('../models/gadget');
 
@@ -102,11 +103,12 @@ var BookingsController = {
     sBooking = new Date(req.body.startdate + 'T' + req.body.starttime);
     eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
 
-    if (sBooking.getTime() < Date.now()) {
-      error = 'Start date not valid';
-    } else if (eBooking.getTime() < sBooking.getTime()) {
-      error = 'End date not valid';
-    }
+    // TODO: Uncomment in production
+    // if (sBooking.getTime() < Date.now()) {
+    //   error = 'Start date not valid';
+    // } else if (eBooking.getTime() < sBooking.getTime()) {
+    //   error = 'End date not valid';
+    // }
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
 
@@ -145,8 +147,14 @@ var BookingsController = {
           {
             upsert: true
           },
-          function (err) {
+          function (err, booking) {
             if (err) { return next(err); }
+
+            if (req.body._id) {
+              Mailer.sendBookingUpdatedMail(gadget, booking, req.session.user);
+            } else {
+              Mailer.sendNewBookingMail(gadget, booking, req.session.user);
+            }
 
             res.render('bookings/ok', { gadget : gadget });
           }

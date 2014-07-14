@@ -4,7 +4,7 @@
 
 var DEVELOPMENT = {
   db: {
-    url: 'mongodb://localhost/odlthek',
+    url: process.env.MONGOLAB_URI || process.env.mongodburl || 'mongodb://localhost/odlthek',
     debug: true
   },
   auth: {
@@ -14,9 +14,9 @@ var DEVELOPMENT = {
       callbackURL: process.env.GITHUB_CALLBACK || process.env.callbackURL || 'http://127.0.0.1:3000/users/auth/github/callback'
     },
     google: {
-      clientID: '1011998292679-n8capudopv0mnt8pcfgd0jumltmdbjtr.apps.googleusercontent.com',
-      clientSecret: 'z7Dn4iTx7Hzjlm8-9FA9SSMB',
-      callbackURL: "http://127.0.0.1:3000/users/auth/google/callback",
+      clientID: process.env.GOOGLE_CLIENT_ID || '1011998292679-n8capudopv0mnt8pcfgd0jumltmdbjtr.apps.googleusercontent.com',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'z7Dn4iTx7Hzjlm8-9FA9SSMB',
+      callbackURL: process.env.GOOGLE_CALLBACK || "http://127.0.0.1:3000/users/auth/google/callback",
       options: {
         scope: [
           'https://www.googleapis.com/auth/userinfo.profile',
@@ -26,10 +26,9 @@ var DEVELOPMENT = {
       }
     }
   },
-  aws: {
-    key: '',
-    secret: '',
-    bucket: "odlthek2"
+  mail: {
+    to: 'joachim.feldmann@sevenval.com',
+    from: 'Sevenval Odlthek <no-reply@odlthek.com>'
   }
 };
 

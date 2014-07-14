@@ -20,6 +20,7 @@
     "moment": "latest",
     "mongoose": "latest",
     "morgan": "latest",
+    "nodemailer": "^0.7.1",
     "passport": "~0.2.0",
     "passport-github": "*",
     "passport-google-oauth": "latest",
