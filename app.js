@@ -87,6 +87,9 @@ app.use(function (req, res, next) {
 // Register view helper
 //
 app.locals.fmtDatetime = function (datetime) {
+  if (!datetime) {
+    return '';
+  }
   return moment.utc(datetime).format('YYYY-MM-DD HH:mm');
 };
 
@@ -114,9 +117,8 @@ app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsContr
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
 app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
-app.post('/bookings/:id/new',             AuthController.isAuth,    BookingsController.save);
 app.get ('/bookings/:id/edit',            AuthController.isAuth,    BookingsController.edit);
-app.post('/bookings/:id/edit',            AuthController.isAuth,    BookingsController.save);
+app.post('/bookings/:id/save',            AuthController.isAuth,    BookingsController.save);
 app.get ('/bookings/:id/remove',          AuthController.isAuth,    BookingsController.remove);
 app.get ('/bookings/:id/handout',         AuthController.isAdmin,   BookingsController.handout);
 app.get ('/bookings/:id/takeback',        AuthController.isAdmin,   BookingsController.takeback);

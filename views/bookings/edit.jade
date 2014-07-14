@@ -1,8 +1,10 @@
-form(method='post', action="/bookings/" + booking.gadget + "/edit", id="book")
+form(method='post', action="/bookings/" + booking.gadget + "/save", id="book")
   div.modal-header
     button(type="button", class="close", data-dismiss="modal")
     h3 Update booking
     = booking.gadgetname
+
+  input(type='hidden', name='_id', value=booking._id)
 
   div.modal-body
     .row

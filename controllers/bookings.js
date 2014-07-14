@@ -4,6 +4,7 @@
 
 var _             = require('underscore');
 var moment        = require('moment');
+var Mongoose      = require('mongoose');
 var BookingModel  = require('../models/booking');
 var GadgetModel   = require('../models/gadget');
 
@@ -94,7 +95,9 @@ var BookingsController = {
 
   save: function (req, res, next) {
 
-    var sBooking, eBooking, error;
+    var sBooking, eBooking, error, bookingId;
+
+    bookingId = req.body._id || new Mongoose.Types.ObjectId();
 
     sBooking = new Date(req.body.startdate + 'T' + req.body.starttime);
     eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
@@ -115,7 +118,7 @@ var BookingsController = {
       BookingModel.count({
         // count bookings colliding with requested date range and exclude the
         // current booking (on updates)...
-        _id: { $ne: req.params.id },
+        _id: { $ne: bookingId },
         gadget: gadget._id,
         start: { $lte: eBooking.toISOString() },
         end: { $gte: sBooking.toISOString() }
@@ -130,7 +133,7 @@ var BookingsController = {
 
         // gadget available -> create booking entry
         BookingModel.findByIdAndUpdate(
-          req.params.id,
+          bookingId,
           {
             gadget: gadget._id,
             gadgetname: gadget.detailedName,

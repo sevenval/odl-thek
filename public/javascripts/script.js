@@ -11,6 +11,10 @@ function bookNow() {
 
 $(function () {
 
+  $('body').on('hidden.bs.modal', '.modal', function () {
+    $(this).removeData('bs.modal');
+  });
+
   $('a#filter-btn').click(function (e) {
     $('#filter-box').toggleClass('box-open');
   });

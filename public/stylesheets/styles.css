@@ -467,10 +467,6 @@ input[type="date"], input[type="time"]{
 	background-repeat: no-repeat;
 }
 
-#bookingModal .modal-content {
-	height: 370px;
-}
-
 .btw {
 	height: 200px;
 	background-image: url(/img/till_btn.gif);
