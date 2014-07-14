@@ -109,9 +109,6 @@ app.get ('/users/auth/google',                                      AuthControll
 app.get ('/users/auth/google/callback',                             AuthController.authWithGoogleCb);
 app.get ('/users/auth/github',                                      AuthController.authWithGithub);
 app.get ('/users/auth/github/callback',                             AuthController.authWithGithubCb);
-
-app.get ('/users/makeAdmin',              AuthController.isAuth,    UserController.makeAdmin);
-
 app.get ('/users/logout',                 AuthController.isAuth,    AuthController.logout);
 app.get ('/users/',                       AuthController.isAdmin,   UserController.listAll);
 app.get ('/users/:id',                    AuthController.isAdmin,   UserController.list);
