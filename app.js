@@ -13,6 +13,7 @@ var GitHubStrategy      = require('passport-github').Strategy;
 var GoogleStrategy      = require('passport-google-oauth').OAuth2Strategy;
 var Mongoose            = require('mongoose');
 var MongoStore          = require('connect-mongo')(session);
+var Cron                = require('./lib/cron');
 var Config              = require('./config/app');
 var IndexController     = require('./controllers/index');
 var AuthController      = require('./controllers/auth');
@@ -22,8 +23,7 @@ var UserController      = require('./controllers/users');
 
 
 // Setup mongodb
-// Todo: Use unique process env var
-Mongoose.connect(process.env.MONGOLAB_URI || process.env.mongodburl || Config.db.url);
+Mongoose.connect(Config.db.url);
 Mongoose.set('debug', Config.db.debug);
 
 
@@ -81,6 +81,12 @@ app.use(function (req, res, next) {
 
   next();
 });
+
+
+//
+// Start scheduler for recurring tasks
+//
+Cron.start();
 
 
 //
