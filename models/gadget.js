@@ -58,9 +58,6 @@ var GadgetSchema = new Mongoose.Schema({
   image: {
     data: {
       type: String
-    },
-    extension: {
-      type: String
     }
   },
 
@@ -87,20 +84,26 @@ GadgetSchema.virtual('hasImage').get(function () {
 
 
 GadgetSchema.virtual('imagePath').get(function () {
-  return '/img/cache/' + this._id + '.' + this.image.extension;
+  return '/img/cache/' + this._id + '.jpg';
 });
 
 
 //
 // TODO: Add/update search keywords on every insert/update
 //
-GadgetSchema.pre('init', function (next) {
-  this.keywords = [
-    this.name,
-    'other'
-  ];
-  next();
-});
+// GadgetSchema.pre('init', function (next) {
+//   console.log('pre init');
+//   this.keywords = [
+//     this.name,
+//     'other'
+//   ];
+//   next();
+// });
+
+// GadgetSchema.pre('validate', function (next) {
+//   console.log('pre validate');
+//   next();
+// });
 
 
 module.exports = Mongoose.model('Gadget', GadgetSchema);

@@ -25,7 +25,7 @@ block content
         if(gadget.hasImage)
           img(src=gadget.imagePath)
         else
-          img(src='/img/dummy_device.gif')
+          img(src='/img/dummy_device.gif' width="210")
 
     br
 
@@ -86,8 +86,8 @@ block content
           td
             if(booking.handoutuser)
               =booking.handoutuser.email
-          if(user.role == 'admin')
-            td.green
+          td.green
+            if(user.role == 'admin')
               a(href="/bookings/remove/"+booking._id).cancel
 
 
