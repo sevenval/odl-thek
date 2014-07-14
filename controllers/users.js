@@ -80,22 +80,22 @@ var UserController = {
    * Helper for switching users role
    * @todo Remove in production!
    */
-  makeAdmin: function (req, res, next) {
-    // delete user from db
-    UserModel.findByIdAndUpdate(
-      req.session.user._id,
-      {
-        role: 'admin'
-      },
-      function (err) {
-        if (err) { return next(err); }
+  // makeAdmin: function (req, res, next) {
+  //   // delete user from db
+  //   UserModel.findByIdAndUpdate(
+  //     req.session.user._id,
+  //     {
+  //       role: 'admin'
+  //     },
+  //     function (err) {
+  //       if (err) { return next(err); }
 
-        req.session.user.role = 'admin';
+  //       req.session.user.role = 'admin';
 
-        res.redirect('/');
-      }
-    );
-  }
+  //       res.redirect('/');
+  //     }
+  //   );
+  // }
 
 };
 
