@@ -71,12 +71,12 @@ app.use(function (req, res, next) {
 
   if (req.url.indexOf('/gadgets/top') !== -1) {
     app.locals.page = 'top';
-  } else if (req.url.indexOf('/gadgets/') !== -1) {
-    app.locals.page = 'gadgets';
-  } else  if (req.url.indexOf('/bookings') !== -1) {
+  } else if (req.url.indexOf('/bookings') !== -1) {
     app.locals.page = 'bookings';
   } else if (req.url.indexOf('/users') !== -1) {
     app.locals.page = 'users';
+  } else {
+    app.locals.page = 'gadgets';
   }
 
   next();
