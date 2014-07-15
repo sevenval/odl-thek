@@ -27,6 +27,10 @@ var DEVELOPMENT = {
     }
   },
   mail: {
+    transport: '', // SMTP or leave blank to use sendmail
+    service: 'Gmail',
+    username: '',
+    password: '',
     to: 'joachim.feldmann@sevenval.com',
     from: 'Sevenval Odlthek <no-reply@odlthek.com>'
   }

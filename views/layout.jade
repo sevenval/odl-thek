@@ -13,7 +13,6 @@ html
         div.modal-content
 
     .container
-
       .header
         .logo
           a(href="/")
@@ -33,8 +32,10 @@ html
             if(user.role == 'admin')
               li(class= (page === 'users') ? "active" : "")
                 a(href="/users/") Users
+            li.visible-xs-block
+              a(href="/users/logout") Logout
 
-          .account.text-right
+          .account.text-right.hidden-xs
             .pull-left
               strong=user.email
               br

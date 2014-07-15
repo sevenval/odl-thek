@@ -1,22 +1,23 @@
 extends ../layout
 
 block content
-  table.userlist
-    tr
-      th Name
-      th Email
-      th Type
-      th Role
-      th
-    - each user in users
+  .table-responsive
+    table
       tr
-        td
-          =user.name
-        td
-          =user.email
-        td
-          =user.type
-        td
-          =user.role
-        td.green
-          a(href='/users/' + user._id).edit
+        th Name
+        th Email
+        th Type
+        th Role
+        th
+      - each user in users
+        tr
+          td
+            =user.name
+          td
+            =user.email
+          td
+            =user.type
+          td
+            =user.role
+          td.tools
+            a(href='/users/' + user._id).edit

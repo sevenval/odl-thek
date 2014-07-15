@@ -57,10 +57,20 @@ var BookingSchema = new Mongoose.Schema({
   closeuser: {
     type: String,
     ref: 'User'
+  },
+
+  notificationSent: {
+    type: Boolean
   }
 
 }, {
   strict: true
 });
+
+
+BookingSchema.virtual('expired').get(function () {
+  return (this.end < new Date());
+});
+
 
 module.exports = Mongoose.model('Booking', BookingSchema);

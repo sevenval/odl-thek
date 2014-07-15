@@ -5,6 +5,8 @@ var Mongoose      = require('mongoose');
 var Formidable    = require('formidable');
 var fs            = require('fs');
 var gm            = require('gm');
+var csv           = require('csv');
+var async         = require('async');
 var Config        = require('../config/app');
 var Utils         = require('../lib/utils');
 var GadgetModel   = require('../models/gadget');
@@ -25,7 +27,7 @@ function createGadgetStats(cb) {
     bookings.forEach(function (booking) {
 
       if (booking.end < now && booking.status === 'closed') {
-         // todo nur übernehmen, wenn wirklich das letzte.
+        // todo nur übernehmen, wenn wirklich das letzte.
         stats[booking.gadget] = { lastBooking: booking };
       }
 
@@ -43,7 +45,7 @@ function createGadgetStats(cb) {
 
 
 function handleImage(gadgetId, fields, files, cb) {
-  if (!files) {
+  if (!files.image || files.image.size === 0) {
     return cb();
   }
 
@@ -60,8 +62,7 @@ function handleImage(gadgetId, fields, files, cb) {
         .resize(210)
         .toBuffer('jpg', function (err, buffer) {
           fields.image = {
-            data: buffer.toString('base64'),
-            extension: Utils.getFileExtension(files.image.path)
+            data: buffer.toString('base64')
           };
 
           cb(err, fields);
@@ -73,7 +74,6 @@ function handleImage(gadgetId, fields, files, cb) {
 
 
 
-
 var GadgetController = {
 
   /**
@@ -81,36 +81,51 @@ var GadgetController = {
    * @todo Pagination? / Endless scrolling?
    */
   listAll: function (req, res, next) {
-    console.time('listAll');
     var where = {};
 
     if (req.query.q) {
       //where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
-      where.name = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
-    }
+      //where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
 
-    GadgetModel.find(where)
-      .sort({
-        brand: 1,
-        name: 1,
-        _id: 1
-      })
-      .limit(750)
-      .exec(function (err, gadgets) {
+      GadgetModel.textSearch(req.query.q, function (err, search) {
         if (err) { return next(err); }
 
-        createGadgetStats(function (stats) {
+        for (var gadgets = [], i = 0; i < search.results.length; i++) {
+          gadgets.push(search.results[i].obj);
+        };
 
-          console.log('render');
+        createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'gadgets',
             gadgets: gadgets,
             stats: stats
           });
-          console.timeEnd('listAll');
         });
 
       });
+    } else {
+
+      GadgetModel.find(where)
+        .sort({
+          brand: 1,
+          name: 1,
+          _id: 1
+        })
+        .limit(750)
+        .exec(function (err, gadgets) {
+          if (err) { return next(err); }
+
+          createGadgetStats(function (stats) {
+            res.render('gadgets/list', {
+              title: 'gadgets',
+              gadgets: gadgets,
+              stats: stats
+            });
+          });
+
+        });
+
+    }
   },
 
 
@@ -161,7 +176,11 @@ var GadgetController = {
    * Renders the blank gadget details form.
    */
   create: function (req, res, next) {
-    res.render('gadgets/edit', { title: 'New Gadget', gadget: {} });
+    res.render('gadgets/edit', {
+      title: 'New Gadget',
+      gadget: {},
+      types: GadgetModel.schema.path('type').enumValues
+    });
   },
 
 
@@ -174,7 +193,8 @@ var GadgetController = {
 
       res.render('gadgets/edit', {
         title: gadget && gadget.name,
-        gadget: gadget
+        gadget: gadget,
+        types: GadgetModel.schema.path('type').enumValues
       });
     });
   },
@@ -185,30 +205,40 @@ var GadgetController = {
    */
   save: function (req, res, next) {
 
-    if (req.params.id === 'undefined') {
-      req.params.id = new Mongoose.Types.ObjectId();
-    }
-
     var form = new Formidable.IncomingForm();
     form.keepExtensions = true;
     form.uploadDir = '/tmp/';
 
+    if (req.params.id === 'undefined') {
+      req.params.id = new Mongoose.Types.ObjectId();
+    }
+
     form.parse(req, function (err, fields, files) {
       if (err) { return next(err); }
 
-      handleImage(req.params.id, fields, files, function (err, fields) {
+      handleImage(req.params.id, fields, files, function (err, updFields) {
         if (err) { return next(err); }
 
-        GadgetModel.findByIdAndUpdate(
-          req.params.id,
-          fields,
-          { upsert: true },
-          function (err, gadget) {
-            if (err) { return next(err); }
+        // enrich with image data if present
+        fields = updFields || fields;
 
-            res.redirect('/gadgets/' + req.params.id + '/edit');
-          }
-        );
+        GadgetModel.findById(req.params.id, function (err, gadget) {
+
+          gadget = gadget || new GadgetModel();
+          gadget.set(fields);
+          gadget.save(function (err) {
+            if (err) {
+              return res.render('gadgets/edit', {
+                title: (gadget && gadget.isNew()) ? 'New Gadget' : gadget.name,
+                gadget: gadget,
+                errors: err,
+                types: GadgetModel.schema.path('type').enumValues
+              });
+            }
+            res.redirect('/gadgets/' + gadget._id + '/edit');
+          });
+
+        });
       });
 
     });
@@ -245,12 +275,75 @@ var GadgetController = {
           if (err) {
             console.log('public' + gadget.imagePath + ' cant be written!');
             console.log(err);
-          } else {
-            console.log('public' + gadget.imagePath + ' written!');
           }
 
           res.end(buf);
         });
+    });
+  },
+
+
+  /**
+   * Renders the gadget import view
+   */
+  uploadCsv: function (req, res, next) {
+    res.render('gadgets/import', {
+      title: 'Import'
+    });
+  },
+
+
+  /**
+   * Imports the gadget CSV list
+   */
+  importCsv: function (req, res, next) {
+
+    var form = new Formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.uploadDir = '/tmp/';
+
+    var columns = [ 'hwid', 'name', 'available', 'location', 'description',
+      'brand', 'model', 'os', 'type' ];
+
+    form.parse(req, function (err, fields, files) {
+      if (err) { return next(err); }
+
+      if (files.image.size === 0) {
+        return res.redirect('/gadgets/import');
+      }
+
+      fs.readFile(files.image.path, function (err, buffer) {
+        if (err) { return next(err); }
+
+        csv.parse(buffer.toString(), { quote: "" }, function (err, data) {
+
+          async.forEach(data, function (line, cb) {
+
+            if (columns.indexOf(line[0]) !== -1) {
+              // skip header line
+              return cb();
+            }
+
+            GadgetModel.create({
+              hwid: line[0],
+              //name: line[1],
+              available: line[2],
+              location: line[3],
+              description: line[4].replace(/\\n/g, '\n'),
+              brand: line[5],
+              model: line[6],
+              os: line[7],
+              type: Utils.capitalize(line[8])
+            }, cb);
+
+          }, function (err) {
+            console.dir(err);
+            // final
+            res.redirect('/gadgets/import');
+          });
+
+        });
+      });
     });
   }
 

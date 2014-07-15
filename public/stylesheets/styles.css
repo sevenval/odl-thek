@@ -275,6 +275,10 @@ a:hover {
 	font-style: italic;
 }
 
+.gadet-entry .details .col-md-6 {
+	padding: 0;
+}
+
 .gadet-entry .content-slider {
 	position: absolute;
 	top: 0;
@@ -341,7 +345,7 @@ table {
 	border: 0;
 }
 
-td.green {
+td.tools {
 	background: #1D9F55;
 	padding: 0;
 	text-align: center;
@@ -373,6 +377,10 @@ table tr.section th {
 
 table tr.section th:last-of-type {
 	border-radius: 0 !important;
+}
+
+td .small {
+	color: rgba(255, 255, 255, 0.51);
 }
 
 /*******************************************************************************
@@ -481,8 +489,6 @@ input[type="date"], input[type="time"]{
 	background-repeat: no-repeat;
 }
 
-
-
 /*******************************************************************************
  * Startpage
  ******************************************************************************/
@@ -510,14 +516,17 @@ a.loginbutton {
 	background-repeat: no-repeat;
 	background-position: bottom;
 }
+
 .introduction {
 	font-size: 60px;
 	font-weight: 700;
 	padding-top: 100px;
 }
+
 .introduction span {
 	font-weight: 100;
 }
+
 .introductionText {
 	padding-top: 35px;
 	font-size: 24px;

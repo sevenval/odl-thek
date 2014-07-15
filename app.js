@@ -117,6 +117,8 @@ app.get ('/users/:id/remove',             AuthController.isAdmin,   UserControll
 app.get ('/gadgets',                      AuthController.isAuth,    GadgetsController.listAll);
 app.get ('/gadgets/top',                  AuthController.isAuth,    GadgetsController.listTop);
 app.get ('/gadgets/new',                  AuthController.isAdmin,   GadgetsController.create);
+app.get ('/gadgets/import',               AuthController.isAdmin,   GadgetsController.uploadCsv);
+app.post('/gadgets/import',               AuthController.isAdmin,   GadgetsController.importCsv);
 app.get ('/gadgets/:id',                  AuthController.isAuth,    GadgetsController.list);
 app.get ('/gadgets/:id/edit',             AuthController.isAdmin,   GadgetsController.edit);
 app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsController.save);

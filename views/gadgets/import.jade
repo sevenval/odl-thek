@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+
+  .details
+    .row
+      .col-md-8
+        br
+        a(href="/gadgets/").btn back
+
+        h1 Import
+      .col-md-4
+
+    br
+
+    form(action="/gadgets/import", method="post",
+      enctype="multipart/form-data", role="form").row
+
+      .col-md-8
+        .form-group
+          input(type="file", name="image", accept="text/comma-separated-values")
+          p.help-block
+            | CSV structure: hwid,name,available,location,description,brand,model,os,type
+
+      .col-md-4.tools-box
+        input(type="submit", value="Import").btn

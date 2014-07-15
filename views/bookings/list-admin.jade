@@ -14,87 +14,110 @@ block content
           a.btn.btn-danger Delete
 
   if(bookings && (bookings.open || bookings.handout || bookings.closed))
-    table
-      tr
-        th Name
-        th Device/ID
-        th Start Reservation
-        th End Reservation
-        th
-        th
-        th
+    .table-responsive
+      table
+        tr
+          th Name
+          th Device/ID
+          th Start Reservation
+          th End Reservation
+          th
+          th
+          th
 
-      if(bookings && bookings.open)
-       tr.spacer
-          th(colspan=7)
-        tr.section
-          th(colspan=7)
-            | Upcoming bookings
+        if(bookings && bookings.open)
+         tr.spacer
+            th(colspan=7)
+          tr.section
+            th(colspan=7)
+              | Upcoming bookings
 
-        - each booking in bookings.open
-          tr
-            td=booking.username
-            td
-              a(href="/gadgets/" + booking.gadget)
-                =booking.gadgetname
-            td=fmtDatetime(booking.start)
-            td=fmtDatetime(booking.end)
-            td.green
-              a(
+          - each booking in bookings.open
+            tr
+              td
+                =booking.username
+                br
+                span.small
+                  =booking.user.email
+              td
+                a(href="/gadgets/" + booking.gadget)
+                  =booking.gadgetname
+              td
+                =fmtDatetime(booking.start)
+              td
+                =fmtDatetime(booking.end)
+                if (booking.expired)
+                  span.text-danger
+                    b (Expired)
+              td.tools
+                a(
                   href="/bookings/" + booking._id + "/edit",
                   data-toggle="modal",
                   data-target="#bookingModal"
                 ).edit
-            td.green
-              a(href="/bookings/"+booking._id+"/handout").handOut
-            td.green
-              a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+              td.tools
+                a(href="/bookings/"+booking._id+"/handout").handOut
+              td.tools
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 
 
-      if(bookings && bookings.handout)
-        tr.spacer
-          th(colspan=7)
-        tr.section
-          th(colspan=7)
-            | Active bookings
-        - each booking in bookings.handout
-          tr
-            td=booking.username
-            td
-              a(href="/gadgets/" + booking.gadget)
-                =booking.gadgetname
-            td=fmtDatetime(booking.start)
-            td=fmtDatetime(booking.end)
-            td.green
-              a(
+        if(bookings && bookings.handout)
+          tr.spacer
+            th(colspan=7)
+          tr.section
+            th(colspan=7)
+              | Active bookings
+          - each booking in bookings.handout
+            tr
+              td
+                =booking.username
+                br
+                span.small
+                  =booking.user.email
+              td
+                a(href="/gadgets/" + booking.gadget)
+                  =booking.gadgetname
+              td
+                =fmtDatetime(booking.start)
+              td
+                =fmtDatetime(booking.end)
+                if (booking.expired)
+                  span.text-danger
+                    b (Expired)
+              td.tools
+                a(
                   href="/bookings/" + booking._id + "/edit",
                   data-toggle="modal",
                   data-target="#bookingModal"
                 ).edit
-            td.green
-              a(href="/bookings/"+booking._id+"/takeback").takeBack
-            td.green
-              a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+              td.tools
+                a(href="/bookings/"+booking._id+"/takeback").takeBack
+              td.tools
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 
 
-      if(bookings && bookings.closed)
-        tr.spacer
-          th(colspan=7)
-        tr.section
-          th(colspan=7)
-            | Closed bookings
-        - each booking in bookings.closed
-          tr
-            td=booking.username
-            td
-              a(href="/gadgets/" + booking.gadget)
-              = booking.gadgetname
-            td=fmtDatetime(booking.start)
-            td=fmtDatetime(booking.end)
-            td.green
-            td.green
-            td.green
-              a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+        if(bookings && bookings.closed)
+          tr.spacer
+            th(colspan=7)
+          tr.section
+            th(colspan=7)
+              | Closed bookings
+          - each booking in bookings.closed
+            tr
+              td
+                =booking.username
+                br
+                span.small
+                  =booking.user.email
+              td
+                a(href="/gadgets/" + booking.gadget)
+                  =booking.gadgetname
+              td=fmtDatetime(booking.start)
+              td=fmtDatetime(booking.end)
+              td.tools
+              td.tools
+              td.tools
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 
   else
     | No bookings...

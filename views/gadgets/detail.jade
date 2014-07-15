@@ -28,10 +28,9 @@ block content
           img(src='/img/dummy_device.gif' width="210")
 
     br
-
     .row
       .col-md-8
-        = gadget.description
+        != gadget.description.replace(/\n/g, '<br>')
         br
         br
 
@@ -64,30 +63,31 @@ block content
 
     br
     br
-    table.table
-      tr
-        th name
-        th start date
-        th end date
-        th handout date
-        th handout user
-        th
-      - each booking in bookings
+    .table-responsive
+      table.table
         tr
-          td
-            if(booking.user)
-              =booking.user.email
-          td
-            =fmtDatetime(booking.start)
-          td
-            =fmtDatetime(booking.end)
-          td
-            =fmtDatetime(booking.handoutdate)
-          td
-            if(booking.handoutuser)
-              =booking.handoutuser.email
-          td.green
-            if(user.role == 'admin')
-              a(href="/bookings/remove/"+booking._id).cancel
+          th name
+          th start date
+          th end date
+          th handout date
+          th handout user
+          th
+        - each booking in bookings
+          tr
+            td
+              if(booking.user)
+                =booking.user.email
+            td
+              =fmtDatetime(booking.start)
+            td
+              =fmtDatetime(booking.end)
+            td
+              =fmtDatetime(booking.handoutdate)
+            td
+              if(booking.handoutuser)
+                =booking.handoutuser.email
+            td.tools
+              if(user.role == 'admin')
+                a(href="/bookings/remove/"+booking._id).cancel
 
 
