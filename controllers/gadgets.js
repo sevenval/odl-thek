@@ -49,6 +49,7 @@ function handleImage(gadgetId, fields, files, cb) {
 
   fs.unlink('public/img/cache/' + gadgetId + '.jpg', function (err) {
     // ignore errors here (e.g. file not found)
+    console.log('public/img/cache/' + gadgetId + '.jpg deleted');
 
     fs.readFile(files.image.path, function (err, data) {
       if (err) { return cb(err); }
@@ -240,7 +241,14 @@ var GadgetController = {
       gm(buf)
         .options({ imageMagick: true })
         .resize(210)
-        .write('public' + gadget.imagePath, function () {
+        .write('public' + gadget.imagePath, function (err) {
+          if (err) {
+            console.log('public' + gadget.imagePath + ' cant be written!');
+            console.log(err);
+          } else {
+            console.log('public' + gadget.imagePath + ' written!');
+          }
+
           res.end(buf);
         });
     });
