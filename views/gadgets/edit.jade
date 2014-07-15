@@ -6,26 +6,40 @@ block content
     .row
       .col-md-8
         br
-        if (gadget._id)
-          a(href="/gadgets/"+ gadget._id +"").btn back
+        if (gadget && gadget._id)
+          a(href="/gadgets/"+ gadget._id).btn back
         else
           a(href="/gadgets/").btn back
 
-        h1= (gadget.name) ? gadget.name : "New gadget"
-      .col-md-4
+        h1= title
+      .col-md-4.text-right
+        br
+        a(href="/gadgets/import").btn Import CSV
 
     br
+    if (errors)
+      p.bg-danger
+        =errors.name
+        if (errors.name === 'MongoError')
+          =errors.err
+        else if (errors.name === 'ValidationError')
+          - each error in errors.errors
+            =error.message
+            br
+        else if (errors.name === 'CastError')
+          =errors.message
+          br
+        else
+          | Unkown Error occurred
+      br
 
-    form(action="/gadgets/" + gadget._id + "/save", method="post", enctype="multipart/form-data", role="form").row
+    form(action="/gadgets/" + gadget._id + "/save",
+      method="post", enctype="multipart/form-data", role="form").row
+
       .col-md-8
-
         .form-group
           label HWID:
           input(type="text", name='hwid', value=gadget.hwid).form-control
-
-        .form-group
-          label Name:
-          input(type="text", name='name', value=gadget.name).form-control
 
         .form-group
           label Brand:
@@ -38,6 +52,7 @@ block content
         .form-group
           label Description:
           textarea(name='description').form-control
+            = gadget.description
 
         .form-group
           label OS:
@@ -45,11 +60,22 @@ block content
 
         .form-group
           label Type:
-          input(type="text", name='type', value=gadget.type).form-control
+          select(name='type').form-control
+            - each type in types
+              option(selected=gadget.type == type)
+                =type
 
         .form-group
           label Location:
           input(type="text", name='location', value=gadget.location).form-control
+
+
+        //- .form-group
+        //-   label Location:
+        //-   select(name='location').form-control
+        //-     - each location in locations
+        //-       option(selected=gadget.location == location)
+        //-         =location
 
         .form-group
           label Thumbnail:
