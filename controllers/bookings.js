@@ -104,11 +104,11 @@ var BookingsController = {
     eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
 
     // TODO: Uncomment in production
-    // if (sBooking.getTime() < Date.now()) {
-    //   error = 'Start date not valid';
-    // } else if (eBooking.getTime() < sBooking.getTime()) {
-    //   error = 'End date not valid';
-    // }
+    if (sBooking.getTime() < Date.now()) {
+      error = 'Start date not valid';
+    } else if (eBooking.getTime() < sBooking.getTime()) {
+      error = 'End date not valid';
+    }
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
 
