@@ -309,42 +309,48 @@ var GadgetController = {
         return res.redirect('/gadgets/import');
       }
 
-      fs.readFile(files.file.path, function (err, buffer) {
-        if (err) { return next(err); }
 
-        csv.parse(buffer.toString(), { quote: "" }, function (err, data) {
+      BookingModel.remove({}, function () {
+        GadgetModel.remove({}, function () {
 
-          async.each(data, function (line, cb) {
+          fs.readFile(files.file.path, function (err, buffer) {
+            if (err) { return next(err); }
 
-            if (columns.indexOf(line[0]) !== -1) {
-              // skip header line
-              return cb();
-            }
+            csv.parse(buffer.toString(), { quote: "" }, function (err, data) {
 
-            GadgetModel.create({
-              hwid: line[0],
-              //name: line[1],
-              available: line[2],
-              location: line[3],
-              description: line[4].replace(/\\n/g, '\n'),
-              brand: line[5],
-              model: line[6],
-              os: line[7],
-              type: Utils.capitalize(line[8])
-            }, function (err) {
-              if (err) {
-                errors.push({ object: err, line: line });
-              }
-              cb();
-            });
+              async.each(data, function (line, cb) {
 
-          }, function (err) {
-            res.render('gadgets/import', {
-              title: 'Import',
-              errors: errors
+                if (columns.indexOf(line[0]) !== -1) {
+                  // skip header line
+                  return cb();
+                }
+
+                GadgetModel.create({
+                  hwid: line[0],
+                  //name: line[1],
+                  available: line[2],
+                  location: line[3],
+                  description: line[4].replace(/\\n/g, '\n'),
+                  brand: line[5],
+                  model: line[6],
+                  os: line[7],
+                  type: Utils.capitalize(line[8])
+                }, function (err) {
+                  if (err) {
+                    errors.push({ object: err, line: line });
+                  }
+                  cb();
+                });
+
+              }, function (err) {
+                res.render('gadgets/import', {
+                  title: 'Import',
+                  errors: errors
+                });
+              });
+
             });
           });
-
         });
       });
 
