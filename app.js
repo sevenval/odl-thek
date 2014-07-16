@@ -1,4 +1,4 @@
-/*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2, white: true */
+/*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2, white: true, todo: true */
 'use strict';
 
 var express             = require('express');
@@ -8,13 +8,13 @@ var cookieParser        = require('cookie-parser');
 var bodyParser          = require('body-parser');
 var session             = require('express-session');
 var moment              = require('moment');
+var dotenv              = require('dotenv');
 var passport            = require('passport');
 var GitHubStrategy      = require('passport-github').Strategy;
 var GoogleStrategy      = require('passport-google-oauth').OAuth2Strategy;
 var Mongoose            = require('mongoose');
 var MongoStore          = require('connect-mongo')(session);
 var Cron                = require('./lib/cron');
-var Config              = require('./config/app');
 var IndexController     = require('./controllers/index');
 var AuthController      = require('./controllers/auth');
 var BookingsController  = require('./controllers/bookings');
@@ -22,19 +22,39 @@ var GadgetsController   = require('./controllers/gadgets');
 var UserController      = require('./controllers/users');
 
 
+// Load local .env file if present to set env vars
+dotenv.load();
+
+
 // Setup mongodb
-Mongoose.connect(Config.db.url);
-Mongoose.set('debug', Config.db.debug);
+// @todo Use single env var -> check on heruko
+Mongoose.connect(process.env.MONGODB_URL || process.env.MONGOLAB_URI || process.env.mongodburl);
+Mongoose.set('debug', process.env.NODE_ENV === 'DEVELOPMENT');
 
 
 //
 // Setup passport strategies
 //
-passport.use(new GitHubStrategy(Config.auth.github, function (at, rt, user, cb) {
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.GITHUB_CALLBACK
+  }, function (at, rt, user, cb) {
   return cb(null, user);
 }));
 
-passport.use(new GoogleStrategy(Config.auth.google, function (at, rt, user, cb) {
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK,
+  options: {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'
+    ],
+    hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
+  }
+}, function (at, rt, user, cb) {
   return cb(null, user);
 }));
 
@@ -47,7 +67,6 @@ passport.deserializeUser(function (user, done) { done(null, user); });
 //
 var app = express();
 app.set('port', process.env.PORT || 3000);
-app.set('env', process.env.NODE_ENV || 'DEVELOPMENT');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.disable('view cache');
@@ -59,7 +78,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  secret: '00c282c815f5336757e1953af53b37ec',
+  secret: process.env.SESSION_COOKIE_SECRET,
   store: new MongoStore({ db: Mongoose.connection.db })
 }));
 app.use(passport.initialize());
@@ -78,25 +97,18 @@ app.use(function (req, res, next) {
   } else {
     app.locals.page = 'gadgets';
   }
-
   next();
 });
 
 
-//
 // Start scheduler for recurring tasks
-//
 Cron.start();
 
 
-//
 // Register view helper
-//
 app.locals.fmtDatetime = function (datetime) {
-  if (!datetime) {
-    return '';
-  }
-  return moment(datetime).format('YYYY-MM-DD HH:mm');
+  if (!datetime) { return ''; }
+  return moment(datetime).format(process.env.DATE_TIME_FORMAT);
 };
 
 
@@ -133,15 +145,16 @@ app.get ('/bookings/:id/handout',         AuthController.isAdmin,   BookingsCont
 app.get ('/bookings/:id/takeback',        AuthController.isAdmin,   BookingsController.takeback);
 
 
-// error handling
+// Error handling
 app.use(function (err, req, res, next) {
-
-  if (!module.parent) {
-    console.error(err.stack);
-  }
 
   err.statusCode  = err.statusCode  || 500;
   err.message     = err.message     || 'Internal server error';
+
+  console.error(err.message);
+  if (app.get('env') === 'DEVELOPMENT') {
+    console.error(err.stack);
+  }
 
   switch (err.statusCode) {
     case 401:
@@ -179,5 +192,8 @@ app.use(function (req, res) {
 
 
 app.listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log(
+    'Express server listening on port %s in %s mode',
+    app.get('port'), process.env.NODE_ENV
+  );
 });

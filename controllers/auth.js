@@ -2,7 +2,6 @@
 'use strict';
 
 var passport      = require('passport');
-var Config        = require('../config/app');
 var Utils         = require('../lib/utils');
 var UserModel     = require('../models/user');
 
@@ -55,7 +54,13 @@ var AuthController = {
    * will redirect the user back to this application at /users/auth/google/callback
    */
   authWithGoogle: function (req, res, next) {
-    passport.authenticate('google', Config.auth.google.options)(req, res);
+    passport.authenticate('google', {
+      scope: [
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email'
+      ],
+      hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
+    })(req, res);
   },
 
 
@@ -75,7 +80,7 @@ var AuthController = {
         avatarurl: json.picture,
         type: 'google',
         // grant editor role to internal users
-        role: (json.email.indexOf('@sevenval.com') > 0) ? 'editor' : 'user'
+        role: (json.email.indexOf(process.env.GOOGLE_HOSTED_DOMAIN) > 0) ? 'editor' : 'user'
       };
 
       upsertUser(user, function (err, user) {
