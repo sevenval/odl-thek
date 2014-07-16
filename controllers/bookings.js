@@ -103,16 +103,14 @@ var BookingsController = {
 
   save: function (req, res, next) {
 
-    var sBooking, eBooking, error, bookingId;
-
-    bookingId = req.body._id || new Mongoose.Types.ObjectId();
+    var sBooking, eBooking, error;
 
     sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
     eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
 
     if (sBooking.getTime() < Date.now()) {
       error = 'Start date not valid';
-    } else if (moment.utc(eBooking) < moment.utc(sBooking)) {
+    } else if (eBooking.getTime() < sBooking.getTime()) {
       error = 'End date not valid';
     }
 
@@ -126,7 +124,7 @@ var BookingsController = {
       BookingModel.count({
         // count bookings colliding with requested date range and exclude the
         // current booking (on updates)...
-        _id: { $ne: bookingId },
+        _id: { $ne: req.body._id },
         gadget: gadget._id,
         start: { $lte: eBooking },
         end: { $gte: sBooking }
@@ -141,7 +139,7 @@ var BookingsController = {
 
         // gadget available -> create booking entry
         BookingModel.findByIdAndUpdate(
-          bookingId,
+          req.body._id,
           {
             gadget: gadget._id,
             gadgetname: gadget.name,
