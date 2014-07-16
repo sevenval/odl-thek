@@ -216,10 +216,10 @@ var BookingsController = {
 
   remove: function (req, res, next) {
     BookingModel.remove({ _id: req.params.id }, function (err, result) {
-
       if (err) { return next(err); }
 
-      res.redirect('/bookings/');
+      // redirect to last page
+      res.redirect(req.headers.referer);
     });
   }
 

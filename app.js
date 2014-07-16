@@ -145,8 +145,8 @@ app.use(function (err, req, res, next) {
 
   switch (err.statusCode) {
     case 401:
-      err.message = 'Unauthorized';
-      break;
+      //err.message = 'Unauthorized';
+      return res.redirect('/');
     case 403:
       err.message = 'Forbidden';
       break;

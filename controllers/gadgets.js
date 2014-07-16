@@ -3,6 +3,7 @@
 
 var Mongoose      = require('mongoose');
 var Formidable    = require('formidable');
+var _             = require('underscore');
 var fs            = require('fs');
 var gm            = require('gm');
 var csv           = require('csv');
@@ -77,16 +78,13 @@ function handleImage(gadgetId, fields, files, cb) {
 var GadgetController = {
 
   /**
-   * Lists all gadgets.
+   * Lists or searches all gadgets.
    * @todo Pagination? / Endless scrolling?
    */
   listAll: function (req, res, next) {
     var where = {};
 
     if (req.query.q) {
-      //where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
-      //where.keywords = { $regex : '.*' + req.query.q + '.*', $options: 'i' };
-
       GadgetModel.textSearch(req.query.q, function (err, search) {
         if (err) { return next(err); }
 
@@ -98,7 +96,8 @@ var GadgetController = {
           res.render('gadgets/list', {
             title: 'gadgets',
             gadgets: gadgets,
-            stats: stats
+            stats: stats,
+            q: req.query.q
           });
         });
 
@@ -106,15 +105,10 @@ var GadgetController = {
     } else {
 
       GadgetModel.find(where)
-        .sort({
-          brand: 1,
-          name: 1,
-          _id: 1
-        })
+        .sort({ brand: 1, name: 1, _id: 1 })
         .limit(750)
         .exec(function (err, gadgets) {
           if (err) { return next(err); }
-
           createGadgetStats(function (stats) {
             res.render('gadgets/list', {
               title: 'gadgets',
@@ -122,7 +116,6 @@ var GadgetController = {
               stats: stats
             });
           });
-
         });
 
     }
@@ -151,6 +144,7 @@ var GadgetController = {
    * Displays the gadget overview page with booking history.
    */
   list: function (req, res, next) {
+
     GadgetModel.findById(req.params.id, function (err, gadget) {
       if (err) { return next(err); }
 
@@ -160,6 +154,14 @@ var GadgetController = {
         .populate('handoutuser')
         .exec(function (err, bookings) {
           if (err) { return next(err); }
+
+          //console.dir(bookings)
+          if (req.session.user.role !== 'admin') {
+            // show only gadget bookings for current user
+            bookings = _.filter(bookings, function(booking) {
+              return booking.user._id == req.session.user._id;
+            });
+          }
 
           res.render('gadgets/detail', {
             title: gadget.name,
@@ -229,7 +231,7 @@ var GadgetController = {
           gadget.save(function (err) {
             if (err) {
               return res.render('gadgets/edit', {
-                title: (gadget && gadget.isNew()) ? 'New Gadget' : gadget.name,
+                title: (gadget && gadget.isNew) ? 'New Gadget' : gadget.name,
                 gadget: gadget,
                 errors: err,
                 types: GadgetModel.schema.path('type').enumValues

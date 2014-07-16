@@ -34,4 +34,4 @@ block content
                 ).edit
             td.tools
               if (booking.status === 'open')
-                a(href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel

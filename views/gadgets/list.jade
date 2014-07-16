@@ -7,11 +7,11 @@ block content
       div.modal-content
 
   form(action='/gadgets/', method='get', id='search').clearfix
-    input(type='text', name='q', placeholder='Search gadgets by brand, model, type...' )
+    input(type='search', name='q', value=q
+      placeholder='Search gadgets by brand, model, type...' )
 
     input(type="submit", value="").btn.btn-search
-    a.btn.btn-filter
-
+    //a.btn.btn-filter
     if(user.role == 'admin')
       a(href='/gadgets/new').btn.btn-add
 

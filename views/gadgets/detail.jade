@@ -13,6 +13,7 @@ block content
         div.modal-footer
           a.btn.btn-danger(href="/gadgets/" + gadget._id + "/remove") Delete gadget
 
+
   .details
     .row
       .col-md-8
@@ -60,6 +61,11 @@ block content
           br
           span= gadget.type
           br
+          br
+          b location
+          br
+          span= gadget.location
+          br
 
     br
     br
@@ -82,12 +88,17 @@ block content
             td
               =fmtDatetime(booking.end)
             td
-              =fmtDatetime(booking.handoutdate)
+              if (booking.handoutdate)
+                =fmtDatetime(booking.handoutdate)
+              else
+                | -
             td
               if(booking.handoutuser)
                 =booking.handoutuser.email
+              else
+                | -
             td.tools
-              if(user.role == 'admin')
-                a(href="/bookings/remove/"+booking._id).cancel
-
+              //- Show delete link only if status is open or user is admin
+              if((booking.status == "open" && booking.user._id == user._id) || user.role == 'admin')
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 

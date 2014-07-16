@@ -17,7 +17,7 @@ block content
     .row
       .col-md-8
         br
-        a.btn(href="/gadgets/") back
+        a.btn(href="/users/") back
         h2= euser.displayname
         h1= euser.name
 
@@ -87,4 +87,4 @@ block content
                 data-target="#bookingModal"
               ).edit
             td.tools
-              a(href="/bookings/" + booking._id + '/remove').cancel
+              a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel

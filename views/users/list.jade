@@ -4,6 +4,7 @@ block content
   .table-responsive
     table
       tr
+        th Displayname
         th Name
         th Email
         th Type
@@ -12,9 +13,17 @@ block content
       - each user in users
         tr
           td
-            =user.name
+            =user.displayname
           td
-            =user.email
+            if (user.name)
+              =user.name
+            else
+              | -
+          td
+            if (user.email)
+              =user.email
+            else
+              | -
           td
             =user.type
           td

@@ -8,13 +8,24 @@ html
     link(href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,300italic' rel='stylesheet' type='text/css')
     body(class= (user && user.role === "admin" ? "admin-ui" : ""))
 
-    div.modal.fade(id="bookingModal")
+    div.modal(id="bookingModal")
       div.modal-dialog
         div.modal-content
 
+    div.modal(id="delete-booking-modal")
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button(type="button", class="close", data-dismiss="modal") &times;
+            h3 Cancel booking?
+          div.modal-body
+            p Dou you really want to cancel this booking?
+          div.modal-footer
+            a.btn.btn-danger Cancel Booking
+
     .container
       .header
-        .logo
+        .logo.pull-left.hidden-xs
           a(href="/")
             img(src='/img/Logo_sevenval.gif', class='logoImg')
             br
@@ -22,7 +33,7 @@ html
             span THEK
 
         if(user)
-          ul.nav.nav-pills
+          ul.nav.nav-pills.pull-left
             li(class= (page === 'gadgets') ? "active" : "")
               a(href="/") Gadgets
             li(class= (page === 'top') ? "active" : "")
@@ -32,15 +43,13 @@ html
             if(user.role == 'admin')
               li(class= (page === 'users') ? "active" : "")
                 a(href="/users/") Users
-            li.visible-xs-block
-              a(href="/users/logout") Logout
 
-          .account.text-right.hidden-xs
+          .account.pull-right.text-right
             .pull-left
-              strong=user.email
+              strong=user.displayname
               br
               a(href="/users/logout") logout
-            .pull-right
+            .pull-right.hidden-xs
               img(src=user.avatarurl)
 
       #content

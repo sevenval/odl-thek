@@ -13,7 +13,7 @@ var UserModel     = require('../models/user');
  */
 function upsertUser(userData, cb) {
   UserModel.findOneAndUpdate({
-    email: userData.email,
+    userIdProvider: userData.userIdProvider,
     type: userData.type
   }, userData, {
     // create user if (email) not exists
@@ -65,15 +65,18 @@ var AuthController = {
   authWithGoogleCb: function (req, res, next) {
     passport.authenticate('google', { failureRedirect: '/' })(req, res, function () {
 
-      var userData = {
-        email: req.session.passport.user._json.email,
-        displayname: req.session.passport.user._json.name,
-        name: req.session.passport.user._json.name,
-        avatarurl: req.session.passport.user._json.picture,
+      var user, json = req.session.passport.user._json;
+
+      user = {
+        userIdProvider: json.id,
+        email: json.email,
+        displayname: req.session.passport.user.displayName,
+        name: json.name,
+        avatarurl: json.picture,
         type: 'google'
       };
 
-      upsertUser(userData, function (err, user) {
+      upsertUser(user, function (err, user) {
         if (err) { return next(err); }
 
         // store user object in session
@@ -91,15 +94,18 @@ var AuthController = {
   authWithGithubCb: function (req, res, next) {
     passport.authenticate('github', { failureRedirect: '/' })(req, res, function () {
 
-      var userData = {
-        email: req.session.passport.user._json.email,
+      var user, json = req.session.passport.user._json;
+
+      user = {
+        userIdProvider: req.session.passport.user.id, // github user id
+        email: json.email || '', // email might not be present on github oauth
         displayname: req.session.passport.user.username,
-        name: req.session.passport.user._json.name,
-        avatarurl: req.session.passport.user._json.avatar_url,
+        name: json.name || '',
+        avatarurl: json.avatar_url,
         type: 'github'
       };
 
-      upsertUser(userData, function (err, user) {
+      upsertUser(user, function (err, user) {
         if (err) { return next(err); }
 
         // store user object in session

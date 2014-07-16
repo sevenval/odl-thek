@@ -18,8 +18,10 @@ block content
 
     br
     if (errors)
-      p.bg-danger
-        =errors.name
+      .alert.alert-danger.alert-dismissible
+        button.close(data-dismiss="alert") &times;
+        strong Something went wrong
+        br
         if (errors.name === 'MongoError')
           =errors.err
         else if (errors.name === 'ValidationError')
