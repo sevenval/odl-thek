@@ -96,7 +96,7 @@ app.locals.fmtDatetime = function (datetime) {
   if (!datetime) {
     return '';
   }
-  return moment.utc(datetime).format('YYYY-MM-DD HH:mm');
+  return moment(datetime).format('YYYY-MM-DD HH:mm');
 };
 
 

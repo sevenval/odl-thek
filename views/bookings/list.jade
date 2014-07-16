@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  if(locals.bookings)
+  if(bookings.length > 0)
     .table-responsive
       table
         tr
@@ -14,15 +14,18 @@ block content
         - each booking in bookings
           tr
             td
-              a(href="/gadgets/" + booking.gadget)
+              a(href="/gadgets/" + booking.gadget._id)
                 =booking.gadgetname
+                | &nbsp;(
+                =booking.gadget.hwid
+                |)
             td
               =fmtDatetime(booking.start)
             td
               =fmtDatetime(booking.end)
               if (booking.expired)
                 span.text-danger
-                  b (Expired)
+                  strong (Expired)
             td
               =booking.status
             td.tools
@@ -35,3 +38,6 @@ block content
             td.tools
               if (booking.status === 'open')
                 a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+
+  else
+    h4 No bookings...

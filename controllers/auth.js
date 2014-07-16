@@ -73,7 +73,9 @@ var AuthController = {
         displayname: req.session.passport.user.displayName,
         name: json.name,
         avatarurl: json.picture,
-        type: 'google'
+        type: 'google',
+        // grant editor role to internal users
+        role: (json.email.indexOf('@sevenval.com') > 0) ? 'editor' : 'user'
       };
 
       upsertUser(user, function (err, user) {

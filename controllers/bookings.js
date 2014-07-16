@@ -13,10 +13,15 @@ var GadgetModel   = require('../models/gadget');
 /**
  * @private
  */
-function renderBookings(res, gadget, data, error) {
-  res.render('bookings/new', {
+function renderBookings(res, gadget, booking, error) {
+  res.render('bookings/edit', {
     gadget: gadget,
-    data: data,
+    booking: booking,
+    gadgetId: gadget._id,
+    startdate: booking.startdate,
+    enddate: booking.enddate,
+    starttime: booking.starttime,
+    endtime: booking.endtime,
     error: error
   });
 }
@@ -44,8 +49,8 @@ var BookingsController = {
         'startdate': 1
       })
       .populate('user')
+      .populate('gadget')
       .exec(function (err, bookings) {
-
         if (err) { return next(err); }
 
         if (req.session.user.role === 'admin') {
@@ -58,7 +63,7 @@ var BookingsController = {
           // render user view
           res.render('bookings/list', {
             title: 'bookings',
-            bookings : bookings
+            bookings: bookings
           });
         }
       });
@@ -66,18 +71,15 @@ var BookingsController = {
 
 
   create: function (req, res, next) {
-
-    var data = {
-      startdate: moment().add(1, 'day').format('YYYY-MM-DD'),
-      enddate: moment().add(2, 'days').format('YYYY-MM-DD'),
-      starttime: moment().add(1, 'hour').format('HH:00'),
-      endtime: moment().add(1, 'hour').format('HH:00')
-    };
-
     GadgetModel.findById(req.params.id, function (err, gadget) {
-      res.render('bookings/new', {
+      res.render('bookings/edit', {
+        booking: new BookingModel(),
         gadget: gadget,
-        data: data
+        gadgetId: gadget._id,
+        startdate: moment().add(1, 'day').format('YYYY-MM-DD'),
+        enddate: moment().add(2, 'days').format('YYYY-MM-DD'),
+        starttime: moment().add(1, 'hour').format('HH:00'),
+        endtime: moment().add(1, 'hour').format('HH:00')
       });
     });
   },
@@ -89,10 +91,11 @@ var BookingsController = {
 
       res.render('bookings/edit', {
         booking: booking,
-        startdate: moment.utc(booking.start).format('YYYY-MM-DD'),
-        starttime: moment.utc(booking.start).format('HH:mm'),
-        enddate: moment.utc(booking.end).format('YYYY-MM-DD'),
-        endtime: moment.utc(booking.end).format('HH:mm'),
+        gadgetId: booking.gadget,
+        startdate: moment(booking.start).format('YYYY-MM-DD'),
+        starttime: moment(booking.start).format('HH:mm'),
+        enddate: moment(booking.end).format('YYYY-MM-DD'),
+        endtime: moment(booking.end).format('HH:mm'),
       });
     });
   },
@@ -104,12 +107,12 @@ var BookingsController = {
 
     bookingId = req.body._id || new Mongoose.Types.ObjectId();
 
-    sBooking = new Date(req.body.startdate + 'T' + req.body.starttime);
-    eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
+    sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
+    eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
 
     if (sBooking.getTime() < Date.now()) {
       error = 'Start date not valid';
-    } else if (eBooking.getTime() < sBooking.getTime()) {
+    } else if (moment.utc(eBooking) < moment.utc(sBooking)) {
       error = 'End date not valid';
     }
 
@@ -125,8 +128,8 @@ var BookingsController = {
         // current booking (on updates)...
         _id: { $ne: bookingId },
         gadget: gadget._id,
-        start: { $lte: eBooking.toISOString() },
-        end: { $gte: sBooking.toISOString() }
+        start: { $lte: eBooking },
+        end: { $gte: sBooking }
       }, function (err, bookings) {
         if (err) { return next(err); }
 
@@ -144,8 +147,8 @@ var BookingsController = {
             gadgetname: gadget.name,
             user: req.session.user._id,
             username: req.session.user.displayname,
-            start: sBooking.toUTCString(),
-            end: eBooking.toUTCString(),
+            start: sBooking,
+            end: eBooking,
             notificationSent: false
           },
           {

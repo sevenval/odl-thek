@@ -39,7 +39,10 @@ html
             li(class= (page === 'top') ? "active" : "")
               a(href="/gadgets/top") Top
             li(class= (page === 'bookings') ? "active" : "")
-              a(href="/bookings") Bookings
+              if (user.role === 'admin')
+                a(href="/bookings") Bookings
+              else
+                a(href="/bookings") My Bookings
             if(user.role == 'admin')
               li(class= (page === 'users') ? "active" : "")
                 a(href="/users/") Users

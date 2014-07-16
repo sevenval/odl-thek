@@ -1,12 +1,18 @@
-form(method='post', action="/bookings/" + booking.gadget + "/save", id="book")
-  div.modal-header
+form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
+  .modal-header
     button(type="button", class="close", data-dismiss="modal") &times;
-    h3 Update booking
-    = booking.gadgetname
+
+    h3 Booking
+    if (gadget)
+      = gadget.brand
+      |&nbsp;
+      b= gadget.model
+    else
+      = booking.gadgetname
 
   input(type='hidden', name='_id', value=booking._id)
 
-  div.modal-body
+  .modal-body
     .row
       .col-md-5
         h4 Start
@@ -26,9 +32,11 @@ form(method='post', action="/bookings/" + booking.gadget + "/save", id="book")
         span.timeIcon
       .clear
 
-    if(locals.error)
-      p.text-danger= error
+    if(error)
+      .alert.alert-danger.alert-dismissible
+        button.close(data-dismiss="alert") &times;
+        = error
 
-  div.modal-footer
-    a.btn(onclick="bookNow(); return false;") Save
+  .modal-footer
+    a.btn(onclick="bookNow(); return false;") Save booking
 

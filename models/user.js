@@ -42,7 +42,8 @@ var UserSchema = new Mongoose.Schema({
   role: {
     type: String,
     enum: [
-      'user',
+      'user', // external users
+      'editor', // internal users
       'admin'
     ],
     default: 'user'

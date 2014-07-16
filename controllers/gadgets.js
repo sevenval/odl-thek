@@ -85,40 +85,42 @@ var GadgetController = {
     var where = {};
 
     if (req.query.q) {
-      GadgetModel.textSearch(req.query.q, function (err, search) {
+      where.keywords = { $regex : ".*" + req.query.q + ".*", $options: 'i' };
+    }
+
+    // Full text search is not supported in mongolabs current free plan
+    //   GadgetModel.textSearch(req.query.q, function (err, search) {
+    //     if (err) { return next(err); }
+
+    //     for (var gadgets = [], i = 0; i < search.results.length; i++) {
+    //       gadgets.push(search.results[i].obj);
+    //     };
+
+    //     createGadgetStats(function (stats) {
+    //       res.render('gadgets/list', {
+    //         title: 'gadgets',
+    //         gadgets: gadgets,
+    //         stats: stats,
+    //         q: req.query.q
+    //       });
+    //     });
+
+    //   });
+    // } else {
+
+    GadgetModel.find(where)
+      .sort({ brand: 1, name: 1, _id: 1 })
+      .limit(750)
+      .exec(function (err, gadgets) {
         if (err) { return next(err); }
-
-        for (var gadgets = [], i = 0; i < search.results.length; i++) {
-          gadgets.push(search.results[i].obj);
-        };
-
         createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'gadgets',
             gadgets: gadgets,
-            stats: stats,
-            q: req.query.q
+            stats: stats
           });
         });
-
       });
-    } else {
-
-      GadgetModel.find(where)
-        .sort({ brand: 1, name: 1, _id: 1 })
-        .limit(750)
-        .exec(function (err, gadgets) {
-          if (err) { return next(err); }
-          createGadgetStats(function (stats) {
-            res.render('gadgets/list', {
-              title: 'gadgets',
-              gadgets: gadgets,
-              stats: stats
-            });
-          });
-        });
-
-    }
   },
 
 
@@ -154,14 +156,6 @@ var GadgetController = {
         .populate('handoutuser')
         .exec(function (err, bookings) {
           if (err) { return next(err); }
-
-          //console.dir(bookings)
-          if (req.session.user.role !== 'admin') {
-            // show only gadget bookings for current user
-            bookings = _.filter(bookings, function(booking) {
-              return booking.user._id == req.session.user._id;
-            });
-          }
 
           res.render('gadgets/detail', {
             title: gadget.name,
@@ -297,29 +291,30 @@ var GadgetController = {
 
   /**
    * Imports the gadget CSV list
+   * @todo Refator/Use promises or async.js
    */
   importCsv: function (req, res, next) {
 
-    var form = new Formidable.IncomingForm();
-    form.keepExtensions = true;
-    form.uploadDir = '/tmp/';
+    var form = new Formidable.IncomingForm(), errors = [], columns;
 
-    var columns = [ 'hwid', 'name', 'available', 'location', 'description',
+    columns = [ 'hwid', 'name', 'available', 'location', 'description',
       'brand', 'model', 'os', 'type' ];
 
+    form.keepExtensions = true;
+    form.uploadDir = '/tmp/';
     form.parse(req, function (err, fields, files) {
       if (err) { return next(err); }
 
-      if (files.image.size === 0) {
+      if (files.file.size === 0) {
         return res.redirect('/gadgets/import');
       }
 
-      fs.readFile(files.image.path, function (err, buffer) {
+      fs.readFile(files.file.path, function (err, buffer) {
         if (err) { return next(err); }
 
         csv.parse(buffer.toString(), { quote: "" }, function (err, data) {
 
-          async.forEach(data, function (line, cb) {
+          async.each(data, function (line, cb) {
 
             if (columns.indexOf(line[0]) !== -1) {
               // skip header line
@@ -336,16 +331,23 @@ var GadgetController = {
               model: line[6],
               os: line[7],
               type: Utils.capitalize(line[8])
-            }, cb);
+            }, function (err) {
+              if (err) {
+                errors.push({ object: err, line: line });
+              }
+              cb();
+            });
 
           }, function (err) {
-            console.dir(err);
-            // final
-            res.redirect('/gadgets/import');
+            res.render('gadgets/import', {
+              title: 'Import',
+              errors: errors
+            });
           });
 
         });
       });
+
     });
   }
 

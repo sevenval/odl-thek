@@ -6,7 +6,7 @@ block content
     div.modal-dialog
       div.modal-content
         div.modal-header
-          button(type="button", class="close", data-dismiss="modal")
+          button(type="button", class="close", data-dismiss="modal") &times;
           h3 Delete user?
         div.modal-body
           p Deleting a user will also delete related bookings. Are you sure?
@@ -31,9 +31,18 @@ block content
     .row
       form(action="/users/" + euser._id, method="post", role="form")
         .col-md-8
+
+          .form-group
+            label Displayname:
+            input(value=euser.displayname, readonly="true").form-control
+
           .form-group
             label Email:
             input(value=euser.email, readonly="true").form-control
+
+          .form-group
+            label OAuth provider:
+            input(value=euser.type, readonly="true").form-control
 
           .form-group
             label Name:
@@ -42,20 +51,9 @@ block content
           .form-group
             label Role:
             select(name='role').form-control
-              if(euser.role == 'admin')
-                option(selected) admin
-              else
-                option admin
-              if(euser.role == 'user')
-                option(selected) user
-              else
-                option user
-
-          //- .form-group
-          //-   label Status:
-          //-   select(name='active').form-control
-          //-     option(selected= ( euser.active) ? "selected" : "") Active
-          //-     option(selected= (!euser.active) ? "selected" : "") Deactive
+              - each role in roles
+                option(selected=euser.role == role)
+                  =role
 
         .col-md-4.tools-box
           input(type="submit", value="Speichern").btn

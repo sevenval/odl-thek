@@ -35,7 +35,8 @@ var UserController = {
         res.render('users/detail', {
           title: user.email,
           euser: user,
-          bookings: bookings
+          bookings: bookings,
+          roles: UserModel.schema.path('role').enumValues
         });
 
       });

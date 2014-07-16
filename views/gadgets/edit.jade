@@ -71,21 +71,15 @@ block content
           label Location:
           input(type="text", name='location', value=gadget.location).form-control
 
-
-        //- .form-group
-        //-   label Location:
-        //-   select(name='location').form-control
-        //-     - each location in locations
-        //-       option(selected=gadget.location == location)
-        //-         =location
-
         .form-group
           label Thumbnail:
-          if(gadget.hasImage)
-            img(src=gadget.imagePath)
-          else
-            img(src='/img/dummy_device.gif')
+          .thumbnail-row
+            if(gadget.hasImage)
+              img(src=gadget.imagePath)
+            else
+              img(src='/img/dummy_device.gif')
 
+          br
           input(type="file", name="image", accept="image/*")
           p.help-block
             | Image will be resized to 210x210 Pixel

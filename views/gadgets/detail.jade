@@ -72,17 +72,19 @@ block content
     .table-responsive
       table.table
         tr
-          th name
-          th start date
-          th end date
-          th handout date
-          th handout user
+          th User
+          th Start Reservation
+          th End Reservation
+          th Handout on
+          th Handout by
           th
         - each booking in bookings
           tr
             td
-              if(booking.user)
-                =booking.user.email
+              if (user.role === 'admin' || user.role === 'editor' || booking.user._id == user._id)
+                =booking.user.displayname
+              else
+                ***
             td
               =fmtDatetime(booking.start)
             td
@@ -94,7 +96,7 @@ block content
                 | -
             td
               if(booking.handoutuser)
-                =booking.handoutuser.email
+                =booking.handoutuser.displayname
               else
                 | -
             td.tools

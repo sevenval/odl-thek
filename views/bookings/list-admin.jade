@@ -7,7 +7,7 @@ block content
       table
         tr
           th Name
-          th Device/ID
+          th Device (ID)
           th Start Reservation
           th End Reservation
           th
@@ -29,8 +29,12 @@ block content
                 span.small
                   =booking.user.email
               td
-                a(href="/gadgets/" + booking.gadget)
+                a(href="/gadgets/" + booking.gadget.id)
                   =booking.gadgetname
+                  | &nbsp;
+                  | (
+                  =booking.gadget.hwid
+                  |)
               td
                 =fmtDatetime(booking.start)
               td
@@ -64,8 +68,12 @@ block content
                 span.small
                   =booking.user.email
               td
-                a(href="/gadgets/" + booking.gadget)
+                a(href="/gadgets/" + booking.gadget.id)
                   =booking.gadgetname
+                  | &nbsp;
+                  | (
+                  =booking.gadget.hwid
+                  |)
               td
                 =fmtDatetime(booking.start)
               td
@@ -99,8 +107,12 @@ block content
                 span.small
                   =booking.user.email
               td
-                a(href="/gadgets/" + booking.gadget)
+                a(href="/gadgets/" + booking.gadget.id)
                   =booking.gadgetname
+                  | &nbsp;
+                  | (
+                  =booking.gadget.hwid
+                  |)
               td=fmtDatetime(booking.start)
               td=fmtDatetime(booking.end)
               td.tools
@@ -109,4 +121,4 @@ block content
                 a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 
   else
-    | No bookings...
+    h4 No bookings...
