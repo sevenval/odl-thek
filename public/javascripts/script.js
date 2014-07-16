@@ -1,5 +1,5 @@
 /*jslint unparam: true, plusplus: true, nomen: true, indent: 2 */
-/*global $, document */
+/*global $, document, window */
 'use strict';
 
 function bookNow() {
@@ -34,6 +34,11 @@ $(function () {
   $('.cancel-booking').click(function (e) {
     $('#delete-booking-modal .modal-footer a').attr('href', $(this).data('href'));
     $('#delete-booking-modal').modal('show');
+  });
+
+  $('#bookingModal').on('hidden.bs.modal', function () {
+    // reload current page on booking modal close
+    window.location.reload(true);
   });
 
 });

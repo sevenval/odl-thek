@@ -5,10 +5,21 @@ var Mongoose = require('mongoose');
 
 var UserSchema = new Mongoose.Schema({
 
-  email: {
+  userIdProvider: {
     type: String,
-    required: true,
     unique: true
+  },
+
+  type: {
+    type: String,
+    enum: [
+      'github',
+      'google'
+    ]
+  },
+
+  email: {
+    type: String
   },
 
   displayname: {
@@ -26,15 +37,6 @@ var UserSchema = new Mongoose.Schema({
 
   avatarurl: {
     type: String
-  },
-
-  // oauth providers
-  type: {
-    type: String,
-    enum: [
-      'github',
-      'google'
-    ]
   },
 
   role: {

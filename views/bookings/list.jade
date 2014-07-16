@@ -2,32 +2,36 @@ extends ../layout
 
 block content
   if(locals.bookings)
-    table.bookingList
-      tr.headline
-        th Name
-        th Device (ID)
-        th Start Reservation
-        th End Reservation
-        th Status
-        th
-        th
-      - each booking in bookings
+    .table-responsive
+      table
         tr
-          td.user
-            =booking.username
-          td.devName
-            =booking.gadgetname
-          td.startDate
-            =fmtDatetime(booking.start)
-          td.endDate
-            =fmtDatetime(booking.end)
-          td
-            =booking.status
-          td.green
-            a(
-                href="/bookings/" + booking._id + "/edit",
-                data-toggle="modal",
-                data-target="#bookingModal"
-              ).edit
-          td.green
-              a(href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+          th Device (ID)
+          th Start Reservation
+          th End Reservation
+          th Status
+          th
+          th
+        - each booking in bookings
+          tr
+            td
+              a(href="/gadgets/" + booking.gadget)
+                =booking.gadgetname
+            td
+              =fmtDatetime(booking.start)
+            td
+              =fmtDatetime(booking.end)
+              if (booking.expired)
+                span.text-danger
+                  b (Expired)
+            td
+              =booking.status
+            td.tools
+              if (booking.status !== 'closed')
+                a(
+                  href="/bookings/" + booking._id + "/edit",
+                  data-toggle="modal",
+                  data-target="#bookingModal"
+                ).edit
+            td.tools
+              if (booking.status === 'open')
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel

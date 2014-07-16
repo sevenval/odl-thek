@@ -17,7 +17,7 @@ block content
     .row
       .col-md-8
         br
-        a.btn(href="/gadgets/") back
+        a.btn(href="/users/") back
         h2= euser.displayname
         h1= euser.name
 
@@ -65,25 +65,26 @@ block content
     br
     br
     h4 Bookings
-    table.table
-      tr
-        th Device (ID)
-        th Start reservation
-        th End reservation
-        th Status
-        th
-        th
-      - each booking in bookings
+    .table-responsive
+      table.table
         tr
-          td= booking.gadgetname
-          td= fmtDatetime(booking.start)
-          td= fmtDatetime(booking.end)
-          td= booking.status
-          td.green
-            a(
-              href="/bookings/" + booking._id + "/edit",
-              data-toggle="modal",
-              data-target="#bookingModal"
-            ).edit
-          td.green
-            a(href="/bookings/" + booking._id + '/remove').cancel
+          th Device (ID)
+          th Start reservation
+          th End reservation
+          th Status
+          th
+          th
+        - each booking in bookings
+          tr
+            td= booking.gadgetname
+            td= fmtDatetime(booking.start)
+            td= fmtDatetime(booking.end)
+            td= booking.status
+            td.tools
+              a(
+                href="/bookings/" + booking._id + "/edit",
+                data-toggle="modal",
+                data-target="#bookingModal"
+              ).edit
+            td.tools
+              a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel

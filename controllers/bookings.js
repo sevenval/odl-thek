@@ -39,7 +39,11 @@ var BookingsController = {
     }
 
     BookingModel.find(where)
-      .sort({'startdate': 1})
+      .sort({
+        'user': 1,
+        'startdate': 1
+      })
+      .populate('user')
       .exec(function (err, bookings) {
 
         if (err) { return next(err); }
@@ -103,7 +107,6 @@ var BookingsController = {
     sBooking = new Date(req.body.startdate + 'T' + req.body.starttime);
     eBooking = new Date(req.body.enddate + 'T' + req.body.endtime);
 
-    // TODO: Uncomment in production
     if (sBooking.getTime() < Date.now()) {
       error = 'Start date not valid';
     } else if (eBooking.getTime() < sBooking.getTime()) {
@@ -138,11 +141,12 @@ var BookingsController = {
           bookingId,
           {
             gadget: gadget._id,
-            gadgetname: gadget.detailedName,
+            gadgetname: gadget.name,
             user: req.session.user._id,
             username: req.session.user.displayname,
             start: sBooking.toUTCString(),
-            end: eBooking.toUTCString()
+            end: eBooking.toUTCString(),
+            notificationSent: false
           },
           {
             upsert: true
@@ -212,10 +216,10 @@ var BookingsController = {
 
   remove: function (req, res, next) {
     BookingModel.remove({ _id: req.params.id }, function (err, result) {
-
       if (err) { return next(err); }
 
-      res.redirect('/bookings/');
+      // redirect to last page
+      res.redirect(req.headers.referer);
     });
   }
 

@@ -13,6 +13,7 @@ block content
         div.modal-footer
           a.btn.btn-danger(href="/gadgets/" + gadget._id + "/remove") Delete gadget
 
+
   .details
     .row
       .col-md-8
@@ -28,10 +29,9 @@ block content
           img(src='/img/dummy_device.gif' width="210")
 
     br
-
     .row
       .col-md-8
-        = gadget.description
+        != gadget.description.replace(/\n/g, '<br>')
         br
         br
 
@@ -61,33 +61,44 @@ block content
           br
           span= gadget.type
           br
+          br
+          b location
+          br
+          span= gadget.location
+          br
 
     br
     br
-    table.table
-      tr
-        th name
-        th start date
-        th end date
-        th handout date
-        th handout user
-        th
-      - each booking in bookings
+    .table-responsive
+      table.table
         tr
-          td
-            if(booking.user)
-              =booking.user.email
-          td
-            =fmtDatetime(booking.start)
-          td
-            =fmtDatetime(booking.end)
-          td
-            =fmtDatetime(booking.handoutdate)
-          td
-            if(booking.handoutuser)
-              =booking.handoutuser.email
-          td.green
-            if(user.role == 'admin')
-              a(href="/bookings/remove/"+booking._id).cancel
-
+          th name
+          th start date
+          th end date
+          th handout date
+          th handout user
+          th
+        - each booking in bookings
+          tr
+            td
+              if(booking.user)
+                =booking.user.email
+            td
+              =fmtDatetime(booking.start)
+            td
+              =fmtDatetime(booking.end)
+            td
+              if (booking.handoutdate)
+                =fmtDatetime(booking.handoutdate)
+              else
+                | -
+            td
+              if(booking.handoutuser)
+                =booking.handoutuser.email
+              else
+                | -
+            td.tools
+              //- Show delete link only if status is open or user is admin
+              if((booking.status == "open" && booking.user._id == user._id) || user.role == 'admin')
+                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 

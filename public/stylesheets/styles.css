@@ -49,9 +49,7 @@ a:hover {
 }
 
 .header .logo {
-	position: absolute;
-	left: 25px;
-	top: 24px;
+	padding: 25px;
 	font-size: 1.18em;
 }
 
@@ -60,13 +58,11 @@ a:hover {
 }
 
 .header .nav {
-	position: absolute;
-	bottom: 0;
-	left: 280px;
+	margin: 41px 0 0 25px;
 }
 
 .header .nav li {
-	padding: 0 20px 0 0;
+	padding: 0 25px 0 0;
 }
 
 .header .nav li a {
@@ -154,16 +150,29 @@ a:hover {
 	margin: 0 0 40px 0;
 }
 
-#search > input[type="text"] {
+#search > input[type="search"] {
+	/*
+	with filter button:
 	width: calc(100% - 110px);
+	*/
+	width: calc(100% - 60px);
 	height: 50px;
 	border: 0;
 	padding: 0 15px;
 	float: left;
+	-webkit-appearance: searchfield;
 }
 
-.admin-ui #search > input[type="text"] {
+input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance: searchfield-cancel-button;
+}
+
+.admin-ui #search > input[type="search"] {
+	width: calc(100% - 110px);
+	/*
+	with filter button:
 	width: calc(100% - 170px);
+	*/
 }
 
 #search .btn {
@@ -275,6 +284,10 @@ a:hover {
 	font-style: italic;
 }
 
+.gadet-entry .details .col-md-6 {
+	padding: 0;
+}
+
 .gadet-entry .content-slider {
 	position: absolute;
 	top: 0;
@@ -341,7 +354,7 @@ table {
 	border: 0;
 }
 
-td.green {
+td.tools {
 	background: #1D9F55;
 	padding: 0;
 	text-align: center;
@@ -373,6 +386,10 @@ table tr.section th {
 
 table tr.section th:last-of-type {
 	border-radius: 0 !important;
+}
+
+td .small {
+	color: rgba(255, 255, 255, 0.51);
 }
 
 /*******************************************************************************
@@ -428,13 +445,14 @@ table tr.section th:last-of-type {
 	color: #fff;
 }
 
-button.close, .modal-header .close {
+
+/*button.close, .modal-header .close {
 	background: url('/img/close_btn.gif');
 	opacity: 1;
 	margin-top: 0px !important;
 	width: 30px;
 	height: 30px;
-}
+}*/
 
 .modal-header h3 {
 	margin: 0;
@@ -481,8 +499,6 @@ input[type="date"], input[type="time"]{
 	background-repeat: no-repeat;
 }
 
-
-
 /*******************************************************************************
  * Startpage
  ******************************************************************************/
@@ -510,14 +526,17 @@ a.loginbutton {
 	background-repeat: no-repeat;
 	background-position: bottom;
 }
+
 .introduction {
 	font-size: 60px;
 	font-weight: 700;
 	padding-top: 100px;
 }
+
 .introduction span {
 	font-weight: 100;
 }
+
 .introductionText {
 	padding-top: 35px;
 	font-size: 24px;
