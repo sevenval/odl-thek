@@ -73,7 +73,7 @@ var BookingsController = {
   create: function (req, res, next) {
     GadgetModel.findById(req.params.id, function (err, gadget) {
       res.render('bookings/edit', {
-        booking: new BookingModel(),
+        booking: {},
         gadget: gadget,
         gadgetId: gadget._id,
         startdate: moment().add(1, 'day').format('YYYY-MM-DD'),
@@ -103,7 +103,13 @@ var BookingsController = {
 
   save: function (req, res, next) {
 
-    var sBooking, eBooking, error;
+    var sBooking, eBooking, error, idBooking;
+
+    if (!req.body._id) {
+      idBooking = new BookingModel()._id;
+    } else {
+      idBooking = req.body._id;
+    }
 
     sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
     eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
@@ -124,7 +130,7 @@ var BookingsController = {
       BookingModel.count({
         // count bookings colliding with requested date range and exclude the
         // current booking (on updates)...
-        _id: { $ne: req.body._id },
+        _id: { $ne: idBooking },
         gadget: gadget._id,
         start: { $lte: eBooking },
         end: { $gte: sBooking }
@@ -139,7 +145,7 @@ var BookingsController = {
 
         // gadget available -> create booking entry
         BookingModel.findByIdAndUpdate(
-          req.body._id,
+          idBooking,
           {
             gadget: gadget._id,
             gadgetname: gadget.name,
@@ -155,10 +161,10 @@ var BookingsController = {
           function (err, booking) {
             if (err) { return next(err); }
 
-            if (req.body._id) {
-              Mailer.sendBookingUpdatedMail(gadget, booking, req.session.user);
-            } else {
+            if (!req.body._id) {
               Mailer.sendNewBookingMail(gadget, booking, req.session.user);
+            } else {
+              Mailer.sendBookingUpdatedMail(gadget, booking, req.session.user);
             }
 
             res.render('bookings/ok', { gadget : gadget });
