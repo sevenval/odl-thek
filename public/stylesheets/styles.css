@@ -155,7 +155,7 @@ a:hover {
 	with filter button:
 	width: calc(100% - 110px);
 	*/
-	width: calc(100% - 60px);
+	width: calc(100% - 50px);
 	height: 50px;
 	border: 0;
 	padding: 0 15px;
