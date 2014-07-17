@@ -5,9 +5,9 @@ a managment software for your own ODL.
 
 needs node.js & mongodb
 
-Sample .env file:
+### ENV vars (e.g. local .env file)
 ```
-NODE_ENV=DEVELOPMENT
+NODE_ENV=DEVELOPMENT|PRODUCTION
 
 # Mongodb url with database name
 MONGODB_URL=mongodb://localhost/odlthek
