@@ -11,6 +11,10 @@ var UserModel     = require('../models/user');
  * @api private
  */
 function upsertUser(userData, cb) {
+
+  // don't update users role
+  delete userData.role;
+
   UserModel.findOneAndUpdate({
     userIdProvider: userData.userIdProvider,
     type: userData.type
