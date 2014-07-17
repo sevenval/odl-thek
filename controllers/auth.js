@@ -54,19 +54,13 @@ var AuthController = {
    * will redirect the user back to this application at /users/auth/google/callback
    */
   authWithGoogle: function (req, res, next) {
-
-
-    UserModel.remove({}, function (err, userCount) {
-      res.redirect('/');
-    });
-
-    // passport.authenticate('google', {
-    //   scope: [
-    //     'https://www.googleapis.com/auth/userinfo.profile',
-    //     'https://www.googleapis.com/auth/userinfo.email'
-    //   ],
-    //   hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
-    // })(req, res);
+    passport.authenticate('google', {
+      scope: [
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email'
+      ],
+      hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
+    })(req, res);
   },
 
 
