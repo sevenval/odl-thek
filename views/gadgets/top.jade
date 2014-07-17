@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+
+  form(action='/gadgets/', method='get', id='search').clearfix
+    input(type='search', name='q', value=q
+      placeholder='Search gadgets by brand, model, type...' )
+
+    input(type="submit", value="").btn.btn-search
+    //a.btn.btn-filter
+    if(user.role == 'admin')
+      a(href='/gadgets/new').btn.btn-add
+
+  if(!gadgets || gadgets.length === 0)
+    h4 Sorry, no gadgets found
+  else
+    h4= gadgets.length + " gadgets"
+
+  ul.gadget-list
+    - each gadget in gadgets
+        include entry.jade
+
+  div.clearfix

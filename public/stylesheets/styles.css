@@ -441,6 +441,30 @@ td .small {
 	background: #fff;
 }
 
+
+/*******************************************************************************
+ * Tabs
+ ******************************************************************************/
+
+.nav-tabs a,
+.nav-tabs a:hover {
+	color: rgba(67, 80, 96, 0.46) !important;
+}
+
+.nav-tabs .active a,
+.nav-tabs .active a:hover {
+	color: #435060 !important;
+}
+
+.nav-tabs >li>a:hover,
+.nav-tabs >li>a:focus {
+	background-color: #D9F1E3;
+}
+
+.nav-tabs>li>a:hover {
+	border-color: transparent transparent #435060;
+}
+
 /*******************************************************************************
  * Modals
  ******************************************************************************/

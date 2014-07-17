@@ -108,15 +108,16 @@ var GadgetController = {
     // } else {
 
     GadgetModel.find(where)
-      .sort({ brand: 1, name: 1, _id: 1 })
+      .sort({ brand: 1, model: 1 })
       .limit(750)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
         createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'gadgets',
-            gadgets: gadgets,
-            stats: stats
+            gadgets: _.groupBy(gadgets, 'type'),
+            stats: stats,
+            q: req.query.q
           });
         });
       });
@@ -124,14 +125,17 @@ var GadgetController = {
 
 
   listTop: function (req, res, next) {
-    GadgetModel.find({ type: "mobile", handoutcount : {$gt : 0 } })
-      .sort({ brand: 1 })
-      .limit(20)
+    GadgetModel.find({ handoutcount : {$gt : 0 } })
+      .sort({
+        handoutcount: 1,
+        brand: 1
+      })
+      .limit(30)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
 
         createGadgetStats(function (stats) {
-          res.render('gadgets/list', {
+          res.render('gadgets/top', {
             title: 'top gadgets',
             gadgets: gadgets,
             stats: stats
@@ -329,7 +333,7 @@ var GadgetController = {
                   //name: line[1],
                   available: line[2],
                   location: line[3],
-                  description: line[4].replace(/\\n/g, '\n'),
+                  description: line[4].replace(/\\n/g, '\n').replace(/\\t/g, ': '),
                   brand: line[5],
                   model: line[6],
                   os: line[7],

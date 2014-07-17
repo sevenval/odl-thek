@@ -1,0 +1,50 @@
+li.gadet-entry
+
+  .content-slider
+    if(gadget.hasImage)
+      img(src=gadget.imagePath)
+    else
+      img(src='/img/dummy_device.gif')
+
+
+    if(stats[gadget._id])
+      div(class="gadget-" + stats[gadget._id].status).smallline
+    else
+      div.smallline.gadget-available
+
+    .details
+      div.brand= gadget.brand
+      div.name= gadget.model
+      hr
+      div.os.row
+        .col-md-10.text-left
+          = gadget.os
+        .col-md-2.text-right
+          = gadget.hwid
+
+    .booking-details
+      b Current status:
+      br
+      if(!stats[gadget._id])
+        p Available
+
+      else
+        if(stats[gadget._id].status === 'open')
+          p Reserved
+        else
+          p Not available
+
+        if(stats[gadget._id].lastBooking)
+          b Last booked by:
+          br
+          =stats[gadget._id].lastBooking.email
+
+      br
+      .controls
+        a(href="/gadgets/" + gadget._id).btn
+          |Details
+        a(
+          href="/bookings/" + gadget._id + "/new",
+          data-toggle="modal",
+          data-target="#bookingModal"
+        ).book-btn.btn|Book

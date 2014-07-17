@@ -2,10 +2,6 @@ extends ../layout
 
 block content
 
-  div.modal.fade(id="bookingModal")
-    div.modal-dialog
-      div.modal-content
-
   form(action='/gadgets/', method='get', id='search').clearfix
     input(type='search', name='q', value=q
       placeholder='Search gadgets by brand, model, type...' )
@@ -15,64 +11,17 @@ block content
     if(user.role == 'admin')
       a(href='/gadgets/new').btn.btn-add
 
+  ul.nav.nav-tabs
+    each list, name in gadgets
+      li(class= (name === 'Mobile') ? 'active' : '')
+        a(href="#" + name, data-toggle="tab")
+          =name + " (" + list.length + ")"
 
-  if(!gadgets || gadgets.length === 0)
-    h4 Sorry, no gadgets found
-  else
-    h4= gadgets.length + " gadgets"
-
-    ul.gadget-list
-
-      - each gadget in gadgets
-        li.gadet-entry
-
-          .content-slider
-            if(gadget.hasImage)
-              img(src=gadget.imagePath)
-            else
-              img(src='/img/dummy_device.gif')
-
-
-            if(stats[gadget._id])
-              div(class="gadget-" + stats[gadget._id].status).smallline
-            else
-              div.smallline.gadget-available
-
-            .details
-              div.brand= gadget.brand
-              div.name= gadget.model
-              hr
-              div.os.row
-                .col-md-10.text-left
-                  = gadget.os
-                .col-md-2.text-right
-                  = gadget.hwid
-
-            .booking-details
-              b Current status:
-              br
-              if(!stats[gadget._id])
-                p Available
-
-              else
-                if(stats[gadget._id].status === 'open')
-                  p Reserved
-                else
-                  p Not available
-
-                if(stats[gadget._id].lastBooking)
-                  b Last booked by:
-                  br
-                  =stats[gadget._id].lastBooking.email
-
-              br
-              .controls
-                a(href="/gadgets/" + gadget._id).btn
-                  |Details
-                a(
-                  href="/bookings/" + gadget._id + "/new",
-                  data-toggle="modal",
-                  data-target="#bookingModal"
-                ).book-btn.btn|Book
-
-  div.clearfix
+  .tab-content
+    br
+    each list, name in gadgets
+      .tab-pane(id=name, class= (name === 'Mobile') ? 'active' : '')
+        ul.gadget-list
+          - each gadget in list
+              include entry.jade
+        div.clearfix
