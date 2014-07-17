@@ -73,7 +73,6 @@ function handleImage(gadgetId, fields, files, cb) {
 }
 
 
-
 var GadgetController = {
 
   /**
