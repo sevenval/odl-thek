@@ -105,16 +105,12 @@ var BookingsController = {
 
     var sBooking, eBooking, error, idBooking;
 
-    if (!req.body._id) {
-      idBooking = new BookingModel()._id;
-    } else {
-      idBooking = req.body._id;
-    }
-
+    idBooking = req.body._id || null;
     sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
     eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
 
-    if (sBooking.getTime() < Date.now()) {
+    // validate booking start (ignore on updates) and end
+    if (sBooking.getTime() < Date.now() && !idBooking) {
       error = 'Start date not valid';
     } else if (eBooking.getTime() < sBooking.getTime()) {
       error = 'End date not valid';
@@ -144,32 +140,35 @@ var BookingsController = {
         }
 
         // gadget available -> create booking entry
-        BookingModel.findByIdAndUpdate(
-          idBooking,
-          {
-            gadget: gadget._id,
-            gadgetname: gadget.name,
-            user: req.session.user._id,
-            username: req.session.user.displayname,
-            start: sBooking,
-            end: eBooking,
-            notificationSent: false
-          },
-          {
-            upsert: true
-          },
-          function (err, booking) {
-            if (err) { return next(err); }
+        BookingModel.findById(idBooking, function (err, booking) {
+          if (err) { return next(err); }
 
-            if (!req.body._id) {
-              Mailer.sendNewBookingMail(gadget, booking, req.session.user);
-            } else {
+          if (booking) {
+            // update booking
+            booking.start = sBooking;
+            booking.end = eBooking;
+            booking.notificationSent = false;
+            booking.save(function (err) {
+              if (err) { return next(err); }
               Mailer.sendBookingUpdatedMail(gadget, booking, req.session.user);
-            }
-
-            res.render('bookings/ok', { gadget : gadget });
+              res.render('bookings/ok', { gadget : gadget });
+            });
+          } else {
+            // create new booking
+            BookingModel.create({
+              gadget: gadget._id,
+              gadgetname: gadget.name,
+              user: req.session.user._id,
+              username: req.session.user.displayname,
+              start: sBooking,
+              end: eBooking
+            }, function (err, booking) {
+              if (err) { return next(err); }
+              Mailer.sendNewBookingMail(gadget, booking, req.session.user);
+              res.render('bookings/ok', { gadget : gadget });
+            });
           }
-        );
+        });
       });
     });
   },
@@ -179,11 +178,9 @@ var BookingsController = {
     BookingModel.findByIdAndUpdate(
       req.params.id,
       {
-        $set: {
-          status: 'handout',
-          handoutdate: new Date(),
-          handoutuser: req.session.user._id
-        }
+        status: 'handout',
+        handoutdate: new Date(),
+        handoutuser: req.session.user._id
       },
       function (err, booking) {
         if (err) { return next(err); }
