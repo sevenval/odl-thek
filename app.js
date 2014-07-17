@@ -27,8 +27,7 @@ dotenv.load();
 
 
 // Setup mongodb
-// @todo Use single env var -> check on heruko
-Mongoose.connect(process.env.MONGODB_URL || process.env.MONGOLAB_URI || process.env.mongodburl);
+Mongoose.connect(process.env.MONGODB_URL);
 Mongoose.set('debug', process.env.NODE_ENV === 'DEVELOPMENT');
 
 
