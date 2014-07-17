@@ -5,42 +5,56 @@ var passport      = require('passport');
 var Utils         = require('../lib/utils');
 var UserModel     = require('../models/user');
 
+
 /**
- * Stores the auth data return from OAuth providers in local db. User data is
- * matched by email addresses and updated on every login action.
+ * Grants admin permissions to the first user in the db
  * @api private
  */
-function upsertUser(userData, cb) {
-
-  // don't update users role
-  delete userData.role;
-
-  UserModel.findOneAndUpdate({
-    userIdProvider: userData.userIdProvider,
-    type: userData.type
-  }, userData, {
-    // create user if (email) not exists
-    upsert: true
-  }, function (err, user) {
-
+function makeFirstUserAdmin(user, cb) {
+  UserModel.count({}, function (err, userCount) {
     if (err) { return cb(err); }
 
-    UserModel.count({}, function (err, userCount) {
-
-      if (err) { return cb(err); }
-
-      if (userCount === 1) {
-        // grant admin permissions to the first user in db
-        UserModel.findByIdAndUpdate(user._id, { role: 'admin' }, function (err, user) {
-          cb(null, user);
-        });
-      } else {
+    if (userCount === 1) {
+      // grant admin permissions to the first user in db
+      UserModel.findByIdAndUpdate(user._id, { role: 'admin' }, function (err, user) {
         cb(null, user);
-      }
-    });
+      });
+    } else {
+      cb(null, user);
+    }
+
   });
 }
 
+
+/**
+ * Stores the auth data return from OAuth providers in local db. User data is
+ * matched by provider ids and updated on every login action.
+ * @api private
+ */
+function upsertUser(userData, cb) {
+  UserModel.findOne({
+    userIdProvider: userData.userIdProvider,
+    type: userData.type
+  }, function (err, user) {
+    if (user) {
+      // update user with data from oauth provider
+      user.email = userData.email;
+      user.displayname = userData.displayname;
+      user.name = userData.name;
+      user.save(function (err) {
+        if (err) { return cb(err); }
+        cb(err, user);
+      });
+    } else {
+      // create user
+      UserModel.create(userData, function (err, user) {
+        if (err) { return cb(err); }
+        makeFirstUserAdmin(user, cb);
+      });
+    }
+  });
+}
 
 var AuthController = {
 

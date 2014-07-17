@@ -41,7 +41,7 @@ block content
                 =fmtDatetime(booking.end)
                 if (booking.expired)
                   span.text-danger
-                    b (Expired)
+                    strong (Expired)
               td.tools
                 a(
                   href="/bookings/" + booking._id + "/edit",
@@ -80,7 +80,7 @@ block content
                 =fmtDatetime(booking.end)
                 if (booking.expired)
                   span.text-danger
-                    b (Expired)
+                    strong (Expired)
               td.tools
                 a(
                   href="/bookings/" + booking._id + "/edit",
