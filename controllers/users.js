@@ -8,6 +8,17 @@ var UserModel     = require('../models/user');
 var UserController = {
 
   /**
+   * Temp helper /
+   * @†odo Remove
+   */
+  drop: function (req, res, next) {
+    UserModel.remove({}, function (err, users) {
+      res.redirect('/');
+    });
+  },
+
+
+  /**
    * Lists all users
    * @todo  Pagination?
    */
