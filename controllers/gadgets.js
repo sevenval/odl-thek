@@ -107,7 +107,7 @@ var GadgetController = {
     // } else {
 
     GadgetModel.find(where)
-      .sort({ brand: 1, model: 1 })
+      .sort({ brand: 1, model: 1, _id: -1 })
       .limit(750)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
