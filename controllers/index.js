@@ -22,7 +22,7 @@ var IndexController = {
       if (err) { return next(err); }
 
       res.render('index', {
-        title: 'ODL: welcome',
+        title: 'welcome',
         gadgets: (gadgets.length > 0) ? gadgets.slice(0, 12) : [],
         devices: gadgets.length
       });
@@ -35,7 +35,7 @@ var IndexController = {
    */
   imprint: function (req, res, next) {
     res.render('imprint', {
-      title: 'ODL: imprint'
+      title: 'imprint'
     });
   }
 
