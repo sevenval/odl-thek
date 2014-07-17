@@ -11,17 +11,24 @@ block content
     if(user.role == 'admin')
       a(href='/gadgets/new').btn.btn-add
 
-  ul.nav.nav-tabs
-    each list, name in gadgets
-      li(class= (name === 'Mobile') ? 'active' : '')
-        a(href="#" + name, data-toggle="tab")
-          =name + " (" + list.length + ")"
+  if (Object.keys(gadgets).length === 0)
+    h4 Sorry, no gadgets found
+  else
+    ul.nav.nav-tabs
+      - var i = 0
+      - each list, name in gadgets
+        li(class= (i === 0) ? 'active' : '')
+          a(href="#" + name, data-toggle="tab")
+            =name + " (" + list.length + ")"
+          - i++
 
-  .tab-content
-    br
-    each list, name in gadgets
-      .tab-pane(id=name, class= (name === 'Mobile') ? 'active' : '')
-        ul.gadget-list
-          - each gadget in list
-              include entry.jade
-        div.clearfix
+    .tab-content
+      br
+      - var i = 0
+      - each list, name in gadgets
+        .tab-pane(id=name, class= (i === 0) ? 'active' : '')
+          - i++
+          ul.gadget-list
+            - each gadget in list
+                include entry.jade
+          div.clearfix
