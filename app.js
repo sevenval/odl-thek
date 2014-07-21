@@ -106,7 +106,7 @@ Cron.start();
 
 // Register view helper
 app.locals.fmtDatetime = function (datetime) {
-  if (!datetime) { return ''; }
+  if (!datetime) { return '-'; }
   return moment(datetime).format(process.env.DATE_TIME_FORMAT);
 };
 

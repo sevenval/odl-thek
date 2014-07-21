@@ -59,6 +59,10 @@ var BookingSchema = new Mongoose.Schema({
     ref: 'User'
   },
 
+  openend: {
+    type: Boolean
+  },
+
   notificationSent: {
     type: Boolean
   }
@@ -69,6 +73,9 @@ var BookingSchema = new Mongoose.Schema({
 
 
 BookingSchema.virtual('expired').get(function () {
+  if (this.openend) {
+    return false;
+  }
   return (this.end < new Date());
 });
 

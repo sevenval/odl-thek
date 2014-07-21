@@ -22,6 +22,7 @@ function renderBookings(res, gadget, booking, error) {
     enddate: booking.enddate,
     starttime: booking.starttime,
     endtime: booking.endtime,
+    openend: booking.openend,
     error: error
   });
 }
@@ -54,8 +55,6 @@ var BookingsController = {
       .populate('closeuser')
       .exec(function (err, bookings) {
         if (err) { return next(err); }
-
-        console.dir(bookings);
 
         if (req.session.user.role === 'admin') {
           // render admin view
@@ -100,6 +99,7 @@ var BookingsController = {
         starttime: moment(booking.start).format('HH:mm'),
         enddate: moment(booking.end).format('YYYY-MM-DD'),
         endtime: moment(booking.end).format('HH:mm'),
+        openend: booking.openend
       });
     });
   },
@@ -110,14 +110,31 @@ var BookingsController = {
     var sBooking, eBooking, error, idBooking;
 
     idBooking = req.body._id || null;
-    sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
-    eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
+    sBooking = req.body.startdate + ' ' + req.body.starttime;
+    eBooking = req.body.enddate + ' ' + req.body.endtime;
 
-    // validate booking start (ignore on updates) and end
-    if (sBooking.getTime() < Date.now() && !idBooking) {
+
+    // date validations...
+    if (moment(sBooking, 'YYYY-MM-DD HH:mm').isValid()) {
+      sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
+      if (sBooking.getTime() < Date.now() && !idBooking) {
+        error = 'Start date must be in the future';
+      }
+    } else {
       error = 'Start date not valid';
-    } else if (eBooking.getTime() < sBooking.getTime()) {
+    }
+    if (moment(eBooking, 'YYYY-MM-DD HH:mm').isValid() || req.body.openend === 'on') {
+      eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
+      if (eBooking.getTime() < sBooking.getTime()) {
+        error = 'End date must be after start date';
+      }
+    } else {
       error = 'End date not valid';
+    }
+
+    if (req.body.openend === 'on') {
+      eBooking = moment().add(5, 'years');
+      req.body.openend = true;
     }
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
@@ -133,7 +150,8 @@ var BookingsController = {
         _id: { $ne: idBooking },
         gadget: gadget._id,
         start: { $lte: eBooking },
-        end: { $gte: sBooking }
+        end: { $gte: sBooking },
+        status: { $ne: 'closed' }
       }, function (err, bookings) {
         if (err) { return next(err); }
 
@@ -151,6 +169,7 @@ var BookingsController = {
             // update booking
             booking.start = sBooking;
             booking.end = eBooking;
+            booking.openend = req.body.openend;
             booking.notificationSent = false;
             booking.save(function (err) {
               if (err) { return next(err); }
@@ -165,7 +184,8 @@ var BookingsController = {
               user: req.session.user._id,
               username: req.session.user.displayname,
               start: sBooking,
-              end: eBooking
+              end: eBooking,
+              openend: req.body.openend
             }, function (err, booking) {
               if (err) { return next(err); }
               Mailer.sendNewBookingMail(gadget, booking, req.session.user);

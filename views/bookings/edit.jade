@@ -25,10 +25,19 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
       .col-md-2.btw
 
       .col-md-5
-        h4 End
-        input(type='date', name='enddate', value=enddate)
+        h4 End&nbsp;
+          if (user.role === 'admin')
+            label.small
+              | (Open end&nbsp;
+              input(
+                type="checkbox",
+                name="openend",
+                checked=(openend == true ? "checked" : undefined),
+                id="open-end-box")
+              |)
+        input(type='date', name='enddate', value=enddate, disabled=openend===true)
         span.dateIcon
-        input(type='time', name='endtime', value=endtime)
+        input(type='time', name='endtime', value=endtime, disabled=openend===true)
         span.timeIcon
       .clear
 
@@ -40,3 +49,15 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
   .modal-footer
     a.btn(onclick="bookNow(); return false;") Save booking
 
+
+script(type='text/javascript').
+  $('#open-end-box').on('change', function (e) {
+
+    if ($(this).is(':checked')) {
+      $('#book input[name="enddate"]').attr('disabled', true);
+      $('#book input[name="endtime"]').attr('disabled', true);
+    } else {
+      $('#book input[name="enddate"]').removeAttr('disabled');
+      $('#book input[name="endtime"]').removeAttr('disabled');
+    }
+  });

@@ -11,11 +11,14 @@ tr
   td
     =fmtDatetime(booking.start)
   td
-    =fmtDatetime(booking.end)
-    if (booking.expired)
-      br
-      span.text-danger
-        strong (Expired)
+    if (booking.openend)
+      | -
+    else
+      =fmtDatetime(booking.end)
+      if (booking.expired)
+        br
+        span.text-danger
+          strong (Expired)
   td
     if (booking.handoutuser)
       =booking.handoutuser.displayname
