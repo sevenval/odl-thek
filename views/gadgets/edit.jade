@@ -69,7 +69,10 @@ block content
 
         .form-group
           label Location:
-          input(type="text", name='location', value=gadget.location).form-control
+          select(name='location').form-control
+            - each location in locations
+              option(selected=gadget.location == location)
+                =location
 
         .form-group
           label Thumbnail:

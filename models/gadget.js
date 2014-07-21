@@ -19,11 +19,11 @@ var GadgetSchema = new Mongoose.Schema({
 
   location: {
     type: String,
-    required: true
-    // enum: [
-    //   'cologne',
-    //   'berlin'
-    // ]
+    required: true,
+    enum: [
+      'cologne',
+      'berlin'
+    ]
   },
 
   description: {
