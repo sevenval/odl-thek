@@ -6,7 +6,7 @@ block content
     div.modal-dialog
       div.modal-content
         div.modal-header
-          button(type="button", class="close", data-dismiss="modal")
+          button(type="button", class="close", data-dismiss="modal") &times;
           h3 Delete gadget?
         div.modal-body
           p Deleting a gadget will also delete all related bookings. Are you sure?
@@ -69,38 +69,61 @@ block content
 
     br
     br
-    .table-responsive
-      table.table
-        tr
-          th User
-          th Start Reservation
-          th End Reservation
-          th Handout on
-          th Handout by
-          th
-        - each booking in bookings
+    if (user.role === 'admin')
+      .table-responsive
+        table
           tr
-            td
-              if (user.role === 'admin' || user.role === 'editor' || booking.user._id == user._id)
-                =booking.user.displayname
-              else
-                ***
-            td
-              =fmtDatetime(booking.start)
-            td
-              =fmtDatetime(booking.end)
-            td
-              if (booking.handoutdate)
-                =fmtDatetime(booking.handoutdate)
-              else
-                | -
-            td
-              if(booking.handoutuser)
-                =booking.handoutuser.displayname
-              else
-                | -
-            td.tools
-              //- Show delete link only if status is open or user is admin
-              if((booking.status == "open" && booking.user._id == user._id) || user.role == 'admin')
-                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+            th Name
+            th Device (ID)
+            th Start Reservation
+            th End Reservation
+            th Handout
+            th Takeback
+            th
+            th
+            th
+          - each booking in bookings
+            include ../bookings/list-entry.jade
+
+    else
+      .table-responsive
+        table.table
+          tr
+            th User
+            th Start Reservation
+            th End Reservation
+            th Handout
+            th Takeback
+            th
+          - each booking in bookings
+            tr
+              td
+                if (user.role === 'admin' || user.role === 'editor' || booking.user._id == user._id)
+                  =booking.user.displayname
+                else
+                  | ***
+              td
+                =fmtDatetime(booking.start)
+              td
+                =fmtDatetime(booking.end)
+              td
+                if(booking.handoutuser)
+                  =booking.handoutuser.displayname
+                  br
+                  span.small
+                    =fmtDatetime(booking.handoutdate)
+                else
+                  | -
+              td
+                if(booking.closeuser)
+                  =booking.closeuser.displayname
+                  br
+                  span.small
+                    =fmtDatetime(booking.closedate)
+                else
+                  | -
+              td.tools
+                //- Show delete link only if status is open or user is admin
+                if((booking.status == "open" && booking.user._id == user._id) || user.role == 'admin')
+                  a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
 

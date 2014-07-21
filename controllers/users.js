@@ -40,17 +40,24 @@ var UserController = {
     UserModel.findById(req.params.id, function (err, user) {
       if (err) { return next(err); }
 
-      BookingModel.find({ user: user._id }, function (err, bookings) {
-        if (err) { return next(err); }
+      BookingModel
+        .find({ user: user._id })
+        .sort({ status: -1})
+        .populate('user')
+        .populate('gadget', { image: 0 })
+        .populate('handoutuser')
+        .populate('closeuser')
+        .exec(function (err, bookings) {
+          if (err) { return next(err); }
 
-        res.render('users/detail', {
-          title: user.email,
-          euser: user,
-          bookings: bookings,
-          roles: UserModel.schema.path('role').enumValues
+          res.render('users/detail', {
+            title: user.email,
+            euser: user,
+            bookings: bookings,
+            roles: UserModel.schema.path('role').enumValues
+          });
+
         });
-
-      });
     });
   },
 

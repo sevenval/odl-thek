@@ -49,9 +49,13 @@ var BookingsController = {
         'startdate': 1
       })
       .populate('user')
-      .populate('gadget')
+      .populate('gadget', { image: 0 })
+      .populate('handoutuser')
+      .populate('closeuser')
       .exec(function (err, bookings) {
         if (err) { return next(err); }
+
+        console.dir(bookings);
 
         if (req.session.user.role === 'admin') {
           // render admin view
@@ -191,7 +195,7 @@ var BookingsController = {
             $inc: { handoutcount: 1 }
           },
           function (err, result) {
-            res.redirect('/bookings/');
+            res.redirect(req.headers.referer);
           }
         );
       }
@@ -206,13 +210,13 @@ var BookingsController = {
         $set: {
           status: 'closed',
           closedate: new Date(),
-          closeduser: req.session.user._id
+          closeuser: req.session.user._id
         }
       },
       function (err, booking) {
         if (err) { return next(err); }
 
-        res.redirect('/bookings/');
+        res.redirect(req.headers.referer);
       }
     );
   },

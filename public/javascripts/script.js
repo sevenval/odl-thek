@@ -37,8 +37,10 @@ $(function () {
   });
 
   $('#bookingModal').on('hidden.bs.modal', function () {
-    // reload current page on booking modal close
-    window.location.reload(true);
+    if (window.location.pathname !== '/gadgets' && window.location.pathname !== '/gadgets/') {
+      // reload current page on booking modal close
+      window.location.reload(true);
+    }
   });
 
 });

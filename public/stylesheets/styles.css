@@ -345,13 +345,13 @@ table {
 .table>tbody>tr>th, th {
 	background: #1D9F55;
 	padding: 15px 10px;
-	vertical-align: inherit;
+	vertical-align: top;
 	border: 0;
 }
 
 .table>tbody>tr>td, td, th {
 	padding: 10px;
-	vertical-align: inherit;
+	vertical-align: top;
 	border: 0;
 }
 
@@ -376,7 +376,7 @@ tr:nth-child(even) {
 
 table .spacer, table .spacer th {
 	background: none;
-	height: 10px;
+	height: 20px;
 	padding: 0;
 }
 

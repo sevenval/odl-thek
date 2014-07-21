@@ -10,115 +10,38 @@ block content
           th Device (ID)
           th Start Reservation
           th End Reservation
+          th Handout
+          th Takeback
           th
           th
           th
 
         if(bookings && bookings.open)
          tr.spacer
-            th(colspan=7)
+            th(colspan=9)
           tr.section
-            th(colspan=7)
+            th(colspan=9)
               | Upcoming bookings
-
           - each booking in bookings.open
-            tr
-              td
-                =booking.username
-                br
-                span.small
-                  =booking.user.email
-              td
-                a(href="/gadgets/" + booking.gadget.id)
-                  =booking.gadgetname
-                  | &nbsp;
-                  | (
-                  =booking.gadget.hwid
-                  |)
-              td
-                =fmtDatetime(booking.start)
-              td
-                =fmtDatetime(booking.end)
-                if (booking.expired)
-                  span.text-danger
-                    strong (Expired)
-              td.tools
-                a(
-                  href="/bookings/" + booking._id + "/edit",
-                  data-toggle="modal",
-                  data-target="#bookingModal"
-                ).edit
-              td.tools
-                a(href="/bookings/"+booking._id+"/handout").handOut
-              td.tools
-                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
-
+            include list-entry.jade
 
         if(bookings && bookings.handout)
           tr.spacer
-            th(colspan=7)
+            th(colspan=9)
           tr.section
-            th(colspan=7)
+            th(colspan=9)
               | Active bookings
           - each booking in bookings.handout
-            tr
-              td
-                =booking.username
-                br
-                span.small
-                  =booking.user.email
-              td
-                a(href="/gadgets/" + booking.gadget.id)
-                  =booking.gadgetname
-                  | &nbsp;
-                  | (
-                  =booking.gadget.hwid
-                  |)
-              td
-                =fmtDatetime(booking.start)
-              td
-                =fmtDatetime(booking.end)
-                if (booking.expired)
-                  span.text-danger
-                    strong (Expired)
-              td.tools
-                a(
-                  href="/bookings/" + booking._id + "/edit",
-                  data-toggle="modal",
-                  data-target="#bookingModal"
-                ).edit
-              td.tools
-                a(href="/bookings/"+booking._id+"/takeback").takeBack
-              td.tools
-                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
-
+            include list-entry.jade
 
         if(bookings && bookings.closed)
           tr.spacer
-            th(colspan=7)
+            th(colspan=9)
           tr.section
-            th(colspan=7)
+            th(colspan=9)
               | Closed bookings
           - each booking in bookings.closed
-            tr
-              td
-                =booking.username
-                br
-                span.small
-                  =booking.user.email
-              td
-                a(href="/gadgets/" + booking.gadget.id)
-                  =booking.gadgetname
-                  | &nbsp;
-                  | (
-                  =booking.gadget.hwid
-                  |)
-              td=fmtDatetime(booking.start)
-              td=fmtDatetime(booking.end)
-              td.tools
-              td.tools
-              td.tools
-                a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+            include list-entry.jade
 
   else
     h4 No bookings...
