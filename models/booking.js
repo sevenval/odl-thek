@@ -65,7 +65,9 @@ var BookingSchema = new Mongoose.Schema({
 
   notificationSent: {
     type: Boolean
-  }
+  },
+
+  transferhash: String,
 
 }, {
   strict: true

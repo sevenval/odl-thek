@@ -3,11 +3,13 @@
 
 
 var _             = require('underscore');
+var crypto        = require('crypto');
 var moment        = require('moment');
 var Mongoose      = require('mongoose');
 var Mailer        = require('../lib/mailer');
 var BookingModel  = require('../models/booking');
 var GadgetModel   = require('../models/gadget');
+var UserModel     = require('../models/user');
 
 
 /**
@@ -24,6 +26,38 @@ function renderBookings(res, gadget, booking, error) {
     endtime: booking.endtime,
     openend: booking.openend,
     error: error
+  });
+}
+
+
+/**
+ * @api private
+ */
+function transferBooking(req, res, next) {
+  var hash = crypto.randomBytes(20).toString('hex');
+
+  UserModel.findById(req.body.newOwner, function (err, newOwner) {
+    if (err) { return next(err); }
+
+    BookingModel.findById(req.body._id, function (err, booking) {
+      if (err || !booking) { return next(err); }
+
+      var url = req.headers.host + '/bookings/transfer/';
+      url += hash;
+      url += '/';
+      url += newOwner._id;
+
+      booking.transferhash = hash;
+      booking.save(function (err) {
+        if (err) { return next(err); }
+
+        Mailer.sendTransferRequestMail(booking, url, newOwner.email);
+
+        res.render('bookings/transfer', { });
+
+      });
+
+    });
   });
 }
 
@@ -89,19 +123,38 @@ var BookingsController = {
 
 
   edit: function (req, res, next) {
-    BookingModel.findById(req.params.id, function (err, booking) {
-      if (err) { return next(err); }
 
-      res.render('bookings/edit', {
-        booking: booking,
-        gadgetId: booking.gadget,
-        startdate: moment(booking.start).format('YYYY-MM-DD'),
-        starttime: moment(booking.start).format('HH:mm'),
-        enddate: moment(booking.end).format('YYYY-MM-DD'),
-        endtime: moment(booking.end).format('HH:mm'),
-        openend: booking.openend
+    var where = {};
+
+    if (req.session.user.role !== 'admin') {
+      // limit bookings to current user when users role is not admin
+      where.email = {
+        $regex : ".*" + process.env.GOOGLE_HOSTED_DOMAIN,
+        $options: 'i'
+      };
+    }
+
+    UserModel
+      .find(where)
+      .exec(function (err, users) {
+        if (err) { return next(err); }
+
+        BookingModel.findById(req.params.id, function (err, booking) {
+          if (err) { return next(err); }
+
+          res.render('bookings/edit', {
+            booking: booking,
+            gadgetId: booking.gadget,
+            startdate: moment(booking.start).format('YYYY-MM-DD'),
+            starttime: moment(booking.start).format('HH:mm'),
+            enddate: moment(booking.end).format('YYYY-MM-DD'),
+            endtime: moment(booking.end).format('HH:mm'),
+            openend: booking.openend,
+            users: users
+          });
+        });
+
       });
-    });
   },
 
 
@@ -135,6 +188,10 @@ var BookingsController = {
     if (req.body.openend === 'on') {
       eBooking = moment().add(5, 'years');
       req.body.openend = true;
+    }
+
+    if (req.body.newOwner && req.body.newOwner !== "false") {
+      return transferBooking(req, res, next);
     }
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
@@ -248,6 +305,31 @@ var BookingsController = {
 
       // redirect to last page
       res.redirect(req.headers.referer);
+    });
+  },
+
+
+  transfer: function (req, res, next) {
+    UserModel.findById(req.params.uId, function (err, newOwner) {
+      if (err) { return next(err); }
+
+      BookingModel.findOne({ transferhash: req.params.hash }, function (err, booking) {
+
+        if (!booking) {
+          // hash not valid
+          return next(new Error());
+        }
+
+        booking.transferhash = null;
+        booking.user = newOwner._id;
+        booking.username = newOwner.displayname;
+        booking.save(function (err, rowsUpdated) {
+          if (err) { return next(err); }
+
+          res.render('bookings/transfer-ok', { booking: booking });
+        });
+
+      });
     });
   }
 

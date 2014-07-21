@@ -47,7 +47,18 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
         = error
 
   .modal-footer
-    a.btn(onclick="bookNow(); return false;") Save booking
+    .row
+      .col-md-6.text-left
+        if (users)
+          select(name='newOwner').form-control
+            option(value='false') Transfer booking to...
+            - each u in users
+              if (u._id != user._id)
+                option(value=u._id)
+                  =u.email
+
+      .col-md-6
+        a.btn(onclick="bookNow(); return false;") Save booking
 
 
 script(type='text/javascript').
