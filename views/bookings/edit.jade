@@ -49,7 +49,7 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
   .modal-footer
     .row
       .col-md-6.text-left
-        if (users)
+        if (users && user.role === 'admin' || user.role === 'editor')
           select(name='newOwner').form-control
             option(value='false') Transfer booking to...
             - each u in users

@@ -51,7 +51,7 @@ var UserController = {
           if (err) { return next(err); }
 
           res.render('users/detail', {
-            title: user.email,
+            title: user.displayname,
             euser: user,
             bookings: bookings,
             roles: UserModel.schema.path('role').enumValues

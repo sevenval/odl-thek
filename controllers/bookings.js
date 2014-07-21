@@ -15,17 +15,33 @@ var UserModel     = require('../models/user');
 /**
  * @private
  */
-function renderBookings(res, gadget, booking, error) {
-  res.render('bookings/edit', {
-    gadget: gadget,
-    booking: booking,
-    gadgetId: gadget._id,
-    startdate: booking.startdate,
-    enddate: booking.enddate,
-    starttime: booking.starttime,
-    endtime: booking.endtime,
-    openend: booking.openend,
-    error: error
+function renderBookings(req, res, next, gadget, booking, error) {
+
+  var where = {};
+
+  if (req.session.user.role === 'editor') {
+    // editors may only see other internal users
+    where.email = {
+      $regex : ".*" + process.env.GOOGLE_HOSTED_DOMAIN,
+      $options: 'i'
+    };
+  }
+
+  UserModel.find(where, function (err, users) {
+    if (err) { return next(err); }
+
+    res.render('bookings/edit', {
+      gadget: gadget,
+      booking: booking,
+      gadgetId: gadget._id,
+      startdate: booking.startdate,
+      enddate: booking.enddate,
+      starttime: booking.starttime,
+      endtime: booking.endtime,
+      openend: booking.openend,
+      users: users,
+      error: error
+    });
   });
 }
 
@@ -123,38 +139,18 @@ var BookingsController = {
 
 
   edit: function (req, res, next) {
+    BookingModel.findById(req.params.id, function (err, booking) {
+      if (err) { return next(err); }
 
-    var where = {};
-
-    if (req.session.user.role !== 'admin') {
-      // limit bookings to current user when users role is not admin
-      where.email = {
-        $regex : ".*" + process.env.GOOGLE_HOSTED_DOMAIN,
-        $options: 'i'
-      };
-    }
-
-    UserModel
-      .find(where)
-      .exec(function (err, users) {
-        if (err) { return next(err); }
-
-        BookingModel.findById(req.params.id, function (err, booking) {
-          if (err) { return next(err); }
-
-          res.render('bookings/edit', {
-            booking: booking,
-            gadgetId: booking.gadget,
-            startdate: moment(booking.start).format('YYYY-MM-DD'),
-            starttime: moment(booking.start).format('HH:mm'),
-            enddate: moment(booking.end).format('YYYY-MM-DD'),
-            endtime: moment(booking.end).format('HH:mm'),
-            openend: booking.openend,
-            users: users
-          });
-        });
-
+      return renderBookings(req, res, next, {_id: booking.gadget}, {
+        _id: booking._id,
+        startdate: moment(booking.start).format('YYYY-MM-DD'),
+        starttime: moment(booking.start).format('HH:mm'),
+        enddate: moment(booking.end).format('YYYY-MM-DD'),
+        endtime: moment(booking.end).format('HH:mm'),
+        openend: booking.openend
       });
+    });
   },
 
 
@@ -190,15 +186,11 @@ var BookingsController = {
       req.body.openend = true;
     }
 
-    if (req.body.newOwner && req.body.newOwner !== "false") {
-      return transferBooking(req, res, next);
-    }
-
     GadgetModel.findById(req.params.id, function (err, gadget) {
 
       if (error) {
         // start or end date not valid -> return
-        return renderBookings(res, gadget, req.body, error);
+        return renderBookings(req, res, next, gadget, req.body, error);
       }
 
       BookingModel.count({
@@ -215,7 +207,7 @@ var BookingsController = {
         if (bookings !== 0) {
           // ...if number of bookings is not zero, the gadget is not available
           error = 'Gadget not available in selected time range';
-          return renderBookings(res, gadget, req.body, error);
+          return renderBookings(req, res, next, gadget, req.body, error);
         }
 
         // gadget available -> create booking entry
@@ -230,8 +222,14 @@ var BookingsController = {
             booking.notificationSent = false;
             booking.save(function (err) {
               if (err) { return next(err); }
+
               Mailer.sendBookingUpdatedMail(gadget, booking, req.session.user);
-              res.render('bookings/ok', { gadget : gadget });
+              if (req.body.newOwner && req.body.newOwner !== "false") {
+                return transferBooking(req, res, next);
+
+              }
+
+              return res.render('bookings/ok', { gadget : gadget });
             });
           } else {
             // create new booking
