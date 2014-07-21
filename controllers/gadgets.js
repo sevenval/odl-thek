@@ -193,7 +193,8 @@ var GadgetController = {
       res.render('gadgets/edit', {
         title: gadget && gadget.name,
         gadget: gadget,
-        types: GadgetModel.schema.path('type').enumValues
+        types: GadgetModel.schema.path('type').enumValues,
+        locations: GadgetModel.schema.path('location').enumValues
       });
     });
   },
