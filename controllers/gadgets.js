@@ -233,7 +233,8 @@ var GadgetController = {
                 title: (gadget && gadget.isNew) ? 'New Gadget' : gadget.name,
                 gadget: gadget,
                 errors: err,
-                types: GadgetModel.schema.path('type').enumValues
+                types: GadgetModel.schema.path('type').enumValues,
+                locations: GadgetModel.schema.path('location').enumValues
               });
             }
             res.redirect('/gadgets/' + gadget._id + '/edit');
