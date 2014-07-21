@@ -156,6 +156,7 @@ var GadgetController = {
         .sort({'startdate': 1})
         .populate('user')
         .populate('handoutuser')
+        .populate('closeuser')
         .exec(function (err, bookings) {
           if (err) { return next(err); }
 

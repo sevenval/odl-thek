@@ -3,11 +3,13 @@
 
 
 var _             = require('underscore');
+var crypto        = require('crypto');
 var moment        = require('moment');
 var Mongoose      = require('mongoose');
 var Mailer        = require('../lib/mailer');
 var BookingModel  = require('../models/booking');
 var GadgetModel   = require('../models/gadget');
+var UserModel     = require('../models/user');
 
 
 /**
@@ -22,7 +24,40 @@ function renderBookings(res, gadget, booking, error) {
     enddate: booking.enddate,
     starttime: booking.starttime,
     endtime: booking.endtime,
+    openend: booking.openend,
     error: error
+  });
+}
+
+
+/**
+ * @api private
+ */
+function transferBooking(req, res, next) {
+  var hash = crypto.randomBytes(20).toString('hex');
+
+  UserModel.findById(req.body.newOwner, function (err, newOwner) {
+    if (err) { return next(err); }
+
+    BookingModel.findById(req.body._id, function (err, booking) {
+      if (err || !booking) { return next(err); }
+
+      var url = req.headers.host + '/bookings/transfer/';
+      url += hash;
+      url += '/';
+      url += newOwner._id;
+
+      booking.transferhash = hash;
+      booking.save(function (err) {
+        if (err) { return next(err); }
+
+        Mailer.sendTransferRequestMail(booking, url, newOwner.email);
+
+        res.render('bookings/transfer', { });
+
+      });
+
+    });
   });
 }
 
@@ -49,7 +84,9 @@ var BookingsController = {
         'startdate': 1
       })
       .populate('user')
-      .populate('gadget')
+      .populate('gadget', { image: 0 })
+      .populate('handoutuser')
+      .populate('closeuser')
       .exec(function (err, bookings) {
         if (err) { return next(err); }
 
@@ -86,18 +123,38 @@ var BookingsController = {
 
 
   edit: function (req, res, next) {
-    BookingModel.findById(req.params.id, function (err, booking) {
-      if (err) { return next(err); }
 
-      res.render('bookings/edit', {
-        booking: booking,
-        gadgetId: booking.gadget,
-        startdate: moment(booking.start).format('YYYY-MM-DD'),
-        starttime: moment(booking.start).format('HH:mm'),
-        enddate: moment(booking.end).format('YYYY-MM-DD'),
-        endtime: moment(booking.end).format('HH:mm'),
+    var where = {};
+
+    if (req.session.user.role !== 'admin') {
+      // limit bookings to current user when users role is not admin
+      where.email = {
+        $regex : ".*" + process.env.GOOGLE_HOSTED_DOMAIN,
+        $options: 'i'
+      };
+    }
+
+    UserModel
+      .find(where)
+      .exec(function (err, users) {
+        if (err) { return next(err); }
+
+        BookingModel.findById(req.params.id, function (err, booking) {
+          if (err) { return next(err); }
+
+          res.render('bookings/edit', {
+            booking: booking,
+            gadgetId: booking.gadget,
+            startdate: moment(booking.start).format('YYYY-MM-DD'),
+            starttime: moment(booking.start).format('HH:mm'),
+            enddate: moment(booking.end).format('YYYY-MM-DD'),
+            endtime: moment(booking.end).format('HH:mm'),
+            openend: booking.openend,
+            users: users
+          });
+        });
+
       });
-    });
   },
 
 
@@ -106,14 +163,35 @@ var BookingsController = {
     var sBooking, eBooking, error, idBooking;
 
     idBooking = req.body._id || null;
-    sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
-    eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
+    sBooking = req.body.startdate + ' ' + req.body.starttime;
+    eBooking = req.body.enddate + ' ' + req.body.endtime;
 
-    // validate booking start (ignore on updates) and end
-    if (sBooking.getTime() < Date.now() && !idBooking) {
+
+    // date validations...
+    if (moment(sBooking, 'YYYY-MM-DD HH:mm').isValid()) {
+      sBooking = new Date(req.body.startdate + ' ' + req.body.starttime);
+      if (sBooking.getTime() < Date.now() && !idBooking) {
+        error = 'Start date must be in the future';
+      }
+    } else {
       error = 'Start date not valid';
-    } else if (eBooking.getTime() < sBooking.getTime()) {
+    }
+    if (moment(eBooking, 'YYYY-MM-DD HH:mm').isValid() || req.body.openend === 'on') {
+      eBooking = new Date(req.body.enddate + ' ' + req.body.endtime);
+      if (eBooking.getTime() < sBooking.getTime()) {
+        error = 'End date must be after start date';
+      }
+    } else {
       error = 'End date not valid';
+    }
+
+    if (req.body.openend === 'on') {
+      eBooking = moment().add(5, 'years');
+      req.body.openend = true;
+    }
+
+    if (req.body.newOwner && req.body.newOwner !== "false") {
+      return transferBooking(req, res, next);
     }
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
@@ -129,7 +207,8 @@ var BookingsController = {
         _id: { $ne: idBooking },
         gadget: gadget._id,
         start: { $lte: eBooking },
-        end: { $gte: sBooking }
+        end: { $gte: sBooking },
+        status: { $ne: 'closed' }
       }, function (err, bookings) {
         if (err) { return next(err); }
 
@@ -147,6 +226,7 @@ var BookingsController = {
             // update booking
             booking.start = sBooking;
             booking.end = eBooking;
+            booking.openend = req.body.openend;
             booking.notificationSent = false;
             booking.save(function (err) {
               if (err) { return next(err); }
@@ -161,7 +241,8 @@ var BookingsController = {
               user: req.session.user._id,
               username: req.session.user.displayname,
               start: sBooking,
-              end: eBooking
+              end: eBooking,
+              openend: req.body.openend
             }, function (err, booking) {
               if (err) { return next(err); }
               Mailer.sendNewBookingMail(gadget, booking, req.session.user);
@@ -191,7 +272,7 @@ var BookingsController = {
             $inc: { handoutcount: 1 }
           },
           function (err, result) {
-            res.redirect('/bookings/');
+            res.redirect(req.headers.referer);
           }
         );
       }
@@ -206,13 +287,13 @@ var BookingsController = {
         $set: {
           status: 'closed',
           closedate: new Date(),
-          closeduser: req.session.user._id
+          closeuser: req.session.user._id
         }
       },
       function (err, booking) {
         if (err) { return next(err); }
 
-        res.redirect('/bookings/');
+        res.redirect(req.headers.referer);
       }
     );
   },
@@ -224,6 +305,31 @@ var BookingsController = {
 
       // redirect to last page
       res.redirect(req.headers.referer);
+    });
+  },
+
+
+  transfer: function (req, res, next) {
+    UserModel.findById(req.params.uId, function (err, newOwner) {
+      if (err) { return next(err); }
+
+      BookingModel.findOne({ transferhash: req.params.hash }, function (err, booking) {
+
+        if (!booking) {
+          // hash not valid
+          return next(new Error());
+        }
+
+        booking.transferhash = null;
+        booking.user = newOwner._id;
+        booking.username = newOwner.displayname;
+        booking.save(function (err, rowsUpdated) {
+          if (err) { return next(err); }
+
+          res.render('bookings/transfer-ok', { booking: booking });
+        });
+
+      });
     });
   }
 

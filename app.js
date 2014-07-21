@@ -106,7 +106,7 @@ Cron.start();
 
 // Register view helper
 app.locals.fmtDatetime = function (datetime) {
-  if (!datetime) { return ''; }
+  if (!datetime) { return '-'; }
   return moment(datetime).format(process.env.DATE_TIME_FORMAT);
 };
 
@@ -137,6 +137,7 @@ app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsContr
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
 app.get ('/gadgets/:id/image',            AuthController.isAuth,    GadgetsController.image);
 app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
+app.get ('/bookings/transfer/:hash/:uId',                           BookingsController.transfer);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
 app.get ('/bookings/:id/edit',            AuthController.isAuth,    BookingsController.edit);
 app.post('/bookings/:id/save',            AuthController.isAuth,    BookingsController.save);

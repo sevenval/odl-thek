@@ -345,13 +345,13 @@ table {
 .table>tbody>tr>th, th {
 	background: #1D9F55;
 	padding: 15px 10px;
-	vertical-align: inherit;
+	vertical-align: top;
 	border: 0;
 }
 
 .table>tbody>tr>td, td, th {
 	padding: 10px;
-	vertical-align: inherit;
+	vertical-align: top;
 	border: 0;
 }
 
@@ -376,7 +376,7 @@ tr:nth-child(even) {
 
 table .spacer, table .spacer th {
 	background: none;
-	height: 10px;
+	height: 20px;
 	padding: 0;
 }
 
@@ -497,7 +497,7 @@ td .small {
 	border-top: none;
 }
 
-input[type="date"], input[type="time"]{
+input[type="date"], input[type="time"] {
 	height: 50px;
 	display: block;
 	width: calc(100% - 50px);
@@ -506,6 +506,10 @@ input[type="date"], input[type="time"]{
 	margin-bottom: 25px;
 	color: #405060;
 	background: #fff;
+}
+
+input[type="date"]:disabled, input[type="time"]:disabled {
+	opacity: 0.15;
 }
 
 .dateIcon, .timeIcon {

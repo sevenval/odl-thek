@@ -56,7 +56,7 @@ block content
                   =role
 
         .col-md-4.tools-box
-          input(type="submit", value="Speichern").btn
+          input(type="submit", value="Save").btn
           a.btn.btn-danger(data-toggle="modal" data-target="#modal") Delete
 
     br
@@ -64,25 +64,17 @@ block content
     br
     h4 Bookings
     .table-responsive
-      table.table
+      table
         tr
+          th Name
           th Device (ID)
-          th Start reservation
-          th End reservation
-          th Status
+          th Start Reservation
+          th End Reservation
+          th Handout
+          th Takeback
+          th
           th
           th
         - each booking in bookings
-          tr
-            td= booking.gadgetname
-            td= fmtDatetime(booking.start)
-            td= fmtDatetime(booking.end)
-            td= booking.status
-            td.tools
-              a(
-                href="/bookings/" + booking._id + "/edit",
-                data-toggle="modal",
-                data-target="#bookingModal"
-              ).edit
-            td.tools
-              a(data-href="/bookings/" + booking._id + "/remove").cancel-booking.cancel
+          include ../bookings/list-entry.jade
+
