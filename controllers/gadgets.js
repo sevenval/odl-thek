@@ -5,12 +5,21 @@ var Mongoose      = require('mongoose');
 var Formidable    = require('formidable');
 var _             = require('underscore');
 var fs            = require('fs');
+var knox          = require('knox');
 var gm            = require('gm');
 var csv           = require('csv');
 var async         = require('async');
 var Utils         = require('../lib/utils');
 var GadgetModel   = require('../models/gadget');
 var BookingModel  = require('../models/booking');
+
+
+
+var s3Client = knox.createClient({
+  key: process.env.AWS_ACCESS_KEY_ID,
+  secret: process.env.AWS_SECRET_ACCESS_KEY,
+  bucket: process.env.AWS_MEDIA_BUCKET
+});
 
 
 /**
@@ -21,17 +30,10 @@ function createGadgetStats(cb) {
 
   var stats = {}, now = new Date();
 
-  BookingModel.find({}, function (err, bookings) {
+  BookingModel.find({ status: { $ne: 'closed' }}, function (err, bookings) {
 
-    // create booking stats per gadget (last and current booking)
-    bookings.forEach(function (booking) {
-
-      if (booking.end < now && booking.status === 'closed') {
-        // todo nur übernehmen, wenn wirklich das letzte.
-        stats[booking.gadget] = { lastBooking: booking };
-      }
-
-      if (booking.status !== 'closed' && booking.start < now && booking.end > now) {
+    _.each(bookings, function (booking) {
+      if (booking.start < now && booking.end > now) {
         stats[booking.gadget] = {
           status: booking.status,
           booking: booking
@@ -44,31 +46,31 @@ function createGadgetStats(cb) {
 }
 
 
-function handleImage(gadgetId, fields, files, cb) {
+function uploadImage(gadgetId, fields, files, cb) {
   if (!files.image || files.image.size === 0) {
-    return cb();
+    return cb(null);
   }
 
-  fs.unlink('public/img/cache/' + gadgetId + '.jpg', function (err) {
-    // ignore errors here (e.g. file not found)
-    console.log('public/img/cache/' + gadgetId + '.jpg deleted');
+  fs.readFile(files.image.path, function (err, data) {
+    if (err) { return cb(err); }
 
-    fs.readFile(files.image.path, function (err, data) {
-      if (err) { return cb(err); }
+    // resize image and convert to jpg
+    gm(data)
+      .options({ imageMagick: true })
+      .resize(210)
+      .toBuffer('jpg', function (err, buffer) {
+        if (err) { return cb(err); }
 
-      // resize image and convert to jpg
-      gm(data)
-        .options({ imageMagick: true })
-        .resize(210)
-        .toBuffer('jpg', function (err, buffer) {
-          fields.image = {
-            data: buffer.toString('base64')
-          };
+        var file = gadgetId + '.jpg';
+        var headers = {
+          'x-amz-acl': 'public-read',
+          'Content-Type': 'image/jpeg'
+        };
 
-          cb(err, fields);
+        s3Client.putBuffer(buffer, file, headers, function (err) {
+          cb(err, file);
         });
-
-    });
+      });
   });
 }
 
@@ -111,10 +113,25 @@ var GadgetController = {
       .limit(750)
       .exec(function (err, gadgets) {
         if (err) { return next(err); }
+
+        var groupedGadgets = {};
+        _.each(gadgets, function (gadget) {
+          groupedGadgets[gadget.type] = groupedGadgets[gadget.type] || {
+            name: gadget.type,
+            count: 0,
+            data: []
+          };
+          groupedGadgets[gadget.type].data.push(gadget);
+          groupedGadgets[gadget.type].count++;
+        });
+        groupedGadgets = _.sortBy(groupedGadgets, function (gadgetGroup) {
+          return -gadgetGroup.count;
+        });
+
         createGadgetStats(function (stats) {
           res.render('gadgets/list', {
             title: 'gadgets',
-            gadgets: _.groupBy(gadgets, 'type'),
+            gadgets: groupedGadgets,
             stats: stats,
             q: req.query.q
           });
@@ -151,6 +168,10 @@ var GadgetController = {
 
     GadgetModel.findById(req.params.id, function (err, gadget) {
       if (err) { return next(err); }
+
+      if (!gadget) {
+        return res.redirect('/gadgets');
+      }
 
       BookingModel.find({ gadget: req.params.id })
         .sort({'startdate': 1})
@@ -217,15 +238,15 @@ var GadgetController = {
     form.parse(req, function (err, fields, files) {
       if (err) { return next(err); }
 
-      handleImage(req.params.id, fields, files, function (err, updFields) {
+      uploadImage(req.params.id, fields, files, function (err, imageUrl) {
         if (err) { return next(err); }
 
         // enrich with image data if present
-        fields = updFields || fields;
+        _.extend(fields, { image: imageUrl });
 
         GadgetModel.findById(req.params.id, function (err, gadget) {
 
-          gadget = gadget || new GadgetModel();
+          gadget = gadget || new GadgetModel({ _id: req.params.id });
           gadget.set(fields);
           gadget.save(function (err) {
             if (err) {
@@ -257,30 +278,12 @@ var GadgetController = {
       BookingModel.remove({ gadget: req.params.id }, function (err) {
         if (err) { return next(err); }
 
-        res.redirect('/gadgets/');
+        var file = req.params.id + '.jpg';
+        s3Client.deleteFile(file, function (err) {
+          res.redirect('/gadgets/');
+        });
 
       });
-    });
-  },
-
-
-  /**
-   * Loads the gadget image from mongodb and stores it in the filesystem.
-   */
-  image: function (req, res, next) {
-    GadgetModel.findById(req.params.id, function (err, gadget) {
-      var buf = new Buffer(gadget.image.data, 'base64');
-      gm(buf)
-        .options({ imageMagick: true })
-        .resize(210)
-        .write('public' + gadget.imagePath, function (err) {
-          if (err) {
-            console.log('public' + gadget.imagePath + ' cant be written!');
-            console.log(err);
-          }
-
-          res.end(buf);
-        });
     });
   },
 

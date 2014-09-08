@@ -33,6 +33,17 @@ function makeFirstUserAdmin(user, cb) {
  * @api private
  */
 function upsertUser(userData, cb) {
+
+  /*
+    db.bios.findOne(
+     {
+       $or: [
+              { 'name.first' : /^G/ },
+              { birth: { $lt: new Date('01/01/1945') } }
+            ]
+     }
+    )
+   */
   UserModel.findOne({
     userIdProvider: userData.userIdProvider,
     type: userData.type

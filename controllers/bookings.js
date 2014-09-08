@@ -47,33 +47,34 @@ function renderBookings(req, res, next, gadget, booking, error) {
 
 
 /**
+ * Prepares a booking for transferring to a new owner.
  * @api private
  */
 function transferBooking(req, res, next) {
   var hash = crypto.randomBytes(20).toString('hex');
 
-  UserModel.findById(req.body.newOwner, function (err, newOwner) {
-    if (err) { return next(err); }
+  BookingModel.findById(req.body._id, function (err, booking) {
+    if (err || !booking) { return next(err); }
 
-    BookingModel.findById(req.body._id, function (err, booking) {
-      if (err || !booking) { return next(err); }
+    var url = req.headers.host + '/bookings/transfer/';
+    url += hash;
+    url += '/';
+    url += req.body.newOwner;
 
-      var url = req.headers.host + '/bookings/transfer/';
-      url += hash;
-      url += '/';
-      url += newOwner._id;
+    booking.transferhash = hash;
+    booking.save(function (err) {
+      if (err) { return next(err); }
 
-      booking.transferhash = hash;
-      booking.save(function (err) {
-        if (err) { return next(err); }
-
-        Mailer.sendTransferRequestMail(booking, url, newOwner.email);
-
-        res.render('bookings/transfer', { });
-
+      Mailer.sendTransferRequestMail({
+        newUserId: req.body.newOwner,
+        currentUserId: req.session.user._id,
+        gadgetId: booking.gadget,
+        url: url,
       });
 
+      res.render('bookings/transfer');
     });
+
   });
 }
 
@@ -225,11 +226,11 @@ var BookingsController = {
 
               Mailer.sendBookingUpdatedMail(gadget, booking, req.session.user);
               if (req.body.newOwner && req.body.newOwner !== "false") {
+                // Booking owner changed -> send new owner transfer mail
                 return transferBooking(req, res, next);
-
               }
 
-              return res.render('bookings/ok', { gadget : gadget });
+              return res.render('bookings/ok', { gadget: gadget });
             });
           } else {
             // create new booking
@@ -298,11 +299,23 @@ var BookingsController = {
 
 
   remove: function (req, res, next) {
-    BookingModel.remove({ _id: req.params.id }, function (err, result) {
+    BookingModel.findById(req.params.id, function (err, booking) {
       if (err) { return next(err); }
 
-      // redirect to last page
-      res.redirect(req.headers.referer);
+      // TODO: Make sure user is allowed to delete a booking
+
+      BookingModel.remove({ _id: req.params.id }, function (err) {
+        if (err) { return next(err); }
+
+        Mailer.sendBookingDeletedMail({
+          gadgetId: booking.gadget,
+          userId: booking.user,
+          booking: booking
+        });
+
+        // redirect to last page
+        res.redirect(req.headers.referer);
+      });
     });
   },
 
@@ -313,24 +326,44 @@ var BookingsController = {
 
       BookingModel.findOne({ transferhash: req.params.hash }, function (err, booking) {
 
-        if (!booking) {
+        if (err || !booking) {
           // hash not valid
           return next(new Error());
         }
 
+        // create a new booking for the new owner
+        var newBooking = new BookingModel();
+        newBooking.user = newOwner._id;
+        newBooking.username = newOwner.displayname;
+        newBooking.start = new Date();
+        newBooking.end = booking.end;
+        newBooking.openend = booking.openend;
+        newBooking.gadget = booking.gadget;
+        newBooking.gadgetname = booking.gadgetname;
+
+        // close booking for the old owner
+        booking.status = 'closed';
+        booking.end = new Date();
         booking.transferhash = null;
-        booking.user = newOwner._id;
-        booking.username = newOwner.displayname;
-        booking.save(function (err, rowsUpdated) {
+        booking.save(function (err) {
           if (err) { return next(err); }
 
-          res.render('bookings/transfer-ok', { booking: booking });
-        });
+          newBooking.save(function (err) {
+            if (err) { return next(err); }
 
+            Mailer.sendTransferConfirmationMail({
+              oldUserId: booking.user,
+              newUserId: newBooking.user,
+              gadgetId: newBooking.gadget
+            });
+
+            res.render('bookings/transfer-ok', { booking: newBooking });
+          });
+
+        });
       });
     });
   }
-
 };
 
 module.exports = BookingsController;

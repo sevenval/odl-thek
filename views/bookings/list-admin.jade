@@ -16,32 +16,37 @@ block content
           th
           th
 
+        tr.section
+          th(colspan=9)
+            | Upcoming bookings
         if(bookings && bookings.open)
-         tr.spacer
-            th(colspan=9)
-          tr.section
-            th(colspan=9)
-              | Upcoming bookings
-          - each booking in bookings.open
+          each booking in bookings.open
             include list-entry.jade
+        else
+          td(colspan=9)
+            | No upcoming bookings...
 
+
+        tr.section
+          th(colspan=9)
+            | Active bookings
         if(bookings && bookings.handout)
-          tr.spacer
-            th(colspan=9)
-          tr.section
-            th(colspan=9)
-              | Active bookings
           - each booking in bookings.handout
             include list-entry.jade
+        else
+          td(colspan=9)
+            | No active bookings...
 
+
+        tr.section
+          th(colspan=9)
+            | Closed bookings
         if(bookings && bookings.closed)
-          tr.spacer
-            th(colspan=9)
-          tr.section
-            th(colspan=9)
-              | Closed bookings
           - each booking in bookings.closed
             include list-entry.jade
+        else
+          td(colspan=9)
+            | No closed bookings...
 
   else
     h4 No bookings...

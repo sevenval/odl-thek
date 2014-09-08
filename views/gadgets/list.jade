@@ -16,19 +16,19 @@ block content
   else
     ul.nav.nav-tabs
       - var i = 0
-      - each list, name in gadgets
+      - each gadgetGroup in gadgets
         li(class= (i === 0) ? 'active' : '')
-          a(href="#" + name, data-toggle="tab")
-            =name + " (" + list.length + ")"
+          a(href="#" + gadgetGroup.name, data-toggle="tab")
+            =gadgetGroup.name + " (" + gadgetGroup.count + ")"
           - i++
 
     .tab-content
       br
       - var i = 0
-      - each list, name in gadgets
-        .tab-pane(id=name, class= (i === 0) ? 'active' : '')
+      - each gadgetGroup in gadgets
+        .tab-pane(id=gadgetGroup.name, class= (i === 0) ? 'active' : '')
           - i++
           ul.gadget-list
-            - each gadget in list
+            - each gadget in gadgetGroup.data
                 include entry.jade
           div.clearfix

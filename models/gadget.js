@@ -63,9 +63,7 @@ var GadgetSchema = new Mongoose.Schema({
   },
 
   image: {
-    data: {
-      type: String
-    }
+    type: String
   },
 
   handoutcount: {
@@ -105,12 +103,14 @@ GadgetSchema.virtual('name').get(function () {
 
 
 GadgetSchema.virtual('hasImage').get(function () {
-  return this.image.data && this.image.data.length > 0;
+  return this.image && this.image.length > 0;
 });
 
-
 GadgetSchema.virtual('imagePath').get(function () {
-  return '/img/cache/' + this._id + '.jpg';
+  var url = 'https://s3-eu-west-1.amazonaws.com/';
+  url += process.env.AWS_MEDIA_BUCKET + '/';
+  url += this._id + '.jpg';
+  return url;
 });
 
 

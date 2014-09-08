@@ -23,12 +23,13 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
         span.timeIcon
 
       .col-md-2.btw
+        img(src="/img/till_btn.gif", width="26")
 
-      .col-md-5
+      .col-md-5.end-box
         h4 End&nbsp;
           if (user.role === 'admin')
             label.small
-              | (Open end&nbsp;
+              | (Book until further&nbsp;
               input(
                 type="checkbox",
                 name="openend",
@@ -49,11 +50,11 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
   .modal-footer
     .row
       .col-md-6.text-left
-        if (users && user.role === 'admin' || user.role === 'editor')
+        if (users && user.role !== 'user' && !booking.expired && booking.status !== 'open')
           select(name='newOwner').form-control
             option(value='false') Transfer booking to...
             - each u in users
-              if (u._id != user._id)
+              if (u._id != user._id && u.email.length > 1)
                 option(value=u._id)
                   =u.email
 
@@ -63,12 +64,13 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
 
 script(type='text/javascript').
   $('#open-end-box').on('change', function (e) {
-
     if ($(this).is(':checked')) {
       $('#book input[name="enddate"]').attr('disabled', true);
       $('#book input[name="endtime"]').attr('disabled', true);
+      $('#book .end-box span').addClass('disabled');
     } else {
       $('#book input[name="enddate"]').removeAttr('disabled');
       $('#book input[name="endtime"]').removeAttr('disabled');
+      $('#book .end-box span').removeClass('disabled');
     }
   });

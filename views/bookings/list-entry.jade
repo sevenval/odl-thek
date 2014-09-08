@@ -15,7 +15,7 @@ tr
       | Until further
     else
       =fmtDatetime(booking.end)
-      if (booking.expired)
+      if (booking.expired && booking.status !== 'closed')
         br
         span.text-danger
           strong (Expired)

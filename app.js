@@ -1,14 +1,17 @@
 /*jslint unparam: true, node: true, plusplus: true, nomen: true, indent: 2, white: true, todo: true */
 'use strict';
 
+// Load local .env file if present to set env vars
+require('dotenv').load();
+
 var express             = require('express');
 var favicon             = require('static-favicon');
 var logger              = require('morgan');
 var cookieParser        = require('cookie-parser');
 var bodyParser          = require('body-parser');
+var compression         = require('compression');
 var session             = require('express-session');
 var moment              = require('moment');
-var dotenv              = require('dotenv');
 var passport            = require('passport');
 var GitHubStrategy      = require('passport-github').Strategy;
 var GoogleStrategy      = require('passport-google-oauth').OAuth2Strategy;
@@ -20,10 +23,6 @@ var AuthController      = require('./controllers/auth');
 var BookingsController  = require('./controllers/bookings');
 var GadgetsController   = require('./controllers/gadgets');
 var UserController      = require('./controllers/users');
-
-
-// Load local .env file if present to set env vars
-dotenv.load();
 
 
 // Setup mongodb
@@ -69,10 +68,9 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.disable('view cache');
-app.disable('etag');
 app.use(favicon());
-app.use(logger('dev'));
-app.use(express.static(__dirname + '/public'));
+app.use(compression());
+app.use(express.static(__dirname + '/public', { maxAge: 86400000 * 10 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -135,7 +133,6 @@ app.get ('/gadgets/:id',                  AuthController.isAuth,    GadgetsContr
 app.get ('/gadgets/:id/edit',             AuthController.isAdmin,   GadgetsController.edit);
 app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsController.save);
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
-app.get ('/gadgets/:id/image',            AuthController.isAuth,    GadgetsController.image);
 app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
 app.get ('/bookings/transfer/:hash/:uId',                           BookingsController.transfer);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
@@ -177,18 +174,10 @@ app.use(function (err, req, res, next) {
 
 // assume 404 since no middleware responded
 app.use(function (req, res) {
-  if (req.url.indexOf('img/cache') !== -1) {
-    // gadget image could not be served from cache -> redirect req
-    // to image handler
-    var id = req.url.replace('/img/cache/', '');
-    id = id.substr(0, id.indexOf('.'));
-    res.redirect('/gadgets/' + id + '/image');
-  } else {
-    res.status(404).render('404', {
-      title: '404',
-      url: req.originalUrl
-    });
-  }
+  res.status(404).render('404', {
+    title: '404',
+    url: req.originalUrl
+  });
 });
 
 

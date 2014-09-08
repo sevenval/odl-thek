@@ -23,7 +23,7 @@ block content
               =fmtDatetime(booking.start)
             td
               =fmtDatetime(booking.end)
-              if (booking.expired)
+              if (booking.expired && booking.status !== 'closed')
                 span.text-danger
                   strong (Expired)
             td
