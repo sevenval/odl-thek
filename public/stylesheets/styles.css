@@ -3,14 +3,14 @@ button:focus,button:active,
 input:focus,input:active,
 select:focus,select:active,
 textarea:focus,textarea:active {
-    outline: none !important;
+   outline: none !important;
 }
 
 body {
-  	font-family: 'Ubuntu', sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 	background: #D9F1E3;
 	color: #435060;
-  	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
 }
 
 #wrapper {
@@ -215,7 +215,7 @@ input[type="search"]::-webkit-search-cancel-button {
 	float: left;
 	width: 210px;
 	height: 320px;
-	margin: 0 10px 20px 0;
+	margin: 0 10px 40px 0;
 	border-radius: 0 10px 0 0 ;
 	background: #fff;
 	list-style: none;
@@ -225,28 +225,28 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media (min-width: 768px) and (max-width: 991px)  {
 	.gadet-entry {
-		margin: 0 25px 20px 0;
+		margin: 0 25px 40px 0;
 	}
 	.gadet-entry:nth-child(3n+3) {
-  		margin: 0 0 20px 0;
+  		margin: 0 0 40px 0;
 	}
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
 	.gadet-entry {
-		margin: 0 20px 20px 0;
+		margin: 0 20px 40px 0;
 	}
 	.gadet-entry:nth-child(4n+4) {
-  		margin: 0 0 20px 0;
+  		margin: 0 0 40px 0;
 	}
 }
 
 @media (min-width: 1200px)  {
 	.gadet-entry {
-		margin: 0 12px 20px 0;
+		margin: 0 12px 40px 0;
 	}
 	.gadet-entry:nth-child(5n+5) {
-  		margin: 0 0 20px 0;
+  		margin: 0 0 40px 0;
 	}
 }
 
@@ -292,12 +292,12 @@ input[type="search"]::-webkit-search-cancel-button {
 .gadet-entry .content-slider {
 	position: absolute;
 	top: 0;
- 	-webkit-transition: top 200ms;
-    transition: top 200ms;
+ 	-webkit-transition: top 125ms;
+  transition: top 125ms;
 }
 
 .gadet-entry.showDetails .content-slider {
-	top: -210px;
+	top: -130px;
 }
 
 .gadet-entry .gadget-available {
@@ -356,7 +356,6 @@ table {
 }
 
 td.tools {
-	background: #1D9F55;
 	padding: 0;
 	text-align: center;
 	width: 50px
@@ -374,15 +373,10 @@ tr:nth-child(even) {
 	background-color: #405060
 }
 
-table .spacer, table .spacer th {
-	background: none;
-	height: 20px;
-	padding: 0;
-}
-
-table tr.section th {
-	padding: 5px 10px;
-	font-size: .9em;
+tr.section th {
+	background: #1CA055;
+	padding: 5px 10px 5px 10px;
+	font-size: .8em;
 }
 
 table tr.section th:last-of-type {
@@ -483,6 +477,20 @@ td .small {
 	height: 30px;
 }*/
 
+.close {
+	float: right;
+	font-size: 40px;
+	font-weight: normal;
+	line-height: 0.8;
+	color: #FFF;
+	text-shadow: none;
+	opacity: 1;
+}
+
+.close:hover {
+	color: rgba(255, 255, 255, 0.9);
+}
+
 .modal-header h3 {
 	margin: 0;
 }
@@ -498,25 +506,26 @@ td .small {
 }
 
 input[type="date"], input[type="time"] {
-	height: 50px;
+	height: 34px;
 	display: block;
-	width: calc(100% - 50px);
+	width: calc(100% - 34px);
 	border: none;
 	float: left;
-	margin-bottom: 25px;
+	margin-bottom: 20px;
 	color: #405060;
 	background: #fff;
+	padding: 6px 12px;
 }
 
-input[type="date"]:disabled, input[type="time"]:disabled {
+input[type="date"]:disabled, input[type="time"]:disabled, .disabled {
 	opacity: 0.15;
 }
 
 .dateIcon, .timeIcon {
 	display: block;
 	background-color: #405060;
-	width: 50px;
-	height: 50px;
+	width: 34px;
+	height: 34px;
 	border-radius: 0 10px 0 0 ;
 	float: left;
 	background-image: url(/img/dropdown_arrow_btn.gif);
@@ -526,10 +535,8 @@ input[type="date"]:disabled, input[type="time"]:disabled {
 }
 
 .btw {
-	height: 200px;
-	background-image: url(/img/till_btn.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
+	text-align: center;
+	padding-top: 60px;
 }
 
 /*******************************************************************************
@@ -574,4 +581,9 @@ a.loginbutton {
 	padding-top: 35px;
 	font-size: 24px;
 	font-weight: 300;
+}
+
+textarea[name="description"] {
+	height: 220px;
+	resize: vertical;
 }

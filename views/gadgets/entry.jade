@@ -16,11 +16,11 @@ li.gadet-entry
       div.brand= gadget.brand
       div.name= gadget.model
       hr
-      div.os.row
-        .col-md-10.text-left
-          = gadget.os
-        .col-md-2.text-right
-          = gadget.hwid
+      div.os.clearfix
+        .text-left.pull-left
+          =gadget.os
+        .text-right.pull-right
+          ="#" + gadget.hwid
 
     .booking-details
       b Current status:
