@@ -50,5 +50,5 @@ MAIL_FROM='Sevenval Odlthek <some@mail.com>'
 ```sh
 $ node app.js
 ```
-Open http://127.0.0.0:3000
+Open http://127.0.0.1:3000
 
