@@ -1,6 +1,6 @@
 ODLTHEK
 ========
-A management software for your own open device library.
+A management software for your own open device library (http://opendevicelab.com/).
 
 ## Setup
 **Prerequisites**
