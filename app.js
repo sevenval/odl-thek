@@ -72,7 +72,7 @@ app.use(favicon());
 app.use(compression());
 app.use(express.static(__dirname + '/public', { maxAge: 86400000 * 10 }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_COOKIE_SECRET,
@@ -124,7 +124,7 @@ app.get ('/users/',                       AuthController.isAdmin,   UserControll
 app.get ('/users/:id',                    AuthController.isAdmin,   UserController.list);
 app.post('/users/:id',                    AuthController.isAdmin,   UserController.update);
 app.get ('/users/:id/remove',             AuthController.isAdmin,   UserController.remove);
-app.get ('/gadgets',                      AuthController.isAuth,    GadgetsController.listAll);
+app.all ('/gadgets',                      AuthController.isAuth,    GadgetsController.listAll);
 app.get ('/gadgets/top',                  AuthController.isAuth,    GadgetsController.listTop);
 app.get ('/gadgets/new',                  AuthController.isAdmin,   GadgetsController.create);
 app.get ('/gadgets/import',               AuthController.isAdmin,   GadgetsController.uploadCsv);

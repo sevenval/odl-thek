@@ -46,16 +46,19 @@ tr
   td.tools
     if (booking.status == 'open')
       a(
-        href="/bookings/"+booking._id+"/handout",
+        data-href="/bookings/" + booking._id + "/handout",
+        data-target="#handout-modal",
         title="Handout gadget"
-      ).handOut
+      ).handOut.copy-href
     if (booking.status == 'handout')
       a(
-        href="/bookings/"+booking._id+"/takeback",
+        data-href="/bookings/"+booking._id+"/takeback",
+        data-target="#takeback-modal",
         title="Takeback gadget"
-      ).takeBack
+      ).takeBack.copy-href
   td.tools
     a(
       data-href="/bookings/" + booking._id + "/remove",
+      data-target="#delete-booking-modal",
       title="Cancel booking"
-    ).cancel-booking.cancel
+    ).cancel.copy-href

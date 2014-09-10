@@ -340,10 +340,12 @@ var BookingsController = {
         newBooking.openend = booking.openend;
         newBooking.gadget = booking.gadget;
         newBooking.gadgetname = booking.gadgetname;
+        newBooking.status = booking.status;
 
         // close booking for the old owner
         booking.status = 'closed';
         booking.end = new Date();
+        booking.openend = false;
         booking.transferhash = null;
         booking.save(function (err) {
           if (err) { return next(err); }

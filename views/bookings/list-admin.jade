@@ -2,51 +2,51 @@ extends ../layout
 
 block content
 
-  if(bookings && (bookings.open || bookings.handout || bookings.closed))
-    .table-responsive
-      table
-        tr
-          th Name
-          th Device (ID)
-          th Start Reservation
-          th End Reservation
-          th Handout
-          th Takeback
-          th
-          th
-          th
+  .table-responsive
+    table
+      tr
+        th Name
+        th Device (ID)
+        th Start Reservation
+        th End Reservation
+        th Handout
+        th Takeback
+        th
+        th
+        th
 
-        tr.section
-          th(colspan=9)
-            | Upcoming bookings
-        if(bookings && bookings.open)
-          each booking in bookings.open
-            include list-entry.jade
-        else
-          td(colspan=9)
-            | No upcoming bookings...
+      tr.spacer
+        th(colspan=9)
+      tr.section
+        th(colspan=9)
+          | Upcoming bookings
+      if(bookings && bookings.open)
+        each booking in bookings.open
+          include list-entry.jade
+      else
+        td(colspan=9)
+          | No upcoming bookings...
 
+      tr.spacer
+        th(colspan=9)
+      tr.section
+        th(colspan=9)
+          | Active bookings
+      if(bookings && bookings.handout)
+        - each booking in bookings.handout
+          include list-entry.jade
+      else
+        td(colspan=9)
+          | No active bookings...
 
-        tr.section
-          th(colspan=9)
-            | Active bookings
-        if(bookings && bookings.handout)
-          - each booking in bookings.handout
-            include list-entry.jade
-        else
-          td(colspan=9)
-            | No active bookings...
-
-
-        tr.section
-          th(colspan=9)
-            | Closed bookings
-        if(bookings && bookings.closed)
-          - each booking in bookings.closed
-            include list-entry.jade
-        else
-          td(colspan=9)
-            | No closed bookings...
-
-  else
-    h4 No bookings...
+      tr.spacer
+        th(colspan=9)
+      tr.section
+        th(colspan=9)
+          | Archived bookings
+      if(bookings && bookings.closed)
+        - each booking in bookings.closed
+          include list-entry.jade
+      else
+        td(colspan=9)
+          | No archived bookings...

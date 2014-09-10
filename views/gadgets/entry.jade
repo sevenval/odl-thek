@@ -1,10 +1,11 @@
 li.gadet-entry
 
   .content-slider
-    if(gadget.hasImage)
-      img(src=gadget.imagePath)
-    else
-      img(src='/img/dummy_device.gif')
+    a(href="/gadgets/" + gadget._id)
+      if(gadget.hasImage)
+        img(src=gadget.imagePath)
+      else
+        img(src='/img/dummy_device.gif')
 
 
     if(stats[gadget._id])
@@ -41,8 +42,7 @@ li.gadet-entry
 
       br
       .controls
-        a(href="/gadgets/" + gadget._id).btn
-          |Details
+        a(href="/gadgets/" + gadget._id).btn|Details
         a(
           href="/bookings/" + gadget._id + "/new",
           data-toggle="modal",

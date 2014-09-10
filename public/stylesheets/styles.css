@@ -13,16 +13,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-#wrapper {
-	position: relative;
-	min-height: 100%;
-	max-width: 960px;
- 	margin: 0 auto !important;
+a {
+	color: #fff;
 }
 
-#content {
-	position: relative;
-	padding: 30px 20px;
+body > .container {
+	margin-top: 30px;
 }
 
 #footer {
@@ -42,63 +38,92 @@ a:hover {
 /*******************************************************************************
  * HEADER
  ******************************************************************************/
-.header {
-	position: relative;
-	height: 100px;
-	background-color: #1CA055;
+.navbar {
+	border-radius: 0;
 }
 
-.header .logo {
-	padding: 25px;
+.navbar .container {
+	background-color: #1CA055;
+	border-color: #1CA055;
+}
+
+.navbar-default {
+	background: transparent;
+}
+
+.navbar-default .navbar-brand {
+	color: #fff;
+	height: auto;
+	padding: 25px 15px;
 	font-size: 1.18em;
 }
 
-.header .logo img {
+.navbar-default .navbar-brand img {
 	width: 150px;
 }
 
-.header .nav {
-	margin: 41px 0 0 25px;
+.navbar-default .navbar-toggle {
+	background-color: #ddd;
+	margin: 36px 15px;
 }
 
-.header .nav li {
-	padding: 0 25px 0 0;
+#navbar-collapse {
+	margin-right: -15px;
+	margin-left: -15px;
 }
 
-.header .nav li a {
+.navbar-nav {
+	padding-left: 36px;
+	margin-top: 46px;
+}
+
+.navbar-default .navbar-nav>li>a {
 	color: #fff;
 	background: none;
 	font-size: 1.18em;
-	padding: 15px 0;
+	padding: 15px;
 	border-radius: 0;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
 	border-bottom: 5px solid transparent;
 }
 
-.header .nav li.active a {
-	background: none;
-}
-
-.header .nav li.active a {
-	border-bottom: 5px solid #008237;
-}
-
-.header .nav li a:hover {
-	border-bottom: 5px solid #008237;
-}
-
-.header .account {
-	position: absolute;
-	top: 25px;
-	right: 25px;
-	font-size: .9em;
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
 	color: #fff;
+	background: transparent;
+	border-bottom: 5px solid #008237;
 }
 
-.header .account img {
+.account {
+	color: #fff;
+	font-size: .9em;
+	margin: 25px 0;
+}
+.account img {
 	width: 50px;
 	margin-left: 10px;
 }
+
+@media (max-width: 768px) {
+	.navbar-nav {
+		padding: 0;
+		margin: 0;
+	}
+
+	.navbar-collapse {
+		padding: 0;
+	}
+
+	.navbar-default .navbar-nav>.active>a,
+	.navbar-default .navbar-nav>.active>a:hover,
+	.navbar-default .navbar-nav>.active>a:focus {
+		color: #fff;
+		background: #008237;
+		border-bottom: 0;
+	}
+}
+
 
 /*******************************************************************************
  * FORMs, Buttons
@@ -150,12 +175,9 @@ a:hover {
 	margin: 0 0 40px 0;
 }
 
-#search > input[type="search"] {
-	/*
-	with filter button:
-	width: calc(100% - 110px);
-	*/
+#search input[type="search"] {
 	width: calc(100% - 50px);
+	width: calc(100% - 110px);
 	height: 50px;
 	border: 0;
 	padding: 0 15px;
@@ -167,12 +189,9 @@ input[type="search"]::-webkit-search-cancel-button {
 	-webkit-appearance: searchfield-cancel-button;
 }
 
-.admin-ui #search > input[type="search"] {
+.admin-ui #search input[type="search"] {
 	width: calc(100% - 110px);
-	/*
-	with filter button:
 	width: calc(100% - 170px);
-	*/
 }
 
 #search .btn {
@@ -192,16 +211,30 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 #search .btn-search {
-	background-image: url('/img/search.gif');
+	background-image: url('/img/search.png');
+	background-size: 22px 22px;
 }
 
 #search .btn-filter {
-	background-image: url('/img/filter.gif');
+	background-image: url('/img/lines.png');
+	background-size: 17px 17px;
 }
 
 #search .btn-add {
-	background-image: url('/img/add_btn.gif');
+	background-image: url('/img/plus.png');
+	background-size: 19px 19px;
 }
+
+#filter .content {
+	margin: 15px 0;
+	background: #CFE6DA;
+	border-radius: 10px;
+}
+
+#filter label {
+	text-transform: capitalize;
+}
+
 
 /*******************************************************************************
  * Gadget list
@@ -225,7 +258,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media (min-width: 768px) and (max-width: 991px)  {
 	.gadet-entry {
-		margin: 0 25px 40px 0;
+		margin: 0 45px 40px 0;
 	}
 	.gadet-entry:nth-child(3n+3) {
   		margin: 0 0 40px 0;
@@ -234,7 +267,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media (min-width: 992px) and (max-width: 1199px) {
 	.gadet-entry {
-		margin: 0 20px 40px 0;
+		margin: 0 33px 40px 0;
 	}
 	.gadet-entry:nth-child(4n+4) {
   		margin: 0 0 40px 0;
@@ -243,7 +276,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media (min-width: 1200px)  {
 	.gadet-entry {
-		margin: 0 12px 40px 0;
+		margin: 0 22px 40px 0;
 	}
 	.gadet-entry:nth-child(5n+5) {
   		margin: 0 0 40px 0;
@@ -373,10 +406,17 @@ tr:nth-child(even) {
 	background-color: #405060
 }
 
+table .spacer, table .spacer th {
+	background: none;
+	height: 20px;
+	padding: 0;
+}
+
 tr.section th {
 	background: #1CA055;
 	padding: 5px 10px 5px 10px;
 	font-size: .8em;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 table tr.section th:last-of-type {
@@ -440,23 +480,28 @@ td .small {
  * Tabs
  ******************************************************************************/
 
+.nav-tabs {
+	border-bottom: 2px solid #1CA055;
+}
+
 .nav-tabs a,
 .nav-tabs a:hover {
 	color: rgba(67, 80, 96, 0.46) !important;
 }
 
-.nav-tabs .active a,
-.nav-tabs .active a:hover {
-	color: #435060 !important;
+.nav-tabs>li>a:hover,
+.nav-tabs>li>a:focus {
+	background-color: #B6E0C7;
+	border: 1px solid #B6E0C7;
+	border-bottom: 1px solid #1CA055;
 }
 
-.nav-tabs >li>a:hover,
-.nav-tabs >li>a:focus {
-	background-color: #D9F1E3;
-}
-
-.nav-tabs>li>a:hover {
-	border-color: transparent transparent #435060;
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+	color: #fff !important;
+	background-color: #1CA055;
+	border: 1px solid #1CA055;
 }
 
 /*******************************************************************************
@@ -468,16 +513,7 @@ td .small {
 	color: #fff;
 }
 
-
-/*button.close, .modal-header .close {
-	background: url('/img/close_btn.gif');
-	opacity: 1;
-	margin-top: 0px !important;
-	width: 30px;
-	height: 30px;
-}*/
-
-.close {
+.modal-header  .close {
 	float: right;
 	font-size: 40px;
 	font-weight: normal;
@@ -487,7 +523,7 @@ td .small {
 	opacity: 1;
 }
 
-.close:hover {
+.modal-header .close:hover {
 	color: rgba(255, 255, 255, 0.9);
 }
 
@@ -499,6 +535,10 @@ td .small {
 	border: 0;
 	background: #D9F1E3;
 	font-weight: 600;
+}
+
+.modal-body .small {
+	color: #435060;
 }
 
 .modal-footer {

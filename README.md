@@ -1,36 +1,53 @@
-odl-thek
+ODLTHEK
 ========
+A management software for your own open device library.
 
-a managment software for your own ODL.
+## Setup
+**Prerequisites**
+Download and install http://nodejs.org and http://www.mongodb.org. Run MongoDB as a daemon or make sure MongoDB is running before continuing.
 
-needs node.js & mongodb
-
-### ENV vars (e.g. local .env file)
+**Installation**
+```sh
+$ git clone https://github.com/sevenval/odl-thek
+$ cd odl-thek
+$ npm install
 ```
-NODE_ENV=DEVELOPMENT|PRODUCTION
 
-# Mongodb url with database name
+**Create .env file (see below) or set environment variables manually**
+```
+NODE_ENV=DEVELOPMENT
 MONGODB_URL=mongodb://localhost/odlthek
-
-SESSION_COOKIE_SECRET=***SECRET***
-
+SESSION_COOKIE_SECRET=<keyboard cat>
 DATE_TIME_FORMAT="YYYY-MM-DD HH:mm"
 
-GITHUB_CLIENT_ID=***
-GITHUB_CLIENT_SECRET=***
-GITHUB_CALLBACK=http://example.com/users/auth/github/callback
+; OAUTH Github
+GITHUB_CLIENT_ID=<ID>
+GITHUB_CLIENT_SECRET=<SECRET>
+GITHUB_CALLBACK=<HOSTNAME>/users/auth/github/callback
 
-GOOGLE_CLIENT_ID=***
-GOOGLE_CLIENT_SECRET=***
-GOOGLE_CALLBACK=http://example.com/users/auth/google/callback
-GOOGLE_HOSTED_DOMAIN=company.com
+; OAUTH Google
+GOOGLE_CLIENT_ID=<ID>
+GOOGLE_CLIENT_SECRET=<SECRET>
+GOOGLE_CALLBACK=<HOSTNAME>/users/auth/google/callback
+GOOGLE_HOSTED_DOMAIN=example.com
 
-// Default transport is sendmail
-#MAIL_TRANSPORT=SMPT
-#MAIL_SERVICE=Gmail
-#MAIL_USERNAME=
-#MAIL_PASSWORD=
-// Recipient address for system mails
-MAIL_RECIPIENT=odlthek@company.com
-MAIL_FROM='Sevenval Odlthek <no-reply@odlthek.com>'
+; AWS S3 for media storage
+AWS_ACCESS_KEY_ID=<ID>
+AWS_SECRET_ACCESS_KEY=<SECRET>
+AWS_MEDIA_BUCKET=odlthek-media
+
+; Mails settings
+MAIL_TRANSPORT=SMTP
+MAIL_SERVICE=Gmail
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_RECIPIENT=<email for system mails>
+MAIL_FROM='Sevenval Odlthek <some@mail.com>'
 ```
+
+**Start**
+```sh
+$ node app.js
+```
+Open http://127.0.0.1:3000
+

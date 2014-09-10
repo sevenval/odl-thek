@@ -84,8 +84,16 @@ var GadgetController = {
   listAll: function (req, res, next) {
     var where = {};
 
-    if (req.query.q) {
-      where.keywords = { $regex : ".*" + req.query.q + ".*", $options: 'i' };
+    if (req.body.q) {
+      where.keywords = { $regex : ".*" + req.body.q + ".*", $options: 'i' };
+    }
+
+    if (req.body.l) {
+      where.location = { $in: req.body.l };
+    }
+
+    if (req.body.t) {
+      where.type = { $in: req.body.t };
     }
 
     // Full text search is not supported in mongolabs current free plan
@@ -107,6 +115,8 @@ var GadgetController = {
 
     //   });
     // } else {
+
+    console.dir(req.body.f);
 
     GadgetModel.find(where)
       .sort({ brand: 1, model: 1, _id: -1 })
@@ -133,7 +143,11 @@ var GadgetController = {
             title: 'gadgets',
             gadgets: groupedGadgets,
             stats: stats,
-            q: req.query.q
+            q: req.body.q,
+            l: req.body.l,
+            t: req.body.t,
+            types: GadgetModel.schema.path('type').enumValues,
+            locations: GadgetModel.schema.path('location').enumValues
           });
         });
       });

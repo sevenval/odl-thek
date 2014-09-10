@@ -13,6 +13,13 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
   input(type='hidden', name='_id', value=booking._id)
 
   .modal-body
+
+
+    if(error)
+      .alert.alert-danger.alert-dismissible
+        button.close(data-dismiss="alert") &times;
+        = error
+
     .row
       .col-md-5
         h4 Start
@@ -42,15 +49,10 @@ form(method='post', action="/bookings/" + gadgetId + "/save", id="book")
         span.timeIcon
       .clear
 
-    if(error)
-      .alert.alert-danger.alert-dismissible
-        button.close(data-dismiss="alert") &times;
-        = error
-
   .modal-footer
     .row
       .col-md-6.text-left
-        if (users && user.role !== 'user' && !booking.expired && booking.status !== 'open')
+        if (users && user.role !== 'user' && booking._id && !booking.expired && booking.status !== 'open')
           select(name='newOwner').form-control
             option(value='false') Transfer booking to...
             - each u in users

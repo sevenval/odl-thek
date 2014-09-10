@@ -17,60 +17,93 @@ html
         div.modal-content
           div.modal-header
             button(type="button", class="close", data-dismiss="modal") &times;
-            h3 Cancel booking?
+            h3 Delete booking?
           div.modal-body
-            p Dou you really want to cancel this booking?
+            p Dou you really want to delete this booking?
           div.modal-footer
-            a.btn.btn-danger Cancel Booking
+            a.btn.btn-danger Delete
 
-    .container
-      .header
-        .logo.pull-left.hidden-xs
-          a(href="/")
-            img(src='/img/Logo_sevenval.gif', class='logoImg')
+    div.modal(id="handout-modal")
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button(type="button", class="close", data-dismiss="modal") &times;
+            h3 Handout?
+          div.modal-body
+            p Handout this device?
+          div.modal-footer
+            a.btn Handout
+
+    div.modal(id="takeback-modal")
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button(type="button", class="close", data-dismiss="modal") &times;
+            h3 Takeback?
+          div.modal-body
+            p Takeback this device?
+          div.modal-footer
+            a.btn Takeback
+
+    nav.navbar.navbar-default(role='navigation')
+      .container
+        .navbar-header
+          if(user)
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar-collapse')
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+
+          a.navbar-brand(href="/")
+            img(src='/img/Logo_sevenval.gif')
             br
             b ODL
             span THEK
 
-        if(user)
-          ul.nav.nav-pills.pull-left
-            li(class= (page === 'gadgets') ? "active" : "")
-              a(href="/") Gadgets
-            li(class= (page === 'top') ? "active" : "")
-              a(href="/gadgets/top") Top
-            li(class= (page === 'bookings') ? "active" : "")
-              if (user.role === 'admin')
-                a(href="/bookings") Bookings
-              else
-                a(href="/bookings") My Bookings
-            if(user.role == 'admin')
-              li(class= (page === 'users') ? "active" : "")
-                a(href="/users/") Users
+        #navbar-collapse.collapse.navbar-collapse
+          if(user)
+            ul.nav.navbar-nav
+              li(class= (page === 'gadgets') ? "active" : "")
+                a(href="/") Gadgets
+              li(class= (page === 'top') ? "active" : "")
+                a(href="/gadgets/top") Top
+              li(class= (page === 'bookings') ? "active" : "")
+                if (user.role === 'admin')
+                  a(href="/bookings") Bookings
+                else
+                  a(href="/bookings") My Bookings
+              if(user.role == 'admin')
+                li(class= (page === 'users') ? "active" : "")
+                  a(href="/users/") Users
+              li.visible-xs
+                a(href="/users/logout") Logout
 
-          .account.pull-right.text-right
-            .pull-left
-              strong=user.displayname
-              br
-              a(href="/users/logout") logout
-            .pull-right.hidden-xs
-              img(src=user.avatarurl)
+            .account.pull-right.hidden-xs
+              .text-right
+                span.pull-left
+                  strong=user.displayname
+                  br
+                  a(href="/users/logout") logout
+                .pull-right
+                  img(src=user.avatarurl).hidden-sm
 
-      #content
-        block content
+    .container
+      block content
 
       #footer
-        a(href='/imprint') imprint
+        a(href='/imprint') Imprint
 
-      script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-      script(src="/javascripts/bootstrap.min.js")
-      script(src="/javascripts/script.js")
-      script.
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="/javascripts/bootstrap.min.js")
+    script(src="/javascripts/script.js")
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-51322760-1', 'odl-thek.herokuapp.com');
-        ga('send', 'pageview');
+      ga('create', 'UA-51322760-1', 'odl-thek.herokuapp.com');
+      ga('send', 'pageview');
 
 
