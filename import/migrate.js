@@ -10,16 +10,16 @@ var Mongoose      = require('mongoose');
 var async         = require('async');
 var csv           = require('csv');
 var fs            = require('fs');
-var Utils         = require('./lib/utils');
-var BookingModel  = require('./models/booking');
-var GadgetModel   = require('./models/gadget');
-var UserModel     = require('./models/user');
+var Utils         = require('../lib/utils');
+var BookingModel  = require('../models/booking');
+var GadgetModel   = require('../models/gadget');
+var UserModel     = require('../models/user');
 var args          = process.argv.slice(2);
 
 
 // Setup mongodb and run script
 //Mongoose.set('debug', true);
-Mongoose.connect(process.env.MONGODB_URL);
+Mongoose.connect(args[2]);
 
 
 function importUsers(data, finalCb) {

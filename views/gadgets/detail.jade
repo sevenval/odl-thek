@@ -13,7 +13,6 @@ block content
         div.modal-footer
           a.btn.btn-danger(href="/gadgets/" + gadget._id + "/remove") Delete gadget
 
-
   .details
     .row
       .col-md-8
@@ -69,65 +68,29 @@ block content
 
     br
     br
-    if (user.role === 'admin')
-      .table-responsive
-        table
-          tr
-            th Name
-            th Device (ID)
-            th Start Reservation
-            th End Reservation
-            th Handout
-            th Takeback
-            th
-            th
-            th
+    .table-responsive
+      table.table
+        tr
+        if (user.role === 'admin')
+          th Name
+          th Device (ID)
+          th Start Reservation
+          th End Reservation
+          th Handout
+          th Takeback
+          th
+          th
+          th
+          - each booking in bookings
+            include ../bookings/list-entry-admin.jade
+
+        else
+          th Device (ID)
+          th Start Reservation
+          th End Reservation
+          th Status
+          th
+          th
           - each booking in bookings
             include ../bookings/list-entry.jade
-
-    else
-      .table-responsive
-        table.table
-          tr
-            th User
-            th Start Reservation
-            th End Reservation
-            th Handout
-            th Takeback
-            th
-          - each booking in bookings
-            tr
-              td
-                if (user.role === 'admin' || user.role === 'editor' || booking.user._id == user._id)
-                  =booking.user.displayname
-                else
-                  | ***
-              td
-                =fmtDatetime(booking.start)
-              td
-                =fmtDatetime(booking.end)
-              td
-                if(booking.handoutuser)
-                  =booking.handoutuser.displayname
-                  br
-                  span.small
-                    =fmtDatetime(booking.handoutdate)
-                else
-                  | -
-              td
-                if(booking.closeuser)
-                  =booking.closeuser.displayname
-                  br
-                  span.small
-                    =fmtDatetime(booking.closedate)
-                else
-                  | -
-              td.tools
-                //- Show delete link only if status is open or user is admin
-                if((booking.status == "open" && booking.user._id == user._id) || user.role == 'admin')
-                  a(
-                    data-href="/bookings/" + booking._id + "/remove",
-                    data-target="#cancel-booking",
-                    title="Cancel booking"
-                  ).cancel-booking.cancel.copy-href
 

@@ -19,8 +19,7 @@ var UserSchema = new Mongoose.Schema({
   },
 
   email: {
-    type: String,
-    unique: true
+    type: String
   },
 
   displayname: {

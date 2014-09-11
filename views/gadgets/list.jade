@@ -5,14 +5,14 @@ block content
   form(action='/gadgets/', method='post', id='search')
     .clearfix
       input(type='search', name='q', value=q
-        placeholder='Search gadgets by brand, model, type...' )
+        placeholder='Search gadgets by brand, model, type, #hwid,...' )
 
       input(type="submit", value="").btn.btn-search
       a.btn.btn-filter(data-toggle="collapse" data-target="#filter")
       if(user.role == 'admin')
         a(href='/gadgets/new').btn.btn-add
 
-    div.collapse(id="filter" class=(l || t) ? "in" : "")
+    div.collapse(id="filter" class=((l || t) && Object.keys(gadgets).length > 1) ? "in" : "")
       .content.row
         .col-sm-2
           h4 Location
@@ -36,7 +36,7 @@ block content
             br
 
   if (Object.keys(gadgets).length === 0)
-    h4 Sorry, no gadgets found
+    h4 No gadgets found...
   else
     ul.nav.nav-tabs
       - var i = 0

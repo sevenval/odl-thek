@@ -91,6 +91,7 @@ GadgetSchema.index({ hwid: 1 });
 // Create and update the gadget keyword search field on every save action
 GadgetSchema.pre('save', function (next) {
   this.keywords = [];
+  this.keywords.push('#' + this.hwid);
   this.keywords.push(this.model);
   this.keywords.push(this.brand);
   this.keywords.push(this.os);

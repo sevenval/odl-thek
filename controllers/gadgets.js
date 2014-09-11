@@ -187,6 +187,7 @@ var GadgetController = {
 
       BookingModel.find({ gadget: req.params.id })
         .sort({ start: -1 })
+        .limit(10)
         .populate('user')
         .populate('handoutuser')
         .populate('closeuser')

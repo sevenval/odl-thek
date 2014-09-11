@@ -104,7 +104,7 @@ var BookingsController = {
     BookingModel.count(where, function (err, count) {
 
       BookingModel.find(where)
-        .sort({ start: 'desc' })
+        .sort({ username: 1, start: -1 })
         .skip(itemsFrom)
         .limit(ITEMS_PER_PAGE)
         .populate('gadget')

@@ -13,8 +13,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a {
-	color: #fff;
+a, a:hover, a:active, a:hover {
+	text-decoration: none;
+	color: #fff !important;
 }
 
 body > .container {
@@ -28,11 +29,6 @@ body > .container {
 	padding: 9px 19px;
 	color: white;
 	text-align: right;
-}
-
-a:hover {
-	text-decoration: none;
-	color: #fff !important;
 }
 
 /*******************************************************************************
@@ -56,6 +52,13 @@ a:hover {
 	height: auto;
 	padding: 25px 15px;
 	font-size: 1.18em;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:active,
+.navbar-default .navbar-brand:hover {
+	color: #fff;
 }
 
 .navbar-default .navbar-brand img {
