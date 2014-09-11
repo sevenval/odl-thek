@@ -17,7 +17,9 @@ var UserModel     = require('../models/user');
  */
 function renderBookings(req, res, next, gadget, booking, error) {
 
-  var where = {};
+  var where = {
+    disabled: false
+  };
 
   if (req.session.user.role === 'editor') {
     // editors may only see other internal users
@@ -27,7 +29,7 @@ function renderBookings(req, res, next, gadget, booking, error) {
     };
   }
 
-  UserModel.find(where, function (err, users) {
+  UserModel.find(where).sort({email: 1}).exec(function (err, users) {
     if (err) { return next(err); }
 
     res.render('bookings/edit', {
@@ -84,43 +86,60 @@ var BookingsController = {
   /**
    * Lists all open and closed bookings for the current user. When the current
    * user has admin permissions, all bookings are shown.
-   *
-   * @todo: Pagination?
    */
   listAll: function (req, res, next) {
+
+    var ITEMS_PER_PAGE = 40;
+
     var where = {};
+    var itemsFrom = parseInt(req.query.from || 0, 0);
 
     if (req.session.user.role !== 'admin') {
       // limit bookings to current user when users role is not admin
       where.user = req.session.user._id;
+    } else {
+      where.status = req.params.status || 'handout';
     }
 
-    BookingModel.find(where)
-      .sort({
-        'user': 1,
-        'startdate': 1
-      })
-      .populate('user')
-      .populate('gadget', { image: 0 })
-      .populate('handoutuser')
-      .populate('closeuser')
-      .exec(function (err, bookings) {
-        if (err) { return next(err); }
+    BookingModel.count(where, function (err, count) {
 
-        if (req.session.user.role === 'admin') {
-          // render admin view
-          res.render('bookings/list-admin', {
-            title: 'bookings',
-            bookings : _.groupBy(bookings, 'status')
-          });
-        } else {
-          // render user view
-          res.render('bookings/list', {
-            title: 'bookings',
-            bookings: bookings
-          });
-        }
-      });
+      BookingModel.find(where)
+        .sort({ start: 'desc' })
+        .skip(itemsFrom)
+        .limit(ITEMS_PER_PAGE)
+        .populate('gadget')
+        .populate('user')
+        .populate('handoutuser')
+        .populate('closeuser')
+        .exec(function (err, bookings) {
+          if (err) { return next(err); }
+
+          var params = {
+            bookings: bookings,
+            moreAvailable: count > (itemsFrom + ITEMS_PER_PAGE),
+            moreUrl: '/bookings/' + where.status + '?from=' + (itemsFrom + ITEMS_PER_PAGE)
+          };
+
+          if (req.xhr) {
+            return res.render('bookings/list-append', params);
+          }
+
+          if (req.session.user.role === 'admin') {
+            // render admin view
+            res.render('bookings/list-admin', _.extend(params, {
+              title: 'bookings',
+              status: where.status
+            }));
+          } else {
+            // render user view
+            res.render('bookings/list', _.extend(params, {
+              title: 'bookings',
+              bookings: bookings
+            }));
+          }
+        });
+
+    });
   },
 
 

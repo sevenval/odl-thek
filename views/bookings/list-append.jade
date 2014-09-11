@@ -1,0 +1,10 @@
+each booking in bookings
+  if (user.role === 'admin')
+    include list-entry-admin.jade
+  else
+    include list-entry.jade
+
+if (moreAvailable > 0)
+  tr
+    td(colspan="9", align="center")
+      a.load-more(href=moreUrl) Load more...

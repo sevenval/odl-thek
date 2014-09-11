@@ -23,13 +23,14 @@ var UserController = {
    * @todo  Pagination?
    */
   listAll: function (req, res, next) {
-
-    UserModel.find({}).limit(200).exec(function (err, users) {
-      res.render('users/list', {
-        title: 'Users',
-        users : users
+    UserModel.find({})
+      .sort({ disabled: 1, email: 1 })
+      .exec(function (err, users) {
+        res.render('users/list', {
+          title: 'Users',
+          users : users
+        });
       });
-    });
   },
 
 

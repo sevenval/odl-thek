@@ -69,16 +69,27 @@ var BookingSchema = new Mongoose.Schema({
 
   transferhash: String,
 
+  oldId: String
+
 }, {
   strict: true
 });
 
+BookingSchema.index({ status: 1 });
 
 BookingSchema.virtual('expired').get(function () {
   if (this.openend) {
     return false;
   }
-  return (this.end < new Date());
+
+  return (
+    // booking end date is exceeded
+    this.end < new Date() &&
+    // gadget was actually handout
+    this.handoutdate &&
+    // gadget has not been brought back
+    this.end > this.closedate
+  );
 });
 
 

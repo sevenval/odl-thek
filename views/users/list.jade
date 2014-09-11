@@ -7,11 +7,11 @@ block content
         th Displayname
         th Name
         th Email
-        th Type
+        th Auth-Type
         th Role
         th
       - each user in users
-        tr
+        tr(class=user.disabled === true ? 'deactive' : '')
           td
             =user.displayname
           td

@@ -57,7 +57,8 @@ var GadgetSchema = new Mongoose.Schema({
       'Console',
       'Glasses',
       'Watch',
-      'Sim'
+      'Sim',
+      'Unspecified'
     ],
     default: 'Mobile'
   },
@@ -83,6 +84,8 @@ var GadgetSchema = new Mongoose.Schema({
 // add a text index to the keywords array
 // GadgetSchema.plugin(textSearch);
 // GadgetSchema.index({ keywords: 'text' });
+
+GadgetSchema.index({ hwid: 1 });
 
 
 // Create and update the gadget keyword search field on every save action

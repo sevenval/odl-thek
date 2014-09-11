@@ -7,3 +7,4 @@ logs
 uploads
 cache
 node_modules
+import/*.csv

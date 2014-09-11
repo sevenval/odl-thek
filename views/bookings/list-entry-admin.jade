@@ -1,6 +1,6 @@
 tr
   td
-    =booking.user.displayname
+    =booking.user.name
   td
     a(href="/gadgets/" + (booking.gadget.id || gadget._id))
       =booking.gadgetname
@@ -21,7 +21,7 @@ tr
           strong (Expired)
   td
     if (booking.handoutuser)
-      =booking.handoutuser.displayname
+      =booking.handoutuser.name
       br
       span.small
         =fmtDatetime(booking.handoutdate)

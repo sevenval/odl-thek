@@ -27,7 +27,7 @@ var UserController      = require('./controllers/users');
 
 // Setup mongodb
 Mongoose.connect(process.env.MONGODB_URL);
-Mongoose.set('debug', process.env.NODE_ENV === 'DEVELOPMENT');
+//Mongoose.set('debug', process.env.NODE_ENV === 'DEVELOPMENT');
 
 
 //
@@ -99,7 +99,7 @@ app.use(function (req, res, next) {
 
 
 // Start scheduler for recurring tasks
-Cron.start();
+// Cron.start();
 
 
 // Register view helper
@@ -133,7 +133,7 @@ app.get ('/gadgets/:id',                  AuthController.isAuth,    GadgetsContr
 app.get ('/gadgets/:id/edit',             AuthController.isAdmin,   GadgetsController.edit);
 app.post('/gadgets/:id/save',             AuthController.isAdmin,   GadgetsController.save);
 app.get ('/gadgets/:id/remove',           AuthController.isAdmin,   GadgetsController.remove);
-app.get ('/bookings',                     AuthController.isAuth,    BookingsController.listAll);
+app.get ('/bookings/:status?',            AuthController.isAuth,    BookingsController.listAll);
 app.get ('/bookings/transfer/:hash/:uId',                           BookingsController.transfer);
 app.get ('/bookings/:id/new',             AuthController.isAuth,    BookingsController.create);
 app.get ('/bookings/:id/edit',            AuthController.isAuth,    BookingsController.edit);

@@ -116,8 +116,6 @@ var GadgetController = {
     //   });
     // } else {
 
-    console.dir(req.body.f);
-
     GadgetModel.find(where)
       .sort({ brand: 1, model: 1, _id: -1 })
       .limit(750)
@@ -188,7 +186,7 @@ var GadgetController = {
       }
 
       BookingModel.find({ gadget: req.params.id })
-        .sort({'startdate': 1})
+        .sort({ start: -1 })
         .populate('user')
         .populate('handoutuser')
         .populate('closeuser')

@@ -41,4 +41,14 @@ $(function () {
     }
   });
 
+  $(document).on('click', '.load-more', function () {
+    var btn = $(this);
+    btn.button('loading');
+    $.get($(this).attr('href'), function (data) {
+      btn.closest('table').append(data);
+      btn.closest('tr').remove();
+    });
+    return false;
+  });
+
 });

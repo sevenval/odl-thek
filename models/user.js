@@ -19,7 +19,8 @@ var UserSchema = new Mongoose.Schema({
   },
 
   email: {
-    type: String
+    type: String,
+    unique: true
   },
 
   displayname: {
@@ -47,7 +48,12 @@ var UserSchema = new Mongoose.Schema({
       'admin'
     ],
     default: 'user'
-  }
+  },
+
+  disabled: {
+    type: Boolean,
+    default: false
+  },
 
 });
 
