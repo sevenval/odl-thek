@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  if(bookings.length > 0)
+    .table-responsive
+      table
+        tr
+          th Device (ID)
+          th Start Reservation
+          th End Reservation
+          th Status
+          th
+          th
+        - each booking in bookings
+          include list-entry.jade
+
+        if (moreAvailable > 0)
+          tr
+            td(colspan="9", align="center")
+              a.load-more(href=moreUrl) Load more...
+
+  else
+    h4 No bookings...

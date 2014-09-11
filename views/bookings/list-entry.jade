@@ -1,0 +1,30 @@
+tr
+  td
+    a(href="/gadgets/" + booking.gadget._id)
+      =booking.gadgetname
+      | &nbsp;(
+      =booking.gadget.hwid
+      |)
+  td
+    =fmtDatetime(booking.start)
+  td
+    =fmtDatetime(booking.end)
+    if (booking.expired && booking.status !== 'closed')
+      span.text-danger
+        strong (Expired)
+  td
+    =booking.status
+  td.tools
+    if (booking.status !== 'closed')
+      a(
+        href="/bookings/" + booking._id + "/edit",
+        data-toggle="modal",
+        data-target="#bookingModal"
+      ).edit
+  td.tools
+    if (booking.status === 'open')
+      a(
+        data-href="/bookings/" + booking._id + "/remove",
+        data-target="#delete-booking-modal",
+        title="Cancel booking"
+      ).cancel.copy-href
