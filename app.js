@@ -76,7 +76,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_COOKIE_SECRET,
-  store: new MongoStore({ db: Mongoose.connection.db })
+  store: new MongoStore({ mongooseConnection: Mongoose.connection })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
