@@ -46,12 +46,10 @@ passport.use(new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALLBACK
 }, function (at, rt, user, cb) {
-
-  console.log(at);
-  console.log(rt);
-  console.log(user);
-
-  return cb(null, user);
+  // asynchronous verification, for effect...
+  process.nextTick(function () {
+    return cb(null, user);
+  });
 }));
 
 passport.serializeUser(function (user, done) { done(null, user); });
@@ -68,16 +66,16 @@ app.set('view engine', 'jade');
 app.disable('view cache');
 app.use(favicon());
 app.use(compression());
-app.use(express.static(__dirname + '/public', { maxAge: 86400000 * 10 }));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_COOKIE_SECRET,
   store: new MongoStore({ mongooseConnection: Mongoose.connection })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(__dirname + '/public', { maxAge: 86400000 * 10 }));
 
 app.use(function (req, res, next) {
   // make current user obj available in templates

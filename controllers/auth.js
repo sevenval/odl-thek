@@ -85,8 +85,7 @@ var AuthController = {
   authWithGoogle: function (req, res, next) {
     passport.authenticate('google', {
       scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/plus.login'
       ],
       //hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
     })(req, res);
