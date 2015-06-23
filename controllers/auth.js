@@ -99,12 +99,11 @@ var AuthController = {
   authWithGoogleCb: function (req, res, next) {
     passport.authenticate('google', { failureRedirect: '/' })(req, res, function () {
 
-      var user, json = req.session.passport.user._json, email = '';
-
-
       console.dir(req.session);
       console.dir(req.session.passport);
       console.dir(req.session.passport.user);
+
+      var user, json = req.session.passport.user._json, email = '';
 
 
       if (json.emails && json.emails.length > 0) {
