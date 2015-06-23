@@ -101,6 +101,12 @@ var AuthController = {
 
       var user, json = req.session.passport.user._json, email = '';
 
+
+      console.dir(req.session);
+      console.dir(req.session.passport);
+      console.dir(req.session.passport.user);
+
+
       if (json.emails && json.emails.length > 0) {
         email = json.emails[0].value;
       }
