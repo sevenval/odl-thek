@@ -99,17 +99,21 @@ var AuthController = {
   authWithGoogleCb: function (req, res, next) {
     passport.authenticate('google', { failureRedirect: '/' })(req, res, function () {
 
-      var user, json = req.session.passport.user._json;
+      var user, json = req.session.passport.user._json, email = '';
+
+      if (json.emails && json.emails.length > 0) {
+        email = json.emails[0].value;
+      }
 
       user = {
         userIdProvider: json.id,
-        email: json.email,
+        email: email,
         displayname: req.session.passport.user.displayName,
         name: json.name,
         avatarurl: json.picture,
         type: 'google',
         // grant editor role to internal users
-        role: (json.email.indexOf(process.env.GOOGLE_HOSTED_DOMAIN) > 0) ? 'editor' : 'user'
+        role: (email.indexOf(process.env.GOOGLE_HOSTED_DOMAIN) > 0) ? 'editor' : 'user'
       };
 
       upsertUser(user, function (err, user) {
