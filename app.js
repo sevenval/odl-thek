@@ -44,15 +44,13 @@ passport.use(new GitHubStrategy({
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK,
-  options: {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ],
-    hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
-  }
+  callbackURL: process.env.GOOGLE_CALLBACK
 }, function (at, rt, user, cb) {
+
+  console.log(at);
+  console.log(rt);
+  console.log(user);
+
   return cb(null, user);
 }));
 
