@@ -85,9 +85,10 @@ var AuthController = {
   authWithGoogle: function (req, res, next) {
     passport.authenticate('google', {
       scope: [
-        'https://www.googleapis.com/auth/plus.login'
+        'https://www.googleapis.com/auth/plus.login',
+        'https://www.googleapis.com/auth/userinfo.profile'
       ],
-      //hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
+      hostedDomain: process.env.GOOGLE_HOSTED_DOMAIN
     })(req, res);
   },
 
@@ -98,12 +99,7 @@ var AuthController = {
   authWithGoogleCb: function (req, res, next) {
     passport.authenticate('google', { failureRedirect: '/' })(req, res, function () {
 
-      console.dir(req.session);
-      console.dir(req.session.passport);
-      console.dir(req.session.passport.user);
-
       var user, json = req.session.passport.user._json, email = '';
-
 
       if (json.emails && json.emails.length > 0) {
         email = json.emails[0].value;
