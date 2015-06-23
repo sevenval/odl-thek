@@ -109,11 +109,11 @@ var AuthController = {
         userIdProvider: json.id,
         email: email,
         displayname: req.session.passport.user.displayName,
-        name: json.name,
-        avatarurl: json.picture,
+        name: req.session.passport.user.displayName,
+        avatarurl: json.image.url,
         type: 'google',
         // grant editor role to internal users
-        role: (email.indexOf(process.env.GOOGLE_HOSTED_DOMAIN) > 0) ? 'editor' : 'user'
+        role: 'editor'
       };
 
       upsertUser(user, function (err, user) {
